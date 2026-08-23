@@ -86,11 +86,26 @@ export const AppContent: React.FC = () => {
   const [activeReceiptFee, setActiveReceiptFee] = useState<FeeRecord | null>(null);
   const [activeMarksheetResult, setActiveMarksheetResult] = useState<StudentResult | null>(null);
 
-  // Switch to portal mode on login, and public mode when unauthenticated
+  // URL Hash & Initial Route Handler: ALWAYS land on Public Website unless #portal- is explicitly in URL
   useEffect(() => {
-    if (isAuthenticated && user) {
-      setIsInPortalMode(true);
-    } else {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash;
+      if (hash.startsWith('#portal-') && isAuthenticated && user) {
+        setIsInPortalMode(true);
+        setCurrentView(hash.replace('#portal-', '') || 'dashboard');
+      } else if (hash && !hash.startsWith('#portal-')) {
+        setIsInPortalMode(false);
+        setPublicView(hash.replace('#', '') || 'home');
+      } else {
+        setIsInPortalMode(false);
+        setPublicView('home');
+      }
+    }
+  }, []);
+
+  // When unauthenticated, ensure portal mode is strictly false
+  useEffect(() => {
+    if (!isAuthenticated || !user) {
       setIsInPortalMode(false);
       setPublicView('home');
     }
