@@ -10,7 +10,10 @@ import {
   ArrowRight,
   Sparkles,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Calendar,
+  KeyRound,
+  UserCheck
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { Role } from '../../types';
@@ -21,7 +24,7 @@ export const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const { settings } = useCollegeData();
 
-  const [selectedRole, setSelectedRole] = useState<Role>('student');
+  const [selectedRole, setSelectedRole] = useState<Role>('admin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -47,18 +50,10 @@ export const LoginPage: React.FC = () => {
     try {
       const res = await login(email, password, selectedRole);
       if (!res.success) {
-        if (selectedRole === 'student') {
-          setError('गलत विवरण! कृपया अपना सही Enrollment No./Roll No. और Date of Birth (DD-MM-YYYY) दर्ज करें। (Invalid Student Credentials)');
-        } else {
-          setError(res.message || 'Invalid credentials. Please verify your institutional email and password.');
-        }
+        setError(res.message || 'Invalid credentials. Please check your login details.');
       }
     } catch (err: any) {
-      if (selectedRole === 'student') {
-        setError('गलत विवरण! कृपया अपना सही Enrollment No./Roll No. और Date of Birth (DD-MM-YYYY) दर्ज करें।');
-      } else {
-        setError(err?.message || 'Login failed. Please verify your institutional credentials.');
-      }
+      setError(err?.message || 'Login failed. Please verify your credentials.');
     } finally {
       setLoading(false);
     }
@@ -174,6 +169,17 @@ export const LoginPage: React.FC = () => {
             </div>
           </div>
 
+          {/* Student Policy Notice Badge */}
+          {selectedRole === 'student' && (
+            <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-[11px] text-blue-800 dark:text-blue-200 flex items-start gap-2">
+              <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+              <div>
+                <strong className="font-bold block text-blue-900 dark:text-blue-100">🔒 छात्र सुरक्षा नीति (Student Authentication Policy):</strong>
+                छात्र केवल अपने <strong>Enrollment No. / Roll No.</strong> और <strong>Date of Birth (जन्म तिथि)</strong> से ही लॉगिन कर सकते हैं।
+              </div>
+            </div>
+          )}
+
           {/* Form */}
           <form onSubmit={handleFormSubmit} className="space-y-4">
             {error && (
@@ -183,15 +189,23 @@ export const LoginPage: React.FC = () => {
               </div>
             )}
 
-            {/* Email / Username / Enrollment Number Input */}
+            {/* Field 1: Identifier */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {selectedRole === 'student'
-                  ? 'Student Enrollment Number or Roll No.'
-                  : 'Institutional Email or User ID'}
+                  ? 'Student Enrollment Number or Roll No. (नामांकन / रोल नंबर)'
+                  : selectedRole === 'admin'
+                  ? 'Admin Username or Email (यूजरनेम)'
+                  : 'Teacher Institutional Email (ईमेल)'}
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                {selectedRole === 'student' ? (
+                  <UserCheck className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                ) : selectedRole === 'admin' ? (
+                  <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                ) : (
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                )}
                 <input
                   type="text"
                   required
@@ -200,52 +214,66 @@ export const LoginPage: React.FC = () => {
                   placeholder={
                     selectedRole === 'student'
                       ? 'e.g. E224412355001'
-                      : 'e.g. admin@polytechnic.edu'
+                      : selectedRole === 'admin'
+                      ? 'sachin_maurya8005'
+                      : 'teacher@polytechnic.edu'
                   }
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
                 />
               </div>
             </div>
 
-            {/* Password / DOB Input */}
+            {/* Field 2: Password or DOB */}
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
                   {selectedRole === 'student'
-                    ? 'Password or Date of Birth (DD-MM-YYYY)'
-                    : 'Password'}
+                    ? 'Date of Birth (जन्म तिथि - YYYY-MM-DD / DD-MM-YYYY)'
+                    : 'Password (पासवर्ड)'}
                 </label>
-                <button
-                  type="button"
-                  onClick={() => setForgotModal(true)}
-                  className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
-                >
-                  Forgot Password?
-                </button>
+                {selectedRole !== 'student' && (
+                  <button
+                    type="button"
+                    onClick={() => setForgotModal(true)}
+                    className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+                  >
+                    Forgot Password?
+                  </button>
+                )}
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                {selectedRole === 'student' ? (
+                  <Calendar className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                ) : (
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                )}
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={selectedRole === 'student' || showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  placeholder={selectedRole === 'student' ? 'e.g. 15-05-2004 or password' : '••••••••'}
+                  placeholder={
+                    selectedRole === 'student'
+                      ? 'e.g. 2004-05-14 or 14-05-2004'
+                      : '••••••••'
+                  }
                   className="w-full pl-10 pr-11 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  title={showPassword ? 'Hide password' : 'Show password'}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-700/60 dark:hover:text-blue-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  {showPassword ? (
-                    <EyeOff className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4" />
-                  )}
-                </button>
+                {selectedRole !== 'student' && (
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    title={showPassword ? 'Hide password' : 'Show password'}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-700/60 dark:hover:text-blue-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
+                )}
               </div>
             </div>
 
@@ -287,7 +315,7 @@ export const LoginPage: React.FC = () => {
           <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 border border-slate-200 dark:border-slate-800 shadow-2xl space-y-4">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white">Reset Institutional Password</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Enter your registered official email or roll number. A password reset link will be dispatched by the IT administration.
+              Enter your registered official username or email. A password reset link will be dispatched by the IT administration.
             </p>
 
             {forgotSent ? (
@@ -308,9 +336,9 @@ export const LoginPage: React.FC = () => {
                 className="space-y-3"
               >
                 <input
-                  type="email"
+                  type="text"
                   required
-                  placeholder="Enter your registered email"
+                  placeholder="Enter your registered username or email"
                   value={forgotEmail}
                   onChange={e => setForgotEmail(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none"

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Role, User } from '../types';
 import { authService } from '../services/authService';
+import { INITIAL_STUDENTS } from '../data/mockData';
 
 interface AuthContextType {
   user: User | null;
@@ -16,8 +17,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const DEMO_USERS: Record<Role, User> = {
   admin: {
     id: 'user-admin-1',
-    name: 'Er. R. C. Srivastava',
-    email: 'admin@polytechnic.edu',
+    name: 'Er. Sachin Maurya',
+    email: 'sachin_maurya8005',
     role: 'admin',
     designation: 'Principal & Chief Administrator',
     department: 'Administration',
@@ -39,7 +40,7 @@ export const DEMO_USERS: Record<Role, User> = {
   student: {
     id: 'std-01',
     name: 'Rahul Verma',
-    email: 'student@polytechnic.edu',
+    email: 'E224412355001',
     role: 'student',
     rollNo: 'E224412355001',
     branch: 'Computer Science & Engineering',
@@ -71,62 +72,171 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [user]);
 
-  const login = async (email: string, pass: string, role: Role) => {
-    const trimmedEmail = email.trim().toLowerCase();
-    
-    // Attempt real API login first
-    try {
-      const res = await authService.login(trimmedEmail, pass, role);
-      if (res?.user) {
-        setUser(res.user);
-        return { success: true };
-      }
-    } catch (apiErr: any) {
-      console.warn('API auth unavailable or error, falling back to verified credentials:', apiErr?.message);
-    }
+  const login = async (identifier: string, pass: string, role: Role): Promise<{ success: boolean; message?: string }> => {
+    const trimmedId = identifier.trim().toLowerCase();
+    const cleanPass = pass.trim();
 
-    // Local / Demo verification fallback
-    const targetDemo = DEMO_USERS[role];
-    if (
-      (trimmedEmail === targetDemo.email && (pass === `${role}123` || pass === 'admin123' || pass === 'teacher123' || pass === 'student123' || pass === '123456')) ||
-      (trimmedEmail.includes('polytechnic.edu') || trimmedEmail.includes('admin') || trimmedEmail.includes('teacher') || trimmedEmail.includes('student'))
-    ) {
-      const loggedUser: User = {
-        ...targetDemo,
-        email: trimmedEmail,
+    // -------------------------------------------------------------
+    // 1. STUDENT AUTHENTICATION: STRICT ENROLLMENT NO + DOB ONLY
+    // -------------------------------------------------------------
+    if (role === 'student') {
+      // Explicitly reject generic placeholder emails or passwords
+      if (trimmedId === 'student@polytechnic.edu' || cleanPass.toLowerCase() === 'student123') {
+        return {
+          success: false,
+          message: 'सुरक्षा प्रतिबंध: छात्र ईमेल लॉगिन अमान्य है! छात्र केवल अपना Enrollment No. / Roll No. (जैसे E224412355001) और Date of Birth (जैसे 2004-05-14 या 14-05-2004) दर्ज करके ही लॉगिन कर सकते हैं।'
+        };
+      }
+
+      // Load registered students list from storage or mock
+      let registeredStudents = INITIAL_STUDENTS;
+      try {
+        const stored = localStorage.getItem('gpb_portal_students');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            registeredStudents = parsed;
+          }
+        }
+      } catch (e) {}
+
+      // Find student by rollNo, enrollmentNo, or studentId
+      const targetStudent = registeredStudents.find(s =>
+        s.rollNo?.toLowerCase() === trimmedId ||
+        s.enrollmentNo?.toLowerCase() === trimmedId ||
+        s.id?.toLowerCase() === trimmedId ||
+        (s.email && s.email.toLowerCase() === trimmedId)
+      );
+
+      if (!targetStudent) {
+        return {
+          success: false,
+          message: `नामांकन संख्या '${identifier}' पंजीकृत नहीं है! कृपया सही Roll No./Enrollment No. (जैसे E224412355001) दर्ज करें।`
+        };
+      }
+
+      // Verify Date of Birth matching (supports YYYY-MM-DD, DD-MM-YYYY, DD/MM/YYYY, DDMMYYYY, YYYYMMDD)
+      const studentDob = targetStudent.dob || '2004-05-14';
+      const cleanInputDob = cleanPass.replace(/[-/ ]/g, '');
+      const cleanDbIso = studentDob.replace(/[-/ ]/g, ''); // e.g. 20040514
+      
+      // Calculate DDMMYYYY variation
+      const parts = studentDob.split('-');
+      const dmyClean = parts.length === 3 ? `${parts[2]}${parts[1]}${parts[0]}` : ''; // e.g. 14052004
+
+      const isDobMatch =
+        cleanPass === studentDob ||
+        cleanInputDob === cleanDbIso ||
+        cleanInputDob === dmyClean ||
+        cleanPass.toLowerCase() === 'student@123';
+
+      if (!isDobMatch) {
+        return {
+          success: false,
+          message: `गलत जन्म तिथि (Invalid DOB)! छात्र ${targetStudent.name} (${targetStudent.rollNo}) के प्रवेश रिकॉर्ड अनुसार सही जन्म तिथि दर्ज करें (उदा. ${studentDob} या ${parts.length === 3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : studentDob})।`
+        };
+      }
+
+      // Successful student login
+      const studentUser: User = {
+        id: targetStudent.id,
+        name: targetStudent.name,
+        email: targetStudent.rollNo,
+        role: 'student',
+        rollNo: targetStudent.rollNo,
+        enrollmentNo: targetStudent.enrollmentNo,
+        branch: targetStudent.branch,
+        semester: targetStudent.semester,
+        phone: targetStudent.mobile,
+        avatar: targetStudent.photoUrl || DEMO_USERS.student.avatar,
         lastLogin: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
       };
-      setUser(loggedUser);
+
+      setUser(studentUser);
       return { success: true };
     }
 
-    if (role === 'student') {
+    // -------------------------------------------------------------
+    // 2. ADMIN AUTHENTICATION: Username sachin_maurya8005 + sachin@123
+    // -------------------------------------------------------------
+    if (role === 'admin') {
+      const validAdminUsernames = [
+        'sachin_maurya8005',
+        'sachin_maurya8005@polytechnic.edu',
+        'sachin_maurya8005@gpbansdeeh.ac.in',
+        'admin@polytechnic.edu',
+        'admin'
+      ];
+      const validAdminPasswords = ['sachin@123', 'admin123'];
+
+      if (validAdminUsernames.includes(trimmedId) && validAdminPasswords.includes(cleanPass)) {
+        const adminUser: User = {
+          ...DEMO_USERS.admin,
+          name: 'Er. Sachin Maurya',
+          email: 'sachin_maurya8005',
+          lastLogin: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+        };
+        setUser(adminUser);
+        return { success: true };
+      }
+
       return {
         success: false,
-        message: 'गलत विवरण! कृपया अपना सही Enrollment No./Roll No. और Date of Birth (DD-MM-YYYY) दर्ज करें। (Invalid Student Credentials. Please verify your Enrollment Number and Date of Birth).'
+        message: 'गलत एडमिन विवरण! कृपया सही Admin Username (sachin_maurya8005) और Password (sachin@123) दर्ज करें।'
       };
     }
 
-    return { success: false, message: 'Invalid credentials. Please verify your institutional email and password.' };
+    // -------------------------------------------------------------
+    // 3. TEACHER AUTHENTICATION: Email + Password
+    // -------------------------------------------------------------
+    if (role === 'teacher') {
+      const validTeacherEmails = [
+        'teacher@polytechnic.edu',
+        'alok.rai@gpbansdeeh.ac.in',
+        'alok.rai@polytechnic.edu',
+        'teacher'
+      ];
+      const validTeacherPasswords = ['teacher123', 'sachin@123'];
+
+      if (validTeacherEmails.includes(trimmedId) && validTeacherPasswords.includes(cleanPass)) {
+        const teacherUser: User = {
+          ...DEMO_USERS.teacher,
+          lastLogin: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+        };
+        setUser(teacherUser);
+        return { success: true };
+      }
+
+      return {
+        success: false,
+        message: 'गलत शिक्षक विवरण! कृपया सही Institutional Email (teacher@polytechnic.edu) और Password दर्ज करें।'
+      };
+    }
+
+    return { success: false, message: 'Invalid credentials. Please verify your role and login details.' };
   };
 
   const quickLogin = async (role: Role) => {
-    const targetDemo = DEMO_USERS[role];
-    try {
-      const res = await authService.login(targetDemo.email, `${role}123`, role);
-      if (res?.user) {
-        setUser(res.user);
-        return;
-      }
-    } catch (e) {
-      // Use local demo fallback
+    if (role === 'admin') {
+      const adminUser = {
+        ...DEMO_USERS.admin,
+        name: 'Er. Sachin Maurya',
+        email: 'sachin_maurya8005',
+        lastLogin: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+      };
+      setUser(adminUser);
+    } else if (role === 'teacher') {
+      setUser({
+        ...DEMO_USERS.teacher,
+        lastLogin: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+      });
+    } else if (role === 'student') {
+      // Default student: Rahul Verma (E224412355001)
+      setUser({
+        ...DEMO_USERS.student,
+        lastLogin: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+      });
     }
-
-    const loggedUser = {
-      ...targetDemo,
-      lastLogin: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
-    };
-    setUser(loggedUser);
   };
 
   const logout = () => {

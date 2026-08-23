@@ -58,12 +58,12 @@ def run_tests():
     print("\n2. Testing Role-Based Logins...")
     # Admin login
     status_code, admin_auth = make_request("/auth/login/", method="POST", data={
-        "username": "admin@polytechnic.edu",
-        "password": "admin123"
+        "username": "sachin_maurya8005",
+        "password": "sachin@123"
     })
     assert status_code == 200, f"Admin login failed: {admin_auth}"
     admin_token = admin_auth["access"]
-    print("  [PASS] Admin Login successful (Role: admin)")
+    print("  [PASS] Admin Login successful (Username: sachin_maurya8005)")
 
     # Teacher login
     status_code, teacher_auth = make_request("/auth/login/", method="POST", data={

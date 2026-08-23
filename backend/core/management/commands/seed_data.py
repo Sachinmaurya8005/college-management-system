@@ -35,19 +35,25 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('[OK] College Settings configured'))
 
         # 2. Demo Users
-        # Admin
-        admin_user, _ = User.objects.get_or_create(username='admin', defaults={'email': 'admin@polytechnic.edu'})
-        admin_user.first_name = 'Er. R. C.'
-        admin_user.last_name = 'Srivastava'
-        admin_user.email = 'admin@polytechnic.edu'
+        # Admin (Er. Sachin Maurya)
+        admin_user, _ = User.objects.get_or_create(username='sachin_maurya8005', defaults={'email': 'sachin_maurya8005@polytechnic.edu'})
+        admin_user.first_name = 'Er. Sachin'
+        admin_user.last_name = 'Maurya'
+        admin_user.email = 'sachin_maurya8005@polytechnic.edu'
         admin_user.role = 'admin'
         admin_user.designation = 'Principal & Chief Administrator'
         admin_user.department = 'Administration'
         admin_user.phone = '+91 94150 24510'
         admin_user.is_staff = True
         admin_user.is_superuser = True
-        admin_user.set_password('admin123')
+        admin_user.set_password('sachin@123')
         admin_user.save()
+
+        # Legacy alias
+        legacy_admin = User.objects.filter(username='admin').first()
+        if legacy_admin:
+            legacy_admin.set_password('sachin@123')
+            legacy_admin.save()
 
         # Teacher
         teacher_user, _ = User.objects.get_or_create(username='teacher', defaults={'email': 'teacher@polytechnic.edu'})

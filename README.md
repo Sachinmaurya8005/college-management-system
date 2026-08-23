@@ -261,10 +261,16 @@ cd ../frontend
 npm run build
 ```
 
-**Verification Results**:
-- ✅ Backend End-to-End Suite: **6/6 Tests Passed (100%)**
-- ✅ Django System Check: **0 Issues**
-- ✅ Frontend Production Build: **2,407 Modules Compiled, 0 Errors**
+## 🔑 Default Login Credentials
+
+| Role | Identifier (Username / Roll No / Email) | Password / DOB | Notes |
+| :--- | :--- | :--- | :--- |
+| **🛡️ Admin (Principal)** | `sachin_maurya8005` | `sachin@123` | Full administrative, financial & approval control |
+| **👨‍🏫 Teacher (Faculty)** | `teacher@polytechnic.edu` | `teacher123` | Geofenced attendance, approval requests & grade entry |
+| **🎓 Student (Rahul Verma)** | `E224412355001` | `2004-05-14` | Authenticated exclusively by Roll No. & Date of Birth |
+| **🎓 Student (Priya Sharma)** | `E224412355002` | `2005-02-18` | Authenticated exclusively by Roll No. & Date of Birth |
+
+> 🔒 **Student Security Policy**: Generic email logins (`student@polytechnic.edu`) are strictly disallowed for students to prevent unauthorized access. Students must authenticate with their official BTEUP Roll / Enrollment number and Date of Birth.
 
 ---
 

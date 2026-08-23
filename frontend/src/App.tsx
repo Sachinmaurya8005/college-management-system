@@ -86,10 +86,13 @@ export const AppContent: React.FC = () => {
   const [activeReceiptFee, setActiveReceiptFee] = useState<FeeRecord | null>(null);
   const [activeMarksheetResult, setActiveMarksheetResult] = useState<StudentResult | null>(null);
 
-  // Switch to portal mode on login
+  // Switch to portal mode on login, and public mode when unauthenticated
   useEffect(() => {
     if (isAuthenticated && user) {
       setIsInPortalMode(true);
+    } else {
+      setIsInPortalMode(false);
+      setPublicView('home');
     }
   }, [isAuthenticated, user]);
 
