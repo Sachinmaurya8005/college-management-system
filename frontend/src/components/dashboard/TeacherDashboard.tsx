@@ -24,6 +24,7 @@ import { PrincipalProfileModal } from '../common/PrincipalProfileModal';
 import { PRINCIPAL_DETAILS } from '../../data/mockData';
 import { Student } from '../../types';
 import { GeoFencedSelfAttendanceModal } from '../attendance/GeoFencedSelfAttendanceModal';
+import { ClassTeacherDailyAttendanceCard } from './ClassTeacherDailyAttendanceCard';
 
 interface TeacherDashboardProps {
   onNavigate: (view: string, metadata?: any) => void;
@@ -107,6 +108,9 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onNavigate }
           onClick={() => onNavigate('applications')}
         />
       </div>
+
+      {/* Class Teacher Daily Attendance Register Widget */}
+      <ClassTeacherDailyAttendanceCard />
 
       {/* Class Students 360 Quick Roster */}
       <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-4">
