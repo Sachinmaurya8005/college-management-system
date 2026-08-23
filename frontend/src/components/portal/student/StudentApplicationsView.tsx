@@ -219,7 +219,7 @@ export const StudentApplicationsView: React.FC = () => {
             <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-                  Government Polytechnic Bansdeeh
+                  Government Polytechnic
                 </span>
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                   Submit Online Application / Correction Request

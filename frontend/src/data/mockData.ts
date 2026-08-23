@@ -50,15 +50,15 @@ export const INITIAL_COLLEGE_BANK_ACCOUNT: CollegeBankAccount = {
   accountNumber: "4018294019284",
   ifscCode: "SBIN0001234",
   branchName: "Govt Treasury Branch, Ballia Main",
-  accountHolderName: "Principal, Government Polytechnic Bansdeeh (Institutional Treasury A/C)",
+  accountHolderName: "Principal, Government Polytechnic (Institutional Treasury A/C)",
   availableBalance: 8550000, // ₹85.50 Lakhs available government fund
   treasuryCode: "UP-TREAS-BLA-4412",
   lastUpdated: "2026-08-22"
 };
 
 export const INITIAL_SETTINGS: CollegeSettings = {
-  collegeName: "GOVERNMENT POLYTECHNIC BANSDEEH, BALLIA",
-  hindiName: "राजकीय पॉलिटेक्निक बांसडीह, बलिया",
+  collegeName: "GOVERNMENT POLYTECHNIC",
+  hindiName: "राजकीय पॉलिटेक्निक",
   tagline: "Approved by AICTE, New Delhi & Affiliated to Board of Technical Education, Uttar Pradesh (BTEUP)",
   code: "GPB-4412",
   bteupCode: "4412",
@@ -395,13 +395,13 @@ export const PRINCIPAL_DETAILS: PrincipalProfile = {
   experienceYears: 28,
   email: "principal@gpbansdeeh.ac.in",
   mobile: "+91 94150 24510",
-  officeLocation: "Principal Chamber, Administrative Block, Government Polytechnic Bansdeeh, Ballia (U.P.) - 277202",
+  officeLocation: "Principal Chamber, Administrative Block, Government Polytechnic (U.P.) - 277202",
   joiningDate: "2012-07-01",
   photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=300&fit=crop&crop=faces",
   bio: "Senior Academician & Technical Administrator with over 28 years of distinguished service under the Department of Technical Education, Government of Uttar Pradesh. Dedicated to institutional discipline, 100% diploma curriculum execution, state-of-the-art laboratory modernisation, and industry-aligned training for Purvanchal students.",
   achievements: [
     "28+ Years of Service in UP Technical Education Department",
-    "Spearheaded Modern CNC Lab & Computer Center at GP Bansdeeh",
+    "Spearheaded Modern CNC Lab & Computer Center at Government Polytechnic",
     "BTEUP Examination Zonal Chief Superintendent",
     "State Technical Excellence Leadership Citation 2023"
   ]
@@ -428,7 +428,7 @@ export const INITIAL_TEACHERS: Teacher[] = [
     salary: 98500,
     payScale: "7th CPC Level 12 (₹79,800 - ₹2,11,500)",
     promotionStatus: "Promoted to Associate Professor (Grade-I) in Aug 2022 • Confirmed",
-    address: "Faculty Quarters A-02, GP Bansdeeh Campus, Ballia - 277202",
+    address: "Faculty Quarters A-02, Government Polytechnic Campus, Ballia - 277202",
     bloodGroup: "B+",
     staffType: "Teaching Faculty",
     workDescription: "Department Head for CSE, Conducts Theory & Practical Lectures for 3rd & 4th Sem, BTEUP Exam Coordination",
@@ -462,7 +462,7 @@ export const INITIAL_TEACHERS: Teacher[] = [
     salary: 92400,
     payScale: "7th CPC Level 11 (₹67,700 - ₹2,08,700)",
     promotionStatus: "Promoted to Senior Lecturer (Level-11) in Jan 2023",
-    address: "Faculty Enclave B-04, GP Bansdeeh Campus, Ballia - 277202",
+    address: "Faculty Enclave B-04, Government Polytechnic Campus, Ballia - 277202",
     bloodGroup: "O+",
     staffType: "Teaching Faculty",
     workDescription: "HOD Mechanical, In-charge of Production Workshop, CNC Lab, and Student Industrial Apprenticeship",
@@ -628,7 +628,7 @@ export const INITIAL_TEACHERS: Teacher[] = [
     salary: 68900,
     payScale: "7th CPC Level 8 (₹47,600 - ₹1,51,100)",
     promotionStatus: "Promoted to Senior Workshop Superintendent in 2020",
-    address: "Staff Colony C-01, GP Bansdeeh Campus, Ballia - 277202",
+    address: "Staff Colony C-01, Government Polytechnic Campus, Ballia - 277202",
     bloodGroup: "B+",
     staffType: "Technical Staff",
     workDescription: "Supervises Central Workshop, Material Procurement, Heavy Machinery Maintenance, Lathe & Welding Training",
@@ -833,7 +833,7 @@ export const INITIAL_TEACHERS: Teacher[] = [
     salary: 31200,
     payScale: "7th CPC Level 2 (₹19,900 - ₹63,200)",
     promotionStatus: "Confirmed Security Supervisor",
-    address: "Campus Security Quarters, GP Bansdeeh, Ballia - 277202",
+    address: "Campus Security Quarters, Government Polytechnic, Ballia - 277202",
     bloodGroup: "A+",
     staffType: "Support Staff",
     workDescription: "Oversees 3 Campus Entry Gates, 24x7 CCTV Control Room, Hostel In-Out Registers, Anti-Ragging Patrol"
@@ -864,7 +864,7 @@ export const INITIAL_FEES: FeeRecord[] = [
         paymentMode: "Online UPI",
         transactionRef: "UPI/30491823901/SBI",
         remarks: "Annual Academic & Exam Fee for 4th Sem",
-        collectedBy: "Accounts Section, GP Bansdeeh"
+        collectedBy: "Accounts Section, Government Polytechnic"
       }
     ]
   },
@@ -891,7 +891,7 @@ export const INITIAL_FEES: FeeRecord[] = [
         paymentMode: "Net Banking",
         transactionRef: "PNB/NB99182371",
         remarks: "Complete Tuition & Hostel Fee",
-        collectedBy: "Accounts Section, GP Bansdeeh"
+        collectedBy: "Accounts Section, Government Polytechnic"
       }
     ]
   },
@@ -918,7 +918,7 @@ export const INITIAL_FEES: FeeRecord[] = [
         paymentMode: "Challan",
         transactionRef: "CHLN/UBI/88712",
         remarks: "1st Installment Paid at Union Bank Bansdeeh",
-        collectedBy: "Accounts Section, GP Bansdeeh"
+        collectedBy: "Accounts Section, Government Polytechnic"
       }
     ]
   },
@@ -961,7 +961,7 @@ export const INITIAL_FEES: FeeRecord[] = [
         paymentMode: "Online UPI",
         transactionRef: "UPI/9981240182/GPAY",
         remarks: "Final Year Tuition & BTEUP Exam Registration",
-        collectedBy: "Accounts Section, GP Bansdeeh"
+        collectedBy: "Accounts Section, Government Polytechnic"
       }
     ]
   }
@@ -1163,7 +1163,7 @@ export const INITIAL_NOTICES: NoticeItem[] = [
   {
     id: "not-04",
     title: "Campus Placement Drive for Final Year Mechanical & Electrical Students",
-    content: "Tata Motors & L&T Heavy Engineering will be conducting a pool campus placement drive at Government Polytechnic Bansdeeh for 6th-semester students on May 02, 2026. Eligible candidates must verify their resumes with the Training & Placement Officer (TPO) by April 25.",
+    content: "Tata Motors & L&T Heavy Engineering will be conducting a pool campus placement drive at Government Polytechnic for 6th-semester students on May 02, 2026. Eligible candidates must verify their resumes with the Training & Placement Officer (TPO) by April 25.",
     category: "Academic",
     publishDate: "2026-03-15",
     priority: "High",

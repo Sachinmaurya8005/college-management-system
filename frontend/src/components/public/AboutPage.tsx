@@ -44,7 +44,7 @@ export const AboutPage: React.FC = () => {
             Affiliated to BTEUP Code: {about?.bteup_code || '4412'} • AICTE Approved
           </span>
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight">
-            About Government Polytechnic Bansdeeh, Ballia
+            About Government Polytechnic
           </h1>
           <p className="text-xs sm:text-sm text-blue-200 max-w-3xl">
             Established by the Government of Uttar Pradesh to foster world-class technical education, industrial excellence, and career development.
@@ -63,7 +63,7 @@ export const AboutPage: React.FC = () => {
             </h2>
             <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               {about?.history ||
-                'Government Polytechnic Bansdeeh, Ballia was established in Uttar Pradesh as a flagship government polytechnic institution to deliver world-class technical education, industrial vocational skills, and career opportunities to youth across the Purvanchal region. Since its inception, the institute has maintained high standards of academic rigor, practical workshop training, and successful industry placements under the Board of Technical Education, Uttar Pradesh.'}
+                'Government Polytechnic was established in Uttar Pradesh as a flagship government polytechnic institution to deliver world-class technical education, industrial vocational skills, and career opportunities to youth across the Purvanchal region. Since its inception, the institute has maintained high standards of academic rigor, practical workshop training, and successful industry placements under the Board of Technical Education, Uttar Pradesh.'}
             </p>
           </div>
 
@@ -135,7 +135,7 @@ export const AboutPage: React.FC = () => {
                   {about?.principal_name || 'Er. R. C. Srivastava'}
                 </h3>
                 <p className="text-xs text-blue-300">
-                  Government Polytechnic Bansdeeh, Ballia
+                  Government Polytechnic
                 </p>
               </div>
             </div>
@@ -143,7 +143,7 @@ export const AboutPage: React.FC = () => {
             <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-blue-100/90 leading-relaxed italic space-y-2">
               <p>
                 "{about?.principal_message ||
-                  'Welcome to Government Polytechnic Bansdeeh, Ballia. Our institution is dedicated to building robust technical foundation, practical engineering skills, and career opportunities for our diploma students under BTEUP curriculum.'}"
+                  'Welcome to Government Polytechnic. Our institution is dedicated to building robust technical foundation, practical engineering skills, and career opportunities for our diploma students under BTEUP curriculum.'}"
               </p>
               <p>
                 "We emphasize discipline, hands-on laboratory experimentation, and industry alignment to prepare technicians who drive India's infrastructure and technology development."

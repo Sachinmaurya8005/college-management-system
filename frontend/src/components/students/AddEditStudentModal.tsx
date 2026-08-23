@@ -109,7 +109,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={student ? 'Edit Student Details' : 'New Student Admission Entry'}
-      subtitle="Government Polytechnic Bansdeeh, Ballia • Student Registry"
+      subtitle="Government Polytechnic • Student Registry"
       maxWidth="4xl"
     >
       <form onSubmit={handleSubmit} className="space-y-6">

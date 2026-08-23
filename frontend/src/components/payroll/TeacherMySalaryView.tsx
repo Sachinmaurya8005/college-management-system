@@ -262,10 +262,10 @@ export const TeacherMySalaryView: React.FC = () => {
                   Government of Uttar Pradesh • Department of Technical Education
                 </div>
                 <h2 className="text-lg sm:text-xl font-black uppercase text-slate-950">
-                  राजकीय पॉलिटेक्निक बांसडीह, बलिया (उ० प्र०)
+                  राजकीय पॉलिटेक्निक (उ० प्र०)
                 </h2>
                 <h3 className="text-sm font-extrabold uppercase text-slate-800">
-                  GOVERNMENT POLYTECHNIC BANSDEEH, BALLIA - 277202
+                  GOVERNMENT POLYTECHNIC - 277202
                 </h3>
                 <p className="text-[11px] text-slate-600 font-semibold">
                   (AICTE Approved &amp; Affiliated to Board of Technical Education, UP • Institute Code: 4412)
@@ -424,7 +424,7 @@ export const TeacherMySalaryView: React.FC = () => {
                     Er. Ramesh Chandra Srivastava
                   </div>
                   <div className="text-[11px] font-semibold text-slate-600">
-                    Principal, Government Polytechnic Bansdeeh, Ballia
+                    Principal, Government Polytechnic
                   </div>
                 </div>
               </div>

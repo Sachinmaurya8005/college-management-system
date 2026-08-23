@@ -86,8 +86,8 @@ export const WebsiteContentManager: React.FC = () => {
 
   // About College State
   const [aboutForm, setAboutForm] = useState<AboutCollegeData>({
-    college_name: 'Government Polytechnic Bansdeeh, Ballia',
-    hindi_name: 'राजकीय पॉलिटेक्निक बांसडीह, बलिया',
+    college_name: 'Government Polytechnic',
+    hindi_name: 'राजकीय पॉलिटेक्निक',
     bteup_code: '4412',
     aicte_approval: 'Approved by AICTE, New Delhi & Affiliated to BTEUP Lucknow',
     history: '',

@@ -81,7 +81,7 @@ export const TimetableModule: React.FC = () => {
             Class &amp; Laboratory Timetable
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            Government Polytechnic Bansdeeh • Weekly Academic Schedule (Monday–Saturday)
+            Government Polytechnic • Weekly Academic Schedule (Monday–Saturday)
           </p>
         </div>
 

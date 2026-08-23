@@ -50,7 +50,7 @@ export const QRVerificationPage: React.FC = () => {
           डिजिटल दस्तावेज़ एवं QR कोड सत्यापन
         </h1>
         <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-          Scan QR code or enter document identifier (Enrollment No, Employee Code, Fee Receipt No) to verify genuine Government Polytechnic Bansdeeh records.
+          Scan QR code or enter document identifier (Enrollment No, Employee Code, Fee Receipt No) to verify genuine Government Polytechnic records.
         </p>
       </div>
 

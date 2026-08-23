@@ -77,7 +77,7 @@ export const SettingsPage: React.FC = () => {
             Institutional Settings &amp; Configuration
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            Government Polytechnic Bansdeeh • Branding, System &amp; Security Controls
+            Government Polytechnic • Branding, System &amp; Security Controls
           </p>
         </div>
 
@@ -454,7 +454,7 @@ export const SettingsPage: React.FC = () => {
           setTimeout(() => setSaveSuccess(false), 2000);
         }}
         title="Reset All College Data"
-        message="This will clear your local changes and reload the default Government Polytechnic Bansdeeh database records. Proceed?"
+        message="This will clear your local changes and reload the default Government Polytechnic database records. Proceed?"
         danger={true}
         confirmText="Yes, Reset Data"
       />

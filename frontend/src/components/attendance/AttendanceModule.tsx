@@ -132,7 +132,7 @@ export const AttendanceModule: React.FC = () => {
             </span>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            Government Polytechnic Bansdeeh • 31-Day Hotel/Enterprise Calendar Matrix &amp; Geo-Fenced Campus Punch
+            Government Polytechnic • 31-Day Hotel/Enterprise Calendar Matrix &amp; Geo-Fenced Campus Punch
           </p>
         </div>
 

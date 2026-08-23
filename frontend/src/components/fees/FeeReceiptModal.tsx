@@ -185,7 +185,7 @@ export const FeeReceiptModal: React.FC<FeeReceiptModalProps> = ({
               <div className="font-serif italic font-bold text-sm text-slate-800 dark:text-slate-200 mb-1">
                 Accounts Officer
               </div>
-              <div className="text-[10px] text-slate-400">Government Polytechnic Bansdeeh, Ballia</div>
+              <div className="text-[10px] text-slate-400">Government Polytechnic</div>
             </div>
           </div>
         </div>

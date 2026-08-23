@@ -187,7 +187,7 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
           </span>
         </div>
       }
-      subtitle="Government Polytechnic Bansdeeh, Ballia (Affiliated to BTEUP Lucknow)"
+      subtitle="Government Polytechnic (Affiliated to BTEUP Lucknow)"
       maxWidth="4xl"
     >
       <div className="space-y-6">
@@ -725,7 +725,7 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
                   <CollegeLogo size="xs" textColor="light" subtitle={false} />
                 </div>
                 <h4 className="text-xs font-serif font-black tracking-wider text-amber-300">
-                  GOVERNMENT POLYTECHNIC BANSDEEH, BALLIA
+                  GOVERNMENT POLYTECHNIC
                 </h4>
                 <p className="text-[9px] text-slate-300">
                   AFFILIATED TO BTEUP LUCKNOW (CODE: {settings.bteupCode})

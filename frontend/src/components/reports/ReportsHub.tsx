@@ -124,7 +124,7 @@ export const ReportsHub: React.FC = () => {
             Institutional Reports &amp; Analytics
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            Government Polytechnic Bansdeeh • Official PDF Print &amp; CSV Export Hub
+            Government Polytechnic • Official PDF Print &amp; CSV Export Hub
           </p>
         </div>
 
@@ -386,13 +386,13 @@ export const ReportsHub: React.FC = () => {
         {/* Verification Signatures in Print */}
         <div className="pt-8 mt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
           <div className="text-slate-500 text-[10px]">
-            Statistical Records Section • GP Bansdeeh Ballia
+            Statistical Records Section • Government Polytechnic Ballia
           </div>
           <div className="text-center">
             <div className="font-serif italic font-bold text-slate-800 dark:text-slate-200 text-sm">
               Principal
             </div>
-            <div className="text-[10px] text-slate-400">Government Polytechnic Bansdeeh, Ballia</div>
+            <div className="text-[10px] text-slate-400">Government Polytechnic</div>
           </div>
         </div>
       </div>

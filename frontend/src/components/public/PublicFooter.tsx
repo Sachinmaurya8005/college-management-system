@@ -149,7 +149,7 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate }) => {
         {/* Bottom Copyright & Disclaimer */}
         <div className="pt-8 border-t border-polytechnic-800/80 dark:border-slate-800 text-center text-xs text-slate-500 space-y-2">
           <p>
-            © {new Date().getFullYear()} Government Polytechnic Bansdeeh, Ballia, Uttar Pradesh. All Rights Reserved.
+            © {new Date().getFullYear()} Government Polytechnic, Uttar Pradesh. All Rights Reserved.
           </p>
           <p className="text-[11px] text-slate-600">
             Affiliated to Board of Technical Education, Uttar Pradesh (BTEUP) • Approved by All India Council for Technical Education (AICTE), New Delhi.

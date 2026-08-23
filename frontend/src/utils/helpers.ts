@@ -58,9 +58,9 @@ export const generateId = (prefix: string = 'item'): string => {
   return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).substr(2, 5)}`;
 };
 
-// Government Polytechnic Bansdeeh, Ballia Campus Geofence Reference
+// Government Polytechnic Campus Geofence Reference
 export const CAMPUS_COORDINATES = {
-  name: 'Government Polytechnic Bansdeeh, Ballia (राजकीय पॉलिटेक्निक बांसडीह)',
+  name: 'Government Polytechnic (राजकीय पॉलिटेक्निक)',
   latitude: 25.86472,
   longitude: 84.22153,
   radiusMeters: 50 // Strict 50-meter campus boundary
@@ -237,7 +237,7 @@ export const generateUpiPaymentUrl = (
   vpa: string,
   payeeName: string,
   amount?: number,
-  transactionNote: string = 'GP Bansdeeh Treasury Deposit'
+  transactionNote: string = 'Government Polytechnic Treasury Deposit'
 ): string => {
   let url = `upi://pay?pa=${encodeURIComponent(vpa)}&pn=${encodeURIComponent(payeeName)}&tn=${encodeURIComponent(transactionNote)}&cu=INR`;
   if (amount && amount > 0) {

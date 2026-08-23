@@ -112,10 +112,10 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ currentRoute, onNavi
             </div>
             <div className="leading-tight">
               <span className="text-[10px] sm:text-xs font-bold text-amber-400 tracking-wider uppercase block">
-                राजकीय पॉलिटेक्निक बांसडीह, बलिया
+                राजकीय पॉलिटेक्निक
               </span>
               <h1 className="text-sm sm:text-base md:text-lg font-black tracking-tight text-white group-hover:text-blue-200 transition-colors">
-                GOVERNMENT POLYTECHNIC BANSDEEH
+                GOVERNMENT POLYTECHNIC
               </h1>
               <span className="text-[10px] text-blue-200/80 font-medium block">
                 Ballia, Uttar Pradesh - 277202

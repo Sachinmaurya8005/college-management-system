@@ -99,7 +99,7 @@ export const CoursesList: React.FC = () => {
             Diploma Engineering Branches &amp; Courses
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            Government Polytechnic Bansdeeh • AICTE Approved 3-Year Diploma Programmes
+            Government Polytechnic • AICTE Approved 3-Year Diploma Programmes
           </p>
         </div>
 
@@ -207,7 +207,7 @@ export const CoursesList: React.FC = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={editingCourse ? 'Edit Diploma Branch' : 'Add New Diploma Engineering Branch'}
-        subtitle="Government Polytechnic Bansdeeh, Ballia"
+        subtitle="Government Polytechnic"
         maxWidth="2xl"
       >
         <form onSubmit={handleSubmit} className="space-y-4">

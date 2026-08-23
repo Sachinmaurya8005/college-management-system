@@ -91,7 +91,7 @@ export const StudentList: React.FC<StudentListProps> = ({
             Student Directory &amp; Records
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            Government Polytechnic Bansdeeh • Total Enrolled: {students.length} Candidates
+            Government Polytechnic • Total Enrolled: {students.length} Candidates
           </p>
         </div>
 

@@ -55,7 +55,7 @@ export const CollegeLogo: React.FC<CollegeLogoProps> = ({
       <div className={`relative flex-shrink-0 ${sizeDimensions[size]} flex items-center justify-center`}>
         <img
           src={logoSrc}
-          alt="Government Polytechnic Bansdeeh Logo"
+          alt="Government Polytechnic Logo"
           className="w-full h-full object-contain drop-shadow-sm transition-transform hover:scale-105"
           onError={(e) => {
             // Fallback to svg emblem if custom URL fails
@@ -72,7 +72,7 @@ export const CollegeLogo: React.FC<CollegeLogoProps> = ({
           {subtitle && (
             <div className="flex items-center gap-1.5 flex-wrap">
               <span className={`text-[10px] uppercase font-semibold tracking-wider ${subClasses}`}>
-                {settings.hindiName || 'राजकीय पॉलिटेक्निक बांसडीह'}
+                {settings.hindiName || 'राजकीय पॉलिटेक्निक'}
               </span>
               <span className="inline-block w-1 h-1 rounded-full bg-amber-500"></span>
               <span className="text-[10px] font-medium text-amber-600 dark:text-amber-400">

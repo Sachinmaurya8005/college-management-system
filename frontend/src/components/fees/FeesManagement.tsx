@@ -74,7 +74,7 @@ export const FeesManagement: React.FC = () => {
             Fees &amp; Revenue Ledger
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            Government Polytechnic Bansdeeh • Academic Session 2025–26 Accounts
+            Government Polytechnic • Academic Session 2025–26 Accounts
           </p>
         </div>
 

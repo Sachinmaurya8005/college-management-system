@@ -138,7 +138,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             Welcome back, Admin 👋
           </h1>
           <p className="text-sm text-blue-200 mt-1 flex items-center gap-2">
-            <span>Government Polytechnic Bansdeeh, Ballia</span>
+            <span>Government Polytechnic</span>
             <span>•</span>
             <span className="font-medium text-white">{todayDate}</span>
           </p>

@@ -150,7 +150,7 @@ export const CollegeTreasuryAccountModal: React.FC<CollegeTreasuryAccountModalPr
                 </span>
               </div>
               <p className="text-slate-500 font-medium">
-                राजकीय पॉलिटेक्निक बांसडीह • आधिकारिक सरकारी कोषागार व यूपीआई भुगतान
+                राजकीय पॉलिटेक्निक • आधिकारिक सरकारी कोषागार व यूपीआई भुगतान
               </p>
             </div>
           </div>

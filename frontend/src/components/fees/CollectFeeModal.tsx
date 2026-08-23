@@ -42,7 +42,7 @@ export const CollectFeeModal: React.FC<CollectFeeModalProps> = ({
       paymentMode,
       transactionRef: txRef,
       remarks,
-      collectedBy: 'Accounts Section, GP Bansdeeh'
+      collectedBy: 'Accounts Section, Government Polytechnic'
     });
 
     confetti({ particleCount: 70, spread: 70, origin: { y: 0.7 } });

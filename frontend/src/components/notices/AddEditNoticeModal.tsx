@@ -76,7 +76,7 @@ export const AddEditNoticeModal: React.FC<AddEditNoticeModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={notice ? 'Edit Official Circular' : 'Publish New College Circular / Notice'}
-      subtitle="Government Polytechnic Bansdeeh, Ballia • Administrative Notice Board"
+      subtitle="Government Polytechnic • Administrative Notice Board"
       maxWidth="2xl"
     >
       <form onSubmit={handleSubmit} className="space-y-4">

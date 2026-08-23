@@ -54,7 +54,7 @@ export const GeoFencedSelfAttendanceModal: React.FC<GeoFencedSelfAttendanceModal
     setErrorMsg(null);
 
     if (simulatedInCampus) {
-      // Simulate In-Campus coordinates (12 meters from GP Bansdeeh main gate)
+      // Simulate In-Campus coordinates (12 meters from Government Polytechnic main gate)
       const simLat = CAMPUS_COORDINATES.latitude + (Math.random() - 0.5) * 0.0001;
       const simLng = CAMPUS_COORDINATES.longitude + (Math.random() - 0.5) * 0.0001;
       const dist = calculateDistanceMeters(simLat, simLng);
@@ -147,7 +147,7 @@ export const GeoFencedSelfAttendanceModal: React.FC<GeoFencedSelfAttendanceModal
                 </h3>
               </div>
               <p className="text-slate-500 font-medium">
-                राजकीय पॉलिटेक्निक बांसडीह • बायोमेट्रिक व जीपीएस हाजिरी
+                राजकीय पॉलिटेक्निक • बायोमेट्रिक व जीपीएस हाजिरी
               </p>
             </div>
           </div>
@@ -204,7 +204,7 @@ export const GeoFencedSelfAttendanceModal: React.FC<GeoFencedSelfAttendanceModal
                     <span>INSIDE CAMPUS (दूरी: {distanceMeters} मीटर)</span>
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 font-medium">
-                    You are verified within the <strong>50-meter radius</strong> of Government Polytechnic Bansdeeh.
+                    You are verified within the <strong>50-meter radius</strong> of Government Polytechnic.
                   </p>
                 </div>
 

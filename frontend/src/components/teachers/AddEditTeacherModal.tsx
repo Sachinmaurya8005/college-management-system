@@ -92,7 +92,7 @@ export const AddEditTeacherModal: React.FC<AddEditTeacherModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={teacher ? 'Edit Faculty Member' : 'New Faculty Appointment Entry'}
-      subtitle="Government Polytechnic Bansdeeh, Ballia • Faculty Registry"
+      subtitle="Government Polytechnic • Faculty Registry"
       maxWidth="3xl"
     >
       <form onSubmit={handleSubmit} className="space-y-4">

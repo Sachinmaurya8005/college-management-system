@@ -74,7 +74,7 @@ export const NoticeBoard: React.FC<NoticeBoardProps> = ({ initialNoticeId }) => 
             Official Notice Board &amp; Circulars
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            Government Polytechnic Bansdeeh • Academic, Administrative &amp; Examination Bulletins
+            Government Polytechnic • Academic, Administrative &amp; Examination Bulletins
           </p>
         </div>
 

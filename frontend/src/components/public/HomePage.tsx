@@ -187,7 +187,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   >
                     Read Full Message <ChevronRight className="w-3 h-3" />
                   </button>
-                  <span className="text-[10px] text-blue-300">GP Bansdeeh, Ballia</span>
+                  <span className="text-[10px] text-blue-300">Government Polytechnic, Ballia</span>
                 </div>
               </div>
             </div>
@@ -444,7 +444,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               <MapPin className="w-4 h-4" /> Campus Location &amp; Directions
             </div>
             <h2 className="text-xl sm:text-2xl font-black">
-              Visit Government Polytechnic Bansdeeh
+              Visit Government Polytechnic
             </h2>
             <p className="text-xs text-blue-200 max-w-xl">
               Near Bansdeeh Road Railway Station, Bansdeeh, Ballia, Uttar Pradesh - 277202. Accessible by rail and road.

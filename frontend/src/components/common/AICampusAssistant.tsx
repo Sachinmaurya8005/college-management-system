@@ -49,7 +49,7 @@ export const AICampusAssistant: React.FC<AICampusAssistantProps> = ({ onNavigate
     {
       id: 'msg-1',
       sender: 'bot',
-      text: `नमस्ते! 🙏 मैं राजकीय पॉलिटेक्निक बांसडीह (GP Bansdeeh) का AI कैंपस असिस्टेंट हूँ।\n\nमैं आपकी एडमिशन, डिप्लोमा कोर्सेस, BTEUP परीक्षा, फीस, स्कॉलरशिप, हॉस्टल और प्लेसमेंट में कैसे मदद कर सकता हूँ?`,
+      text: `नमस्ते! 🙏 मैं राजकीय पॉलिटेक्निक (Government Polytechnic) का AI कैंपस असिस्टेंट हूँ।\n\nमैं आपकी एडमिशन, डिप्लोमा कोर्सेस, BTEUP परीक्षा, फीस, स्कॉलरशिप, हॉस्टल और प्लेसमेंट में कैसे मदद कर सकता हूँ?`,
       timestamp: 'Just now',
       suggestions: [
         '📋 डिप्लोमा कोर्सेस और सीटें',
@@ -78,7 +78,7 @@ export const AICampusAssistant: React.FC<AICampusAssistantProps> = ({ onNavigate
 
     if (q.includes('course') || q.includes('branch') || q.includes('seat') || q.includes('कोर्स') || q.includes('ब्रांच')) {
       return {
-        text: `🏛️ राजकीय पॉलिटेक्निक बांसडीह में 6 प्रमुख 3-वर्षीय AICTE अनुमोदित डिप्लोमा कोर्सेस संचालित हैं:\n\n1. Computer Science & Engineering (60 सीटें)\n2. Mechanical Engineering - Production (60 सीटें)\n3. Civil Engineering (60 सीटें)\n4. Electrical Engineering (60 सीटें)\n5. Electronics Engineering (60 सीटें)\n6. Information Technology (60 सीटें)\n\nसभी पाठ्यक्रम BTEUP लखनऊ से संबद्ध हैं।`,
+        text: `🏛️ राजकीय पॉलिटेक्निक में 6 प्रमुख 3-वर्षीय AICTE अनुमोदित डिप्लोमा कोर्सेस संचालित हैं:\n\n1. Computer Science & Engineering (60 सीटें)\n2. Mechanical Engineering - Production (60 सीटें)\n3. Civil Engineering (60 सीटें)\n4. Electrical Engineering (60 सीटें)\n5. Electronics Engineering (60 सीटें)\n6. Information Technology (60 सीटें)\n\nसभी पाठ्यक्रम BTEUP लखनऊ से संबद्ध हैं।`,
         suggestions: ['💰 वार्षिक फीस विवरण', '📝 एडमिशन प्रक्रिया', '🏢 प्लेसमेंट रिकॉर्ड्स'],
         actionLink: { label: 'Explore All Courses', view: 'courses' }
       };
@@ -86,7 +86,7 @@ export const AICampusAssistant: React.FC<AICampusAssistantProps> = ({ onNavigate
 
     if (q.includes('fee') || q.includes('फीस') || q.includes('paisa') || q.includes('payment')) {
       return {
-        text: `💰 राजकीय पॉलिटेक्निक बांसडीह में यूपी शासन द्वारा निर्धारित वार्षिक शुल्क संरचना:\n\n• General / OBC छात्र: ₹12,450 / वर्ष (ट्यूशन + परीक्षा शुल्क)\n• SC / ST छात्र: ₹2,450 / वर्ष (ट्यूशन शुल्क छूट)\n• हॉस्टल एवं मेस शुल्क: ₹4,800 / वर्ष अतिरिक्त\n\nऑनलाइन फीस रसीद और डिजिटल भुगतान पोर्टल पर उपलब्ध है।`,
+        text: `💰 राजकीय पॉलिटेक्निक में यूपी शासन द्वारा निर्धारित वार्षिक शुल्क संरचना:\n\n• General / OBC छात्र: ₹12,450 / वर्ष (ट्यूशन + परीक्षा शुल्क)\n• SC / ST छात्र: ₹2,450 / वर्ष (ट्यूशन शुल्क छूट)\n• हॉस्टल एवं मेस शुल्क: ₹4,800 / वर्ष अतिरिक्त\n\nऑनलाइन फीस रसीद और डिजिटल भुगतान पोर्टल पर उपलब्ध है।`,
         suggestions: ['🎓 स्कॉलरशिप जानकारी', '📋 ऑनलाइन फीस पोर्टल', '📝 एडमिशन प्रक्रिया'],
         actionLink: { label: 'View Fee Structure', view: 'fees' }
       };
@@ -142,7 +142,7 @@ export const AICampusAssistant: React.FC<AICampusAssistantProps> = ({ onNavigate
 
     // Default intelligent fallback
     return {
-      text: `धन्यवाद आपके प्रश्न के लिए! राजकीय पॉलिटेक्निक बांसडीह से संबंधित यह विवरण हमारी आधिकारिक डायरेक्टरी में दर्ज है। क्या आप नीचे दिए गए विकल्पों में से कुछ देखना चाहेंगे?`,
+      text: `धन्यवाद आपके प्रश्न के लिए! राजकीय पॉलिटेक्निक से संबंधित यह विवरण हमारी आधिकारिक डायरेक्टरी में दर्ज है। क्या आप नीचे दिए गए विकल्पों में से कुछ देखना चाहेंगे?`,
       suggestions: [
         '📋 सभी 6 डिप्लोमा कोर्सेस',
         '💰 फीस एवं स्कॉलरशिप',

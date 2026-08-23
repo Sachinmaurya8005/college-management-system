@@ -41,7 +41,7 @@ export const PrincipalProfileModal: React.FC<PrincipalProfileModalProps> = ({
           </span>
         </div>
       }
-      subtitle="Government Polytechnic Bansdeeh, Ballia (Affiliated to BTEUP Lucknow)"
+      subtitle="Government Polytechnic (Affiliated to BTEUP Lucknow)"
       maxWidth="3xl"
     >
       <div className="space-y-6">

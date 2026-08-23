@@ -56,7 +56,7 @@ export const PublicNoticeBoardPage: React.FC = () => {
             Institutional Notice Board &amp; Circulars
           </h1>
           <p className="text-xs sm:text-sm text-blue-200 max-w-2xl">
-            Official administrative notices, academic circulars, fee deadlines, and board notifications for Government Polytechnic Bansdeeh.
+            Official administrative notices, academic circulars, fee deadlines, and board notifications for Government Polytechnic.
           </p>
         </div>
 
@@ -154,7 +154,7 @@ export const PublicNoticeBoardPage: React.FC = () => {
                 <CollegeLogo size="sm" />
                 <div>
                   <h2 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">
-                    GOVERNMENT POLYTECHNIC BANSDEEH, BALLIA
+                    GOVERNMENT POLYTECHNIC
                   </h2>
                   <span className="text-[10px] text-slate-400 font-mono">
                     Ref No: {activeNoticeModal.referenceNo}
@@ -202,7 +202,7 @@ export const PublicNoticeBoardPage: React.FC = () => {
                     {activeNoticeModal.issuedBy || 'Principal / Officer-in-Charge'}
                   </strong>
                   <span className="text-slate-500 text-[11px] block">
-                    Government Polytechnic Bansdeeh, Ballia
+                    Government Polytechnic
                   </span>
                 </div>
               </div>

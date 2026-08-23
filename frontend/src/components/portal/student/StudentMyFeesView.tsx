@@ -61,7 +61,7 @@ export const StudentMyFeesView: React.FC = () => {
         paymentMode: 'Online UPI',
         transactionRef: 'SBI/UP/500199',
         remarks: 'Semester Tuition & Board Fee',
-        collectedBy: 'Accounts Section, GP Bansdeeh'
+        collectedBy: 'Accounts Section, Government Polytechnic'
       }
     ]
   };

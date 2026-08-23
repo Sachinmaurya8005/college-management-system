@@ -61,7 +61,7 @@ export const LocationContactPage: React.FC = () => {
             Campus Location &amp; Directions
           </span>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-            How to Reach Government Polytechnic Bansdeeh
+            How to Reach Government Polytechnic
           </h1>
           <p className="text-xs sm:text-sm text-blue-200 max-w-2xl">
             Located in Bansdeeh, District Ballia, Uttar Pradesh. Conveniently accessible via road transit and Northern Eastern Railway network.
@@ -103,7 +103,7 @@ export const LocationContactPage: React.FC = () => {
 
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 space-y-1.5 text-xs">
               <strong className="text-slate-900 dark:text-white text-sm block">
-                Government Polytechnic Bansdeeh, Ballia
+                Government Polytechnic
               </strong>
               <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                 {loc.address}
@@ -173,7 +173,7 @@ export const LocationContactPage: React.FC = () => {
           <div className="p-4 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-card overflow-hidden">
             <div className="h-[420px] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 relative">
               <iframe
-                title="Government Polytechnic Bansdeeh Ballia Map"
+                title="Government Polytechnic Ballia Map"
                 src={loc.map_embed_url}
                 className="w-full h-full border-0"
                 loading="lazy"
