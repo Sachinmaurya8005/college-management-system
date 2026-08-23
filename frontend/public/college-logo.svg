@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="sealGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="50%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+    <linearGradient id="sealNavyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E3A8A"/>
+      <stop offset="50%" stop-color="#0B2545"/>
+      <stop offset="100%" stop-color="#05162D"/>
+    </linearGradient>
+    <linearGradient id="sunbeamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFEDD5"/>
+      <stop offset="100%" stop-color="#FED7AA"/>
+    </linearGradient>
+
+    <!-- Circular text paths -->
+    <path id="textPathTop" d="M 55,250 A 195,195 0 1,1 445,250" fill="none"/>
+    <path id="textPathBottom" d="M 445,250 A 195,195 0 0,1 55,250" fill="none"/>
+    <path id="textPathInnerTop" d="M 85,250 A 165,165 0 1,1 415,250" fill="none"/>
+  </defs>
+
+  <!-- Outer Ring with Decorative Gear / Cog Rim -->
+  <circle cx="250" cy="250" r="242" fill="url(#sealGoldGrad)" stroke="#78350F" stroke-width="4"/>
+  <circle cx="250" cy="250" r="230" fill="url(#sealNavyGrad)" stroke="#F59E0B" stroke-width="3"/>
+  <circle cx="250" cy="250" r="172" fill="#FFFFFF" stroke="url(#sealGoldGrad)" stroke-width="6"/>
+
+  <!-- Outer Ring Text (English & Hindi) -->
+  <text font-family="'Inter', sans-serif" font-size="21" font-weight="800" fill="#FFFFFF" letter-spacing="2.5">
+    <textPath href="#textPathTop" startOffset="50%" text-anchor="middle">
+      GOVERNMENT POLYTECHNIC BANSDEEH
+    </textPath>
+  </text>
+  
+  <text font-family="'Inter', sans-serif" font-size="19" font-weight="700" fill="#FCD34D" letter-spacing="3">
+    <textPath href="#textPathBottom" startOffset="50%" text-anchor="middle">
+      ★ BALLIA (U.P.) • ESTD. 2013 ★
+    </textPath>
+  </text>
+
+  <!-- Star accents -->
+  <g fill="#FCD34D">
+    <polygon points="52,250 48,255 53,253 58,255 54,250 56,245 51,248 46,245" />
+    <polygon points="448,250 444,255 449,253 454,255 450,250 452,245 447,248 442,245" />
+  </g>
+
+  <!-- Inner Center Shield / Crest -->
+  <!-- Background Rays / Glow -->
+  <circle cx="250" cy="250" r="166" fill="#F8FAFC"/>
+  
+  <!-- Technical Cogwheel behind book -->
+  <g transform="translate(250, 245)" opacity="0.85">
+    <!-- Cogwheel teeth -->
+    <path d="M-15,-95 L15,-95 L12,-75 L-12,-75 Z" fill="#0B2545"/>
+    <path d="M-15,-95 L15,-95 L12,-75 L-12,-75 Z" fill="#0B2545" transform="rotate(30)"/>
+    <path d="M-15,-95 L15,-95 L12,-75 L-12,-75 Z" fill="#0B2545" transform="rotate(60)"/>
+    <path d="M-15,-95 L15,-95 L12,-75 L-12,-75 Z" fill="#0B2545" transform="rotate(90)"/>
+    <path d="M-15,-95 L15,-95 L12,-75 L-12,-75 Z" fill="#0B2545" transform="rotate(120)"/>
+    <path d="M-15,-95 L15,-95 L12,-75 L-12,-75 Z" fill="#0B2545" transform="rotate(150)"/>
+    <path d="M-15,-95 L15,-95 L12,-75 L-12,-75 Z" fill="#0B2545" transform="rotate(180)"/>
+    <path d="M-15,-95 L15,-95 L12,-75 L-12,-75 Z" fill="#0B2545" transform="rotate(210)"/>
+    <path d="M-15,-95 L15,-95 L12,-75 L-12,-75 Z" fill="#0B2545" transform="rotate(240)"/>
+    <path d="M-15,-95 L15,-95 L12,-75 L-12,-75 Z" fill="#0B2545" transform="rotate(270)"/>
+    <path d="M-15,-95 L15,-95 L12,-75 L-12,-75 Z" fill="#0B2545" transform="rotate(300)"/>
+    <path d="M-15,-95 L15,-95 L12,-75 L-12,-75 Z" fill="#0B2545" transform="rotate(330)"/>
+    <circle cx="0" cy="0" r="80" fill="#E2E8F0" stroke="#0B2545" stroke-width="8"/>
+    <circle cx="0" cy="0" r="66" fill="#FFFFFF"/>
+  </g>
+
+  <!-- Uttar Pradesh Twin Fish & Bow Motif at Top of Center -->
+  <g transform="translate(250, 160) scale(0.65)" fill="#0B2545">
+    <!-- Bow and Arrow -->
+    <path d="M-60,0 Q0,-45 60,0 Q40,-15 0,-15 Q-40,-15 -60,0 Z" fill="#D97706"/>
+    <line x1="0" y1="-30" x2="0" y2="25" stroke="#D97706" stroke-width="4"/>
+    <polygon points="0,-38 -6,-24 6,-24" fill="#D97706"/>
+    <!-- Left Fish -->
+    <path d="M-45,-5 C-30,-20 -20,5 -35,15 C-45,20 -50,5 -45,-5 Z" fill="#0B2545"/>
+    <polygon points="-50,12 -58,8 -55,20" fill="#0B2545"/>
+    <!-- Right Fish -->
+    <path d="M45,-5 C30,-20 20,5 35,15 C45,20 50,5 45,-5 Z" fill="#0B2545"/>
+    <polygon points="50,12 58,8 55,20" fill="#0B2545"/>
+  </g>
+
+  <!-- Open Book of Knowledge in Foreground -->
+  <g transform="translate(250, 260) scale(1.1)">
+    <!-- Book Base / Cover -->
+    <path d="M-75,15 Q-35,3 0,18 Q35,3 75,15 L70,30 Q35,18 0,32 Q-35,18 -70,30 Z" fill="#0B2545"/>
+    <!-- Pages Left -->
+    <path d="M-75,10 Q-35,-2 0,12 L0,-25 Q-35,-40 -75,-28 Z" fill="#FFFFFF" stroke="#0B2545" stroke-width="2.5"/>
+    <!-- Page lines Left -->
+    <line x1="-65" y1="-18" x2="-15" y2="-6" stroke="#94A3B8" stroke-width="2"/>
+    <line x1="-65" y1="-8" x2="-15" y2="4" stroke="#94A3B8" stroke-width="2"/>
+    <line x1="-65" y1="2" x2="-20" y2="13" stroke="#94A3B8" stroke-width="2"/>
+    
+    <!-- Pages Right -->
+    <path d="M75,10 Q35,-2 0,12 L0,-25 Q35,-40 75,-28 Z" fill="#FFFFFF" stroke="#0B2545" stroke-width="2.5"/>
+    <!-- Page lines Right -->
+    <line x1="15" y1="-6" x2="65" y2="-18" stroke="#94A3B8" stroke-width="2"/>
+    <line x1="15" y1="4" x2="65" y2="-8" stroke="#94A3B8" stroke-width="2"/>
+    <line x1="20" y1="13" x2="65" y2="2" stroke="#94A3B8" stroke-width="2"/>
+  </g>
+
+  <!-- Lamp of Knowledge / Diya with Flame -->
+  <g transform="translate(250, 205)">
+    <!-- Lamp base -->
+    <path d="M-22,12 Q0,24 22,12 Q0,8 -22,12 Z" fill="#D97706" stroke="#78350F" stroke-width="1.5"/>
+    <path d="M-8,19 L8,19 L12,25 L-12,25 Z" fill="#B45309"/>
+    <!-- Flame Outer -->
+    <path d="M0,-24 C-12,-8 -8,4 0,8 C8,4 12,-8 0,-24 Z" fill="#EA580C"/>
+    <!-- Flame Inner (Gold) -->
+    <path d="M0,-18 C-6,-6 -4,3 0,6 C4,3 6,-6 0,-18 Z" fill="#FDE047"/>
+  </g>
+
+  <!-- Hindi Ribbon Banner at bottom of shield -->
+  <g transform="translate(250, 350)">
+    <path d="M-130,-12 L130,-12 L115,16 L-115,16 Z" fill="#0B2545" stroke="#F59E0B" stroke-width="2"/>
+    <text x="0" y="7" font-family="'Inter', sans-serif" font-size="14.5" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">
+      राजकीय पॉलिटेक्निक बांसडीह, बलिया
+    </text>
+  </g>
+
+  <!-- Motto below banner -->
+  <text x="250" y="390" font-family="'Inter', sans-serif" font-size="11.5" font-weight="700" fill="#0B2545" text-anchor="middle" letter-spacing="2">
+    AFFILIATED TO BTEUP • APPROVED BY AICTE
+  </text>
+</svg>

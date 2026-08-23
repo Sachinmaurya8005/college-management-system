@@ -1,0 +1,19 @@
+# Backend .gitignore - Django
+.env
+.env.*
+!.env.example
+*.sqlite3
+db.sqlite3
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+staticfiles/
+media/
+*.log
+.vercel/
