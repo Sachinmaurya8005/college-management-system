@@ -36,10 +36,17 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onNavigate }
   const [selectedStudentForModal, setSelectedStudentForModal] = useState<Student | null>(null);
   const [isPrincipalModalOpen, setIsPrincipalModalOpen] = useState(false);
   const [isGeoModalOpen, setIsGeoModalOpen] = useState(false);
-
-  const cseStudents = students.filter(s => s.branch.includes('Computer') || s.branch.includes('CSE'));
+  const deptKeyword = user?.department ? user.department.split(' ')[0] : 'Computer';
+  const assignedStudents = students.filter(s =>
+    user?.department ? s.branch.toLowerCase().includes(deptKeyword.toLowerCase()) : s.branch.includes('Computer')
+  );
+  const classStudentsList = assignedStudents.length > 0 ? assignedStudents : students.slice(0, 12);
   const todayClasses = timetable.filter(
-    t => t.day === 'Monday' && (t.teacherName.includes('Alok') || t.teacherName.includes('Rai'))
+    t => t.day === 'Monday' && (
+      (user?.name && t.teacherName.toLowerCase().includes(user.name.toLowerCase().split(' ')[1] || 'xyz')) ||
+      t.teacherName.includes('Alok') ||
+      t.teacherName.includes('Rai')
+    )
   );
 
   return (
@@ -79,8 +86,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onNavigate }
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Assigned Students"
-          value={cseStudents.length.toString()}
-          description="Department of CSE"
+          value={classStudentsList.length.toString()}
+          description={`Dept of ${user?.department?.split(' ')[0] || 'Engineering'}`}
           icon={Users}
           trend={{ value: '100%', isPositive: true, label: 'Enrolled' }}
           color="blue"
@@ -133,7 +140,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onNavigate }
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {cseStudents.map(student => (
+          {classStudentsList.map(student => (
             <div
               key={student.id}
               onClick={() => setSelectedStudentForModal(student)}

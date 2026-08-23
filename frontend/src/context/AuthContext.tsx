@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Role, User } from '../types';
 import { authService } from '../services/authService';
-import { INITIAL_STUDENTS } from '../data/mockData';
+import { INITIAL_STUDENTS, INITIAL_TEACHERS } from '../data/mockData';
 
 interface AuthContextType {
   user: User | null;
@@ -195,20 +195,63 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     // -------------------------------------------------------------
-    // 3. TEACHER AUTHENTICATION: Email + Password
+    // 3. TEACHER AUTHENTICATION: Dynamic Email / EmpCode / Username + Password
     // -------------------------------------------------------------
     if (role === 'teacher') {
-      const validTeacherEmails = [
-        'teacher@polytechnic.edu',
-        'alok.rai@gpbansdeeh.ac.in',
-        'alok.rai@polytechnic.edu',
-        'teacher'
-      ];
-      const validTeacherPasswords = ['teacher123', 'sachin@123'];
+      let facultyList = INITIAL_TEACHERS;
+      try {
+        const stored = localStorage.getItem('gpb_portal_teachers');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            facultyList = parsed;
+          }
+        }
+      } catch (e) {}
 
-      if (validTeacherEmails.includes(trimmedId) && validTeacherPasswords.includes(cleanPass)) {
+      // Find teacher by email, employee code (e.g. FAC-ME-02), id (e.g. fac-02), mobile, or name
+      const matchedTeacher = facultyList.find(t =>
+        t.email?.toLowerCase() === trimmedId ||
+        t.empCode?.toLowerCase() === trimmedId ||
+        t.id?.toLowerCase() === trimmedId ||
+        (t.mobile && t.mobile.replace(/\D/g, '') === trimmedId.replace(/\D/g, '')) ||
+        (t.name && t.name.toLowerCase().replace(/^(dr\.|er\.|shri|smt\.)\s*/i, '').trim().toLowerCase() === trimmedId) ||
+        (trimmedId === 'teacher@polytechnic.edu' && t.id === 'fac-01') ||
+        (trimmedId === 'teacher' && t.id === 'fac-01')
+      );
+
+      const validPasswords = ['teacher123', 'sachin@123', 'faculty123', '123456'];
+
+      if (matchedTeacher && (validPasswords.includes(cleanPass) || cleanPass.toLowerCase() === 'teacher123')) {
         const teacherUser: User = {
-          ...DEMO_USERS.teacher,
+          id: matchedTeacher.id,
+          name: matchedTeacher.name,
+          email: matchedTeacher.email,
+          role: 'teacher',
+          designation: matchedTeacher.designation,
+          department: matchedTeacher.department,
+          empCode: matchedTeacher.empCode,
+          phone: matchedTeacher.mobile,
+          avatar: matchedTeacher.photoUrl || DEMO_USERS.teacher.avatar,
+          lastLogin: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+        };
+        setUser(teacherUser);
+        return { success: true };
+      }
+
+      // Default generic teacher login fallback
+      if (trimmedId === 'teacher@polytechnic.edu' && validPasswords.includes(cleanPass)) {
+        const defaultTeacher = facultyList[0] || DEMO_USERS.teacher;
+        const teacherUser: User = {
+          id: defaultTeacher.id,
+          name: defaultTeacher.name,
+          email: defaultTeacher.email || 'teacher@polytechnic.edu',
+          role: 'teacher',
+          designation: defaultTeacher.designation,
+          department: defaultTeacher.department,
+          empCode: defaultTeacher.empCode,
+          phone: defaultTeacher.mobile,
+          avatar: defaultTeacher.photoUrl || DEMO_USERS.teacher.avatar,
           lastLogin: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
         };
         setUser(teacherUser);
@@ -217,7 +260,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return {
         success: false,
-        message: 'अमान्य शिक्षक क्रेडेंशियल्स! कृपया अपनी सही अधिकृत शिक्षक ईमेल / आईडी और पासवर्ड दर्ज करें।'
+        message: 'अमान्य शिक्षक क्रेडेंशियल्स! कृपया अपनी सही अधिकृत शिक्षक ईमेल / एम्प्लॉई कोड (Emp Code) और पासवर्ड दर्ज करें।'
       };
     }
 

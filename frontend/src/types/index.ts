@@ -9,6 +9,7 @@ export interface User {
   phone?: string;
   designation?: string;
   department?: string;
+  empCode?: string;
   rollNo?: string;
   enrollmentNo?: string;
   dob?: string;
