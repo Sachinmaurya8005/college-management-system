@@ -34,20 +34,20 @@ export const LocationContactPage: React.FC = () => {
   }, []);
 
   const defaultLocation: CollegeLocationData = {
-    address: 'Near Bansdeeh Road Railway Station, Bansdeeh, Ballia, Uttar Pradesh - 277202',
-    district: 'Ballia',
+    address: 'Campus Main Road, Uttar Pradesh - 277202',
+    district: 'Main District',
     state: 'Uttar Pradesh',
     pincode: '277202',
-    landmark: 'State Highway 1, Near Bansdeeh Tehsil Office',
+    landmark: 'State Highway 1, Polytechnic Campus',
     latitude: 25.8647,
     longitude: 84.2185,
-    map_embed_url: 'https://maps.google.com/maps?q=Bansdeeh,Ballia,Uttar+Pradesh&t=&z=14&ie=UTF8&iwloc=&output=embed',
+    map_embed_url: 'https://maps.google.com/maps?q=Uttar+Pradesh&t=&z=14&ie=UTF8&iwloc=&output=embed',
     map_view_url: 'https://maps.google.com/?q=25.8647,84.2185',
-    directions_url: 'https://www.google.com/maps/dir//Bansdeeh+Ballia+Uttar+Pradesh+277202',
-    connectivity_bus: 'Frequent UPSRTC buses and private shared vehicles from Ballia City Bus Stand (18 km) and Bansdeeh Chauraha (2.5 km).',
-    connectivity_train: 'Nearest Railway Stations: Bansdeeh Road Railway Station (BUI) - 4 km; Ballia Junction (BUI) - 19 km with direct express trains to Lucknow, Varanasi, Delhi, and Patna.',
+    directions_url: 'https://maps.google.com',
+    connectivity_bus: 'Frequent UPSRTC buses and private shared vehicles available from City Bus Stand.',
+    connectivity_train: 'Nearest Railway Station with direct express trains to major cities.',
     contact_phone: '+91 94150 24510 / +91 5498 290124',
-    contact_email: 'principal.gpbansdeeh@gmail.com'
+    contact_email: 'principal.polytechnic@gmail.com'
   };
 
   const loc = location || defaultLocation;
@@ -64,7 +64,7 @@ export const LocationContactPage: React.FC = () => {
             How to Reach Government Polytechnic
           </h1>
           <p className="text-xs sm:text-sm text-blue-200 max-w-2xl">
-            Located in Bansdeeh, District Ballia, Uttar Pradesh. Conveniently accessible via road transit and Northern Eastern Railway network.
+            Located in Uttar Pradesh. Conveniently accessible via road transit and railway network.
           </p>
         </div>
 
@@ -173,7 +173,7 @@ export const LocationContactPage: React.FC = () => {
           <div className="p-4 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-card overflow-hidden">
             <div className="h-[420px] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 relative">
               <iframe
-                title="Government Polytechnic Ballia Map"
+                title="Government Polytechnic Map"
                 src={loc.map_embed_url}
                 className="w-full h-full border-0"
                 loading="lazy"
@@ -182,7 +182,7 @@ export const LocationContactPage: React.FC = () => {
             </div>
 
             <div className="pt-4 flex items-center justify-between text-xs px-2">
-              <span className="text-slate-500">Bansdeeh, Ballia (UP) - 277202</span>
+              <span className="text-slate-500">Polytechnic Campus, Uttar Pradesh - 277202</span>
               <a
                 href={loc.directions_url}
                 target="_blank"

@@ -195,7 +195,7 @@ export const QRVerificationPage: React.FC = () => {
                     </div>
                     <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 space-y-1">
                       <span className="text-[10px] text-slate-400 font-bold uppercase">Institution Name</span>
-                      <p className="font-semibold text-slate-800 dark:text-slate-200">Govt. Polytechnic Bansdeeh</p>
+                      <p className="font-semibold text-slate-800 dark:text-slate-200">Government Polytechnic</p>
                     </div>
                   </div>
                 </div>

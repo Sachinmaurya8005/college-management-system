@@ -194,7 +194,7 @@ export const PublicNoticeBoardPage: React.FC = () => {
                 <div className="space-y-1">
                   <span className="text-[10px] text-slate-400 font-bold uppercase block">Official Seal:</span>
                   <div className="w-20 h-20 rounded-full border-2 border-dashed border-polytechnic-700/50 flex items-center justify-center text-[9px] font-bold text-polytechnic-700 text-center p-1">
-                    GOVT. POLYTECHNIC BANSDEEH
+                    GOVT. POLYTECHNIC
                   </div>
                 </div>
                 <div className="text-right space-y-0.5">

@@ -30,7 +30,7 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate }) => {
                   GOVERNMENT POLYTECHNIC
                 </h3>
                 <span className="text-xs text-amber-400 font-bold block">
-                  Bansdeeh, Ballia (U.P.)
+                  Uttar Pradesh (U.P.)
                 </span>
               </div>
             </div>
@@ -118,7 +118,7 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate }) => {
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
                 <span>
-                  Near Bansdeeh Road Railway Station, Bansdeeh, Ballia, Uttar Pradesh - 277202
+                  Institutional Campus Area, Uttar Pradesh - 277202
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -127,7 +127,7 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate }) => {
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                <span>principal.gpbansdeeh@gmail.com</span>
+                <span>principal.polytechnic@gmail.com</span>
               </div>
             </div>
 

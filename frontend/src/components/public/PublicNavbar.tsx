@@ -83,7 +83,7 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ currentRoute, onNavi
             onClick={() => handleNavClick('location')}
             className="hover:text-white flex items-center gap-1 transition-colors"
           >
-            <MapPin className="w-3 h-3 text-amber-400" /> Bansdeeh, Ballia (U.P.)
+            <MapPin className="w-3 h-3 text-amber-400" /> Uttar Pradesh (U.P.)
           </button>
           <span className="text-white/30">•</span>
           <button
@@ -106,8 +106,8 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ currentRoute, onNavi
           >
             <div className="relative">
               <CollegeLogo size="lg" showText={false} className="rounded-xl shadow-lg ring-2 ring-white/20 transition-transform group-hover:scale-105" />
-              <div className="absolute -bottom-1 -right-1 bg-amber-500 text-[9px] font-black text-slate-950 px-1 py-0.2 rounded-full shadow">
-                GPB
+              <div className="absolute -bottom-1 -right-1 bg-amber-500 text-[9px] font-black text-slate-950 px-1.5 py-0.2 rounded-full shadow">
+                GP
               </div>
             </div>
             <div className="leading-tight">
@@ -118,7 +118,7 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ currentRoute, onNavi
                 GOVERNMENT POLYTECHNIC
               </h1>
               <span className="text-[10px] text-blue-200/80 font-medium block">
-                Ballia, Uttar Pradesh - 277202
+                Approved by AICTE • Affiliated to BTEUP Lucknow
               </span>
             </div>
           </div>

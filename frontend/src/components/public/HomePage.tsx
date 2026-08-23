@@ -108,13 +108,13 @@ export const HomePage: React.FC<HomePageProps> = ({
                   Department of Technical Education, Uttar Pradesh
                 </span>
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
-                  GOVERNMENT POLYTECHNIC <br className="hidden sm:inline" />
+                  <span className="text-white">GOVERNMENT </span>
                   <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-200 bg-clip-text text-transparent">
-                    BANSDEEH, BALLIA
+                    POLYTECHNIC
                   </span>
                 </h1>
                 <p className="text-xs sm:text-sm text-blue-200/90 max-w-xl font-normal leading-relaxed">
-                  Empowering Purvanchal youth with world-class 3-year diploma engineering programs, industry-standard laboratories, and technical competence under the Board of Technical Education, Uttar Pradesh.
+                  Empowering youth with world-class 3-year diploma engineering programs, industry-standard laboratories, and technical competence under the Board of Technical Education, Uttar Pradesh.
                 </p>
               </div>
 
@@ -447,7 +447,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               Visit Government Polytechnic
             </h2>
             <p className="text-xs text-blue-200 max-w-xl">
-              Near Bansdeeh Road Railway Station, Bansdeeh, Ballia, Uttar Pradesh - 277202. Accessible by rail and road.
+              Main Campus, Uttar Pradesh. Accessible by rail and road networks.
             </p>
           </div>
 
@@ -460,7 +460,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               <span>View Map &amp; Transit Info</span>
             </button>
             <a
-              href="https://www.google.com/maps/dir//Bansdeeh+Ballia+Uttar+Pradesh+277202"
+              href="https://maps.google.com"
               target="_blank"
               rel="noopener noreferrer"
               className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold shadow-lg transition-all flex items-center gap-1.5"
