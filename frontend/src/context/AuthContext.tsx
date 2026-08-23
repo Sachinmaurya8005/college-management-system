@@ -92,7 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (trimmedId === 'student@polytechnic.edu' || cleanPass.toLowerCase() === 'student123') {
         return {
           success: false,
-          message: 'सुरक्षा प्रतिबंध: छात्र ईमेल लॉगिन अमान्य है! छात्र केवल अपना Enrollment No. / Roll No. (जैसे E224412355001) और Date of Birth (जैसे 2004-05-14 या 14-05-2004) दर्ज करके ही लॉगिन कर सकते हैं।'
+          message: 'अमान्य छात्र क्रेडेंशियल्स! कृपया केवल अपना अधिकृत Enrollment No. और Date of Birth दर्ज करें।'
         };
       }
 
@@ -119,7 +119,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!targetStudent) {
         return {
           success: false,
-          message: `नामांकन संख्या '${identifier}' पंजीकृत नहीं है! कृपया सही Roll No./Enrollment No. (जैसे E224412355001) दर्ज करें।`
+          message: 'अमान्य छात्र क्रेडेंशियल्स! दर्ज की गई नामांकन संख्या अथवा जन्म तिथि रिकॉर्ड से मेल नहीं खाती।'
         };
       }
 
@@ -141,7 +141,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!isDobMatch) {
         return {
           success: false,
-          message: `गलत जन्म तिथि (Invalid DOB)! छात्र ${targetStudent.name} (${targetStudent.rollNo}) के प्रवेश रिकॉर्ड अनुसार सही जन्म तिथि दर्ज करें (उदा. ${studentDob} या ${parts.length === 3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : studentDob})।`
+          message: 'अमान्य छात्र क्रेडेंशियल्स! दर्ज की गई जन्म तिथि प्रवेश रिकॉर्ड से मेल नहीं खाती।'
         };
       }
 
@@ -190,7 +190,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return {
         success: false,
-        message: 'गलत एडमिन विवरण! कृपया सही Admin Username (sachin_maurya8005) और Password (sachin@123) दर्ज करें।'
+        message: 'अमान्य एडमिन क्रेडेंशियल्स! कृपया अपना सही अधिकृत यूजरनेम और पासवर्ड दर्ज करें।'
       };
     }
 
@@ -217,7 +217,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return {
         success: false,
-        message: 'गलत शिक्षक विवरण! कृपया सही Institutional Email (teacher@polytechnic.edu) और Password दर्ज करें।'
+        message: 'अमान्य शिक्षक क्रेडेंशियल्स! कृपया अपनी सही अधिकृत शिक्षक ईमेल / आईडी और पासवर्ड दर्ज करें।'
       };
     }
 

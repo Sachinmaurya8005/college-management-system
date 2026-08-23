@@ -178,16 +178,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onGoToHome
             </div>
           </div>
 
-          {/* Student Policy Notice Badge */}
-          {selectedRole === 'student' && (
-            <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-[11px] text-blue-800 dark:text-blue-200 flex items-start gap-2">
-              <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-              <div>
-                <strong className="font-bold block text-blue-900 dark:text-blue-100">🔒 छात्र सुरक्षा नीति (Student Authentication Policy):</strong>
-                छात्र केवल अपने <strong>Enrollment No. / Roll No.</strong> और <strong>Date of Birth (जन्म तिथि)</strong> से ही लॉगिन कर सकते हैं।
-              </div>
+          {/* Policy Notice Badge */}
+          <div className="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-[11px] text-slate-700 dark:text-slate-300 flex items-start gap-2">
+            <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+            <div>
+              <strong className="font-bold block text-slate-900 dark:text-white">🔒 अधिकृत संस्थागत लॉगिन (Authorized Access Only):</strong>
+              कृपया अपने पद (Role) के अनुसार अपना अधिकृत यूजर आईडी / नामांकन संख्या और पासवर्ड दर्ज करें।
             </div>
-          )}
+          </div>
 
           {/* Form */}
           <form onSubmit={handleFormSubmit} className="space-y-4">
@@ -202,10 +200,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onGoToHome
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 {selectedRole === 'student'
-                  ? 'Student Enrollment Number or Roll No. (नामांकन / रोल नंबर)'
+                  ? 'Enrollment No. / Roll No. (नामांकन / रोल नंबर)'
                   : selectedRole === 'admin'
-                  ? 'Admin Username or Email (यूजरनेम)'
-                  : 'Teacher Institutional Email (ईमेल)'}
+                  ? 'Administrator Username (यूजरनेम)'
+                  : 'Teacher ID / Email (शिक्षक आईडी / ईमेल)'}
               </label>
               <div className="relative">
                 {selectedRole === 'student' ? (
@@ -222,10 +220,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onGoToHome
                   onChange={e => setEmail(e.target.value)}
                   placeholder={
                     selectedRole === 'student'
-                      ? 'e.g. E224412355001'
+                      ? 'Enter Enrollment No. / Roll No.'
                       : selectedRole === 'admin'
-                      ? 'sachin_maurya8005'
-                      : 'teacher@polytechnic.edu'
+                      ? 'Enter Administrator Username'
+                      : 'Enter Teacher ID / Email'
                   }
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
                 />
@@ -237,7 +235,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onGoToHome
               <div className="flex items-center justify-between mb-1">
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
                   {selectedRole === 'student'
-                    ? 'Date of Birth (जन्म तिथि - YYYY-MM-DD / DD-MM-YYYY)'
+                    ? 'Date of Birth (जन्म तिथि)'
                     : 'Password (पासवर्ड)'}
                 </label>
                 {selectedRole !== 'student' && (
@@ -263,7 +261,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onGoToHome
                   onChange={e => setPassword(e.target.value)}
                   placeholder={
                     selectedRole === 'student'
-                      ? 'e.g. 2004-05-14 or 14-05-2004'
+                      ? 'DD-MM-YYYY / YYYY-MM-DD'
                       : '••••••••'
                   }
                   className="w-full pl-10 pr-11 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
