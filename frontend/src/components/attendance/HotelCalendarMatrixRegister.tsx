@@ -17,7 +17,11 @@ import {
   Printer,
   ChevronLeft,
   ChevronRight,
-  AlertCircle
+  AlertCircle,
+  MapPin,
+  CheckSquare,
+  Plus,
+  Radio
 } from 'lucide-react';
 import { useCollegeData } from '../../context/CollegeDataContext';
 import { useAuth } from '../../context/AuthContext';
@@ -27,6 +31,8 @@ import {
   exportToCSV
 } from '../../utils/helpers';
 import { AttendanceStatusCode } from '../../types';
+import { GeoFencedSelfAttendanceModal } from './GeoFencedSelfAttendanceModal';
+import { ClassTeacherDailyAttendanceCard } from '../dashboard/ClassTeacherDailyAttendanceCard';
 
 export const HotelCalendarMatrixRegister: React.FC = () => {
   const { user } = useAuth();
@@ -44,6 +50,8 @@ export const HotelCalendarMatrixRegister: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState(2026);
   const [selectedMonthIndex, setSelectedMonthIndex] = useState(7); // August (0-indexed: 7)
   const [activeRegisterType, setActiveRegisterType] = useState<'faculty' | 'students'>('faculty');
+  const [isGeoModalOpen, setIsGeoModalOpen] = useState(false);
+  const [isTakeStudentAttendanceOpen, setIsTakeStudentAttendanceOpen] = useState(false);
 
   // Student Filter State
   const [selectedBranch, setSelectedBranch] = useState('Computer Science & Engineering');
@@ -206,39 +214,61 @@ export const HotelCalendarMatrixRegister: React.FC = () => {
             </button>
           </div>
 
-          <button
-            onClick={handleExportCSV}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-600/30 transition-all"
-          >
-            <Download className="w-4 h-4" /> Export CSV / Excel
-          </button>
+          <div className="flex items-center gap-2">
+            {!isPrincipal && (
+              <button
+                type="button"
+                onClick={() => setIsGeoModalOpen(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 active:scale-95 animate-pulse"
+              >
+                <MapPin className="w-4 h-4" />
+                <span>Punch 50m In-Campus Attendance (50m हाजिरी)</span>
+              </button>
+            )}
+
+            <button
+              onClick={handleExportCSV}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold shadow-md transition-all"
+            >
+              <Download className="w-4 h-4" /> Export CSV / Excel
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Teacher Confidential Privacy Banner */}
       {!isPrincipal && (
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-900 to-indigo-950 text-white shadow-md border border-blue-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-white/10 text-emerald-400">
-              <ShieldCheck className="w-5 h-5" />
+        <div className="p-5 rounded-3xl bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 text-white shadow-xl border border-blue-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="p-3 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-inner">
+              <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-sm text-white">
-                  🔒 Confidential Attendance Portal: {currentTeacher.name}
+                <span className="font-black text-sm text-white">
+                  🔒 Official Attendance Portal: {currentTeacher.name}
                 </span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-400 text-slate-950">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-400 text-slate-950">
                   {currentTeacher.empCode}
+                </span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/30 text-blue-200 border border-blue-400/30">
+                  50m Geo-Fence Active
                 </span>
               </div>
               <p className="text-[11px] text-blue-200 mt-0.5">
-                गोपनीयता नीति: आपको केवल आपकी अपनी व्यक्तिगत मासिक उपस्थिति (1-31 दिन) व वेतन का विवरण दिख रहा है।
+                गोपनीयता नीति: शिक्षक की हाजिरी केवल कॉलेज के <strong>50 मीटर के दायरे</strong> में ही लग सकती है। छात्र हाजिरी कभी भी लाइव ली जा सकती है।
               </p>
             </div>
           </div>
-          <span className="text-xs font-mono bg-white/10 px-3 py-1.5 rounded-xl hidden sm:inline-block">
-            {currentTeacher.department}
-          </span>
+
+          <button
+            type="button"
+            onClick={() => setIsGeoModalOpen(true)}
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/30 transition-all hover:scale-105 active:scale-95"
+          >
+            <MapPin className="w-4 h-4" />
+            <span>Punch 50m Attendance Now</span>
+          </button>
         </div>
       )}
 
@@ -301,6 +331,19 @@ export const HotelCalendarMatrixRegister: React.FC = () => {
                 <option value={5}>Sem 5</option>
                 <option value={6}>Sem 6</option>
               </select>
+
+              <button
+                type="button"
+                onClick={() => setIsTakeStudentAttendanceOpen(!isTakeStudentAttendanceOpen)}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  isTakeStudentAttendanceOpen
+                    ? 'bg-rose-600 text-white shadow-md'
+                    : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/30'
+                }`}
+              >
+                <CheckSquare className="w-4 h-4" />
+                <span>{isTakeStudentAttendanceOpen ? 'Close Roll-Call' : 'Take Student Attendance (हाजिरी लगाएं)'}</span>
+              </button>
             </>
           )}
 
@@ -318,6 +361,13 @@ export const HotelCalendarMatrixRegister: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Live Class Attendance Roll-Call Card when toggled */}
+      {activeRegisterType === 'students' && isTakeStudentAttendanceOpen && (
+        <div className="animate-fade-in">
+          <ClassTeacherDailyAttendanceCard />
+        </div>
+      )}
 
       {/* Legend Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 text-xs bg-slate-50 dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800">
@@ -594,6 +644,12 @@ export const HotelCalendarMatrixRegister: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* 50m In-Campus Geo-Fenced Attendance Punch Modal */}
+      <GeoFencedSelfAttendanceModal
+        isOpen={isGeoModalOpen}
+        onClose={() => setIsGeoModalOpen(false)}
+      />
     </div>
   );
 };
