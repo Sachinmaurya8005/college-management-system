@@ -28,7 +28,7 @@ export const AdminApplicationsView: React.FC = () => {
   const [reviewForm, setReviewForm] = useState({
     status: 'Under Review',
     staff_response: '',
-    reviewed_by: 'Er. R. C. Srivastava (Principal)',
+    reviewed_by: 'Er. Sachin Maurya (Principal)',
     corrected_name: ''
   });
   const [saving, setSaving] = useState(false);
@@ -54,7 +54,7 @@ export const AdminApplicationsView: React.FC = () => {
     setReviewForm({
       status: app.status || 'Under Review',
       staff_response: app.staff_response || '',
-      reviewed_by: app.reviewed_by || 'Er. R. C. Srivastava (Principal)',
+      reviewed_by: app.reviewed_by || 'Er. Sachin Maurya (Principal)',
       corrected_name: app.student_name || ''
     });
     setSaveSuccess(false);

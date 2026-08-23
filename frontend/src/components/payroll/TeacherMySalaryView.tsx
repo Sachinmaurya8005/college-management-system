@@ -418,10 +418,10 @@ export const TeacherMySalaryView: React.FC = () => {
 
                 <div className="space-y-1 text-right">
                   <div className="font-serif italic font-bold text-slate-800 text-sm">
-                    R. C. Srivastava
+                    Sachin Maurya
                   </div>
                   <div className="font-black text-xs uppercase text-slate-900">
-                    Er. Ramesh Chandra Srivastava
+                    Er. Sachin Maurya
                   </div>
                   <div className="text-[11px] font-semibold text-slate-600">
                     Principal, Government Polytechnic

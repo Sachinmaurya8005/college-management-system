@@ -93,7 +93,7 @@ export const WebsiteContentManager: React.FC = () => {
     history: '',
     vision: '',
     mission: '',
-    principal_name: 'Er. R. C. Srivastava',
+    principal_name: 'Er. Sachin Maurya',
     principal_message: '',
     principal_photo: '',
     achievements: []

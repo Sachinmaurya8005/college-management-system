@@ -73,7 +73,7 @@ interface StaffNotice {
 }
 
 const FACULTY_MEMBERS = [
-  { name: 'Er. R. C. Srivastava (Principal & Exam Controller)', email: 'principal.gpbansdeeh@gmail.com', role: 'principal', department: 'Administration' },
+  { name: 'Er. Sachin Maurya (Principal & Exam Controller)', email: 'principal.gpbansdeeh@gmail.com', role: 'principal', department: 'Administration' },
   { name: 'Dr. Alok Kumar Rai (HOD & Lecturer - CSE)', email: 'alok.rai@polytechnic.edu', role: 'teacher', department: 'Computer Science & Engineering' },
   { name: 'Er. Priya Sharma (Lecturer - CSE)', email: 'priya.sharma@polytechnic.edu', role: 'teacher', department: 'Computer Science & Engineering' },
   { name: 'Er. Amit Kumar Gupta (Lecturer - Mechanical)', email: 'amit.gupta@polytechnic.edu', role: 'teacher', department: 'Mechanical Engineering' },
@@ -108,14 +108,14 @@ export const UniversalApplicationsView: React.FC = () => {
       branch: 'Computer Science & Engineering',
       semester: 4,
       recipientRole: 'principal',
-      recipientName: 'Er. R. C. Srivastava (Principal & Exam Controller)',
+      recipientName: 'Er. Sachin Maurya (Principal & Exam Controller)',
       recipientEmail: 'principal.gpbansdeeh@gmail.com',
       subject: 'Request for Name Spelling Correction on BTEUP Portal',
       category: 'Personal Information Correction',
       description: 'Respected Sir, My father name spelling in the matriculation marksheet is Shri Ramakant Verma. Please update the same on BTEUP college database record.',
       status: 'Approved',
       staffResponse: 'Verified with High School Board Certificate and approved. Updated in database.',
-      reviewedBy: 'Er. R. C. Srivastava (Principal)',
+      reviewedBy: 'Er. Sachin Maurya (Principal)',
       submissionDate: '2026-04-18'
     },
     {
@@ -145,7 +145,7 @@ export const UniversalApplicationsView: React.FC = () => {
       senderRole: 'teacher',
       senderEmail: 'alok.rai@polytechnic.edu',
       recipientRole: 'principal',
-      recipientName: 'Er. R. C. Srivastava (Principal & Exam Controller)',
+      recipientName: 'Er. Sachin Maurya (Principal & Exam Controller)',
       recipientEmail: 'principal.gpbansdeeh@gmail.com',
       subject: 'Requisition for 10 New Core i7 Workstations for CSE Python Lab',
       category: 'Academic / Lab Equipment Request',
@@ -166,7 +166,7 @@ export const UniversalApplicationsView: React.FC = () => {
       category: 'Academic Audit',
       publishDate: '2026-04-12',
       priority: 'High',
-      issuedBy: 'Office of the Principal (Er. R. C. Srivastava)',
+      issuedBy: 'Office of the Principal (Er. Sachin Maurya)',
       referenceNo: 'GPB/STAFF/CONF/2026/01',
       comments: [
         {

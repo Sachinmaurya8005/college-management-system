@@ -132,7 +132,7 @@ export const AboutPage: React.FC = () => {
                   Principal &amp; Head of Institution
                 </span>
                 <h3 className="text-lg font-extrabold text-white">
-                  {about?.principal_name || 'Er. R. C. Srivastava'}
+                  {about?.principal_name || 'Er. Sachin Maurya'}
                 </h3>
                 <p className="text-xs text-blue-300">
                   Government Polytechnic

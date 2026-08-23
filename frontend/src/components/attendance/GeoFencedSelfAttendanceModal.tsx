@@ -165,7 +165,7 @@ export const GeoFencedSelfAttendanceModal: React.FC<GeoFencedSelfAttendanceModal
           <div>
             <span className="text-[10px] text-slate-400 font-bold uppercase block">Employee / Official</span>
             <strong className="text-slate-900 dark:text-white text-xs">
-              {isPrincipal ? 'Er. R. C. Srivastava (Principal)' : currentTeacher?.name}
+              {isPrincipal ? 'Er. Sachin Maurya (Principal)' : currentTeacher?.name}
             </strong>
             <span className="text-slate-500 text-[11px] block">
               {isPrincipal ? 'Office of Principal' : `${currentTeacher?.empCode} • ${currentTeacher?.department}`}
@@ -289,7 +289,7 @@ export const GeoFencedSelfAttendanceModal: React.FC<GeoFencedSelfAttendanceModal
             <button
               type="button"
               onClick={() => {
-                alert('Attendance Request sent to Principal Er. R. C. Srivastava for manual verification.');
+                alert('Attendance Request sent to Principal Er. Sachin Maurya for manual verification.');
                 onClose();
               }}
               className="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold shadow-md flex items-center gap-2 transition-all"

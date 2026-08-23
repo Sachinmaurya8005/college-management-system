@@ -618,7 +618,7 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
     broadcastLiveEvent('attendance', `Principal Attendance Logged: ${status}`, `GPB 50m Geo-Fenced (${today})`);
     addNotification({
       title: 'Principal Campus Attendance Logged',
-      message: `Principal Er. R. C. Srivastava attendance recorded as '${status}' on ${today}.`,
+      message: `Principal Er. Sachin Maurya attendance recorded as '${status}' on ${today}.`,
       type: 'success',
       linkView: 'attendance'
     });
@@ -770,9 +770,9 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
         accountNumber: teacherBank.accountNumber,
         ifscCode: teacherBank.ifscCode
       },
-      approvedBy: 'Er. Ramesh Chandra Srivastava (Principal)',
+      approvedBy: 'Er. Sachin Maurya (Principal)',
       payslipNumber,
-      remarks: remarks || `Monthly salary for ${monthStr} approved and disbursed by Principal Er. R. C. Srivastava.`
+      remarks: remarks || `Monthly salary for ${monthStr} approved and disbursed by Principal Er. Sachin Maurya.`
     };
 
     // 1. Deduct from college treasury balance

@@ -767,7 +767,7 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
                   <div className="font-mono text-[8px] text-slate-400">{student.enrollmentNo}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-serif italic font-bold text-white text-[10px]">R. C. Srivastava</div>
+                  <div className="font-serif italic font-bold text-white text-[10px]">Sachin Maurya</div>
                   <div className="text-[8px] text-amber-400 font-semibold">Principal Sign</div>
                 </div>
               </div>

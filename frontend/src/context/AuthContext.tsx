@@ -58,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const parsed = JSON.parse(saved);
         // Clear stale legacy demo sessions so visitors always start unauthenticated
-        if (parsed?.name === 'Er. R. C. Srivastava' || parsed?.email === 'admin@polytechnic.edu' || parsed?.email === 'student@polytechnic.edu') {
+        if (parsed?.name === 'Er. Sachin Maurya' || parsed?.email === 'admin@polytechnic.edu' || parsed?.email === 'student@polytechnic.edu') {
           localStorage.removeItem('gpb_portal_user');
           return null;
         }

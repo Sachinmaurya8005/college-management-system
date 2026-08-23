@@ -168,7 +168,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                       From the Principal's Desk
                     </span>
                     <h3 className="text-sm sm:text-base font-extrabold text-white">
-                      {data?.principal_name || 'Er. R. C. Srivastava'}
+                      {data?.principal_name || 'Er. Sachin Maurya'}
                     </h3>
                     <p className="text-[11px] text-blue-200">
                       Principal &amp; Chief Administrator

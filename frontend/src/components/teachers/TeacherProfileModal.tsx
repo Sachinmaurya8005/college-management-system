@@ -418,7 +418,7 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
 
               <div className="pt-3 border-t border-white/20 flex items-center justify-between text-[9px] text-slate-400">
                 <div>Official Govt. Faculty Record</div>
-                <div className="text-right font-serif italic text-white font-bold">R. C. Srivastava (Principal)</div>
+                <div className="text-right font-serif italic text-white font-bold">Sachin Maurya (Principal)</div>
               </div>
             </div>
 

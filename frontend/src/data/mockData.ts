@@ -70,7 +70,7 @@ export const INITIAL_SETTINGS: CollegeSettings = {
   phone: "+91 5498 245120",
   email: "principal.gpbansdeeh@gmail.com",
   website: "https://gpbansdeeh.up.gov.in",
-  principalName: "Er. Ramesh Chandra Srivastava (M.Tech, FIE)",
+  principalName: "Er. Sachin Maurya",
   establishedYear: 2013,
   customLogoUrl: ""
 };
@@ -386,7 +386,7 @@ export const INITIAL_STUDENTS: Student[] = [
 ];
 
 export const PRINCIPAL_DETAILS: PrincipalProfile = {
-  name: "Er. R. C. Srivastava",
+  name: "Er. Sachin Maurya",
   designation: "Principal & Chief Administrator (प्राचार्य एवं मुख्य प्रशासक)",
   department: "Administration & Technical Education Directorate",
   age: 54,
@@ -1316,7 +1316,7 @@ export const INITIAL_SALARY_DISBURSEMENTS: SalaryDisbursementRecord[] = [
       accountNumber: "30481920491",
       ifscCode: "SBIN0004412"
     },
-    approvedBy: "Er. Ramesh Chandra Srivastava (Principal)",
+    approvedBy: "Er. Sachin Maurya (Principal)",
     payslipNumber: "GPB/PAY/2026/07/001",
     remarks: "Full monthly salary disbursed upon 100% verified attendance compliance."
   },
@@ -1345,7 +1345,7 @@ export const INITIAL_SALARY_DISBURSEMENTS: SalaryDisbursementRecord[] = [
       accountNumber: "1829001500293",
       ifscCode: "PUNB0182900"
     },
-    approvedBy: "Er. Ramesh Chandra Srivastava (Principal)",
+    approvedBy: "Er. Sachin Maurya (Principal)",
     payslipNumber: "GPB/PAY/2026/07/002",
     remarks: "Monthly salary credited via NEFT direct institutional treasury gateway."
   }
