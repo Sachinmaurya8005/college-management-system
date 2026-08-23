@@ -143,7 +143,11 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const saved = localStorage.getItem(`gpb_portal_${key}`);
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(defaultVal) && !Array.isArray(parsed)) {
+          return defaultVal;
+        }
+        return parsed;
       } catch (e) {
         console.error(`Error parsing state for ${key}:`, e);
       }
@@ -215,16 +219,16 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
         noticeService.getAll(),
       ]);
 
-      if (apiStudents.status === 'fulfilled' && apiStudents.value.length > 0) {
+      if (apiStudents.status === 'fulfilled' && Array.isArray(apiStudents.value) && apiStudents.value.length > 0) {
         setStudents(apiStudents.value);
       }
-      if (apiTeachers.status === 'fulfilled' && apiTeachers.value.length > 0) {
+      if (apiTeachers.status === 'fulfilled' && Array.isArray(apiTeachers.value) && apiTeachers.value.length > 0) {
         setTeachers(apiTeachers.value);
       }
-      if (apiCourses.status === 'fulfilled' && apiCourses.value.length > 0) {
+      if (apiCourses.status === 'fulfilled' && Array.isArray(apiCourses.value) && apiCourses.value.length > 0) {
         setCourses(apiCourses.value);
       }
-      if (apiNotices.status === 'fulfilled' && apiNotices.value.length > 0) {
+      if (apiNotices.status === 'fulfilled' && Array.isArray(apiNotices.value) && apiNotices.value.length > 0) {
         setNotices(apiNotices.value);
       }
     } catch (e) {
