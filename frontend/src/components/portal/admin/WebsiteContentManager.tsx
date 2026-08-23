@@ -124,7 +124,7 @@ export const WebsiteContentManager: React.FC = () => {
   // Load content
   const loadContent = async () => {
     try {
-      const [facRes, galRes, linkRes, feeRes, locRes, aboutRes] = await Promise.all([
+      const [facRes, galRes, linkRes, feeRes, locRes, aboutRes] = await Promise.allSettled([
         websiteContentService.getFacilities(),
         websiteContentService.getGallery(),
         websiteContentService.getLinks(),
@@ -132,12 +132,18 @@ export const WebsiteContentManager: React.FC = () => {
         websiteContentService.getLocation(),
         websiteContentService.getAboutCollege()
       ]);
-      setFacilities(facRes);
-      setGallery(galRes);
-      setLinks(linkRes);
-      setFees(feeRes);
-      if (locRes) setLocationForm(locRes);
-      if (aboutRes) setAboutForm(aboutRes);
+      if (facRes.status === 'fulfilled' && Array.isArray(facRes.value)) setFacilities(facRes.value);
+      if (galRes.status === 'fulfilled' && Array.isArray(galRes.value)) setGallery(galRes.value);
+      if (linkRes.status === 'fulfilled' && Array.isArray(linkRes.value)) setLinks(linkRes.value);
+      if (feeRes.status === 'fulfilled' && Array.isArray(feeRes.value)) setFees(feeRes.value);
+      if (locRes.status === 'fulfilled' && locRes.value && typeof locRes.value === 'object') setLocationForm(locRes.value);
+      if (aboutRes.status === 'fulfilled' && aboutRes.value && typeof aboutRes.value === 'object') {
+        setAboutForm(prev => ({
+          ...prev,
+          ...aboutRes.value,
+          achievements: Array.isArray(aboutRes.value.achievements) ? aboutRes.value.achievements : []
+        }));
+      }
     } catch (err) {
       console.error('Failed to load website content', err);
     }
