@@ -20,7 +20,12 @@ import { Role } from '../../types';
 import { CollegeLogo } from '../common/CollegeLogo';
 import { useCollegeData } from '../../context/CollegeDataContext';
 
-export const LoginPage: React.FC = () => {
+interface LoginPageProps {
+  onLoginSuccess?: () => void;
+  onGoToHome?: () => void;
+}
+
+export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onGoToHome }) => {
   const { login } = useAuth();
   const { settings } = useCollegeData();
 
@@ -49,7 +54,11 @@ export const LoginPage: React.FC = () => {
 
     try {
       const res = await login(email, password, selectedRole);
-      if (!res.success) {
+      if (res.success) {
+        if (onLoginSuccess) {
+          onLoginSuccess();
+        }
+      } else {
         setError(res.message || 'Invalid credentials. Please check your login details.');
       }
     } catch (err: any) {

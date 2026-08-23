@@ -205,8 +205,14 @@ export const AppContent: React.FC = () => {
           return <LocationContactPage />;
         case 'login':
           return (
-            <div className="py-10">
-              <LoginPage />
+            <div className="py-6">
+              <LoginPage
+                onLoginSuccess={() => {
+                  setIsInPortalMode(true);
+                  setCurrentView('dashboard');
+                }}
+                onGoToHome={() => handlePublicNavigate('home')}
+              />
             </div>
           );
         default:

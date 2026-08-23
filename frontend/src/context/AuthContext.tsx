@@ -56,12 +56,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const saved = localStorage.getItem('gpb_portal_user');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        // Clear stale legacy demo sessions so visitors always start unauthenticated
+        if (parsed?.name === 'Er. R. C. Srivastava' || parsed?.email === 'admin@polytechnic.edu' || parsed?.email === 'student@polytechnic.edu') {
+          localStorage.removeItem('gpb_portal_user');
+          return null;
+        }
+        if (parsed && typeof parsed === 'object' && parsed.role) {
+          return parsed;
+        }
       } catch (e) {
-        return DEMO_USERS.admin;
+        return null;
       }
     }
-    return DEMO_USERS.admin;
+    return null;
   });
 
   useEffect(() => {
