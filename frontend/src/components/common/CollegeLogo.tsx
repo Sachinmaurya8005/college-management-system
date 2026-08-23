@@ -49,6 +49,8 @@ export const CollegeLogo: React.FC<CollegeLogoProps> = ({
       : 'text-slate-500 dark:text-slate-400';
 
   const logoSrc = settings.customLogoUrl || '/college-logo.svg';
+  const collegeDisplayName = 'GOVERNMENT POLYTECHNIC';
+  const collegeDisplayHindi = 'राजकीय पॉलिटेक्निक';
 
   return (
     <div className={`flex items-center gap-3 select-none ${className}`}>
@@ -67,16 +69,16 @@ export const CollegeLogo: React.FC<CollegeLogoProps> = ({
       {showText && (
         <div className="flex flex-col">
           <span className={`font-serif tracking-tight font-extrabold ${titleSizes[size]} ${textClasses}`}>
-            {settings.collegeName}
+            {collegeDisplayName}
           </span>
           {subtitle && (
             <div className="flex items-center gap-1.5 flex-wrap">
               <span className={`text-[10px] uppercase font-semibold tracking-wider ${subClasses}`}>
-                {settings.hindiName || 'राजकीय पॉलिटेक्निक'}
+                {collegeDisplayHindi}
               </span>
               <span className="inline-block w-1 h-1 rounded-full bg-amber-500"></span>
               <span className="text-[10px] font-medium text-amber-600 dark:text-amber-400">
-                BTEUP Code: {settings.bteupCode}
+                BTEUP Code: {settings.bteupCode || '4412'}
               </span>
             </div>
           )}

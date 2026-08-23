@@ -143,7 +143,12 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const saved = localStorage.getItem(`gpb_portal_${key}`);
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
+        let str = saved;
+        // Purge old stale names in cached local storage
+        if (str.includes('Bansdeeh') || str.includes('Ballia') || str.includes('बांसडीह') || str.includes('बलिया')) {
+          str = str.replace(/Bansdeeh/gi, '').replace(/Ballia/gi, '').replace(/बांसडीह/g, '').replace(/बलिया/g, '');
+        }
+        const parsed = JSON.parse(str);
         if (Array.isArray(defaultVal) && !Array.isArray(parsed)) {
           return defaultVal;
         }
@@ -164,7 +169,23 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [timetable, setTimetable] = useState<TimetableSlot[]>(() => loadState('timetable', INITIAL_TIMETABLE));
   const [notices, setNotices] = useState<NoticeItem[]>(() => loadState('notices', INITIAL_NOTICES));
   const [notifications, setNotifications] = useState<NotificationItem[]>(() => loadState('notifications', INITIAL_NOTIFICATIONS));
-  const [settings, setSettings] = useState<CollegeSettings>(() => loadState('settings', INITIAL_SETTINGS));
+  const [settings, setSettings] = useState<CollegeSettings>(() => {
+    const raw = loadState('settings', INITIAL_SETTINGS);
+    const cleaned: CollegeSettings = {
+      ...raw,
+      collegeName: 'GOVERNMENT POLYTECHNIC',
+      hindiName: 'राजकीय पॉलिटेक्निक',
+      principalName: 'Er. Sachin Maurya',
+      address: 'Polytechnic Campus, Uttar Pradesh - 277202',
+      district: 'Uttar Pradesh',
+      email: 'principal.polytechnic@gmail.com',
+      website: 'https://polytechnic.up.gov.in'
+    };
+    try {
+      localStorage.setItem('gpb_portal_settings', JSON.stringify(cleaned));
+    } catch (e) {}
+    return cleaned;
+  });
   const [attendanceSessions, setAttendanceSessions] = useState<AttendanceSession[]>(() => loadState('attendance_sessions', []));
   const [teacherAttendance, setTeacherAttendance] = useState<TeacherDailyAttendance[]>(() => loadState('teacher_attendance', INITIAL_TEACHER_ATTENDANCE));
   const [principalTodayAttendance, setPrincipalTodayAttendance] = useState<{ date: string; status: AttendanceStatusCode; inTime?: string; geoRecord?: GeoLocationRecord }>(() =>
