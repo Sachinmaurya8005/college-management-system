@@ -129,22 +129,22 @@ export interface IfscLookupResult {
 }
 
 const IFSC_DATABASE: Record<string, { bankName: string; branch: string; city: string; district: string }> = {
-  SBIN0001234: { bankName: 'State Bank of India', branch: 'Govt Treasury Branch', city: 'Ballia', district: 'Ballia' },
-  SBIN0004412: { bankName: 'State Bank of India', branch: 'Bansdeeh Main Branch', city: 'Bansdeeh', district: 'Ballia' },
-  SBIN0000019: { bankName: 'State Bank of India', branch: 'Ballia Sadar Main', city: 'Ballia', district: 'Ballia' },
-  PUNB0182900: { bankName: 'Punjab National Bank', branch: 'Collectorate Branch', city: 'Ballia', district: 'Ballia' },
-  PUNB0002100: { bankName: 'Punjab National Bank', branch: 'Bansdeeh Market', city: 'Bansdeeh', district: 'Ballia' },
-  BARB0BALLIA: { bankName: 'Bank of Baroda', branch: 'Civil Lines Branch', city: 'Ballia', district: 'Ballia' },
-  BARB0BANSDE: { bankName: 'Bank of Baroda', branch: 'Bansdeeh Bazar', city: 'Bansdeeh', district: 'Ballia' },
-  UBIN0558490: { bankName: 'Union Bank of India', branch: 'Bansdeeh Bazar Branch', city: 'Bansdeeh', district: 'Ballia' },
-  UBIN0538920: { bankName: 'Union Bank of India', branch: 'Ballia Chowk', city: 'Ballia', district: 'Ballia' },
-  CNRB0001482: { bankName: 'Canara Bank', branch: 'Ballia Sadar Branch', city: 'Ballia', district: 'Ballia' },
-  HDFC0001829: { bankName: 'HDFC Bank', branch: 'Civil Lines, Ballia', city: 'Ballia', district: 'Ballia' },
-  ICIC0002109: { bankName: 'ICICI Bank', branch: 'Station Road, Ballia', city: 'Ballia', district: 'Ballia' },
-  UTIB0001420: { bankName: 'Axis Bank', branch: 'Ballia City Branch', city: 'Ballia', district: 'Ballia' },
-  KKBK0005120: { bankName: 'Kotak Mahindra Bank', branch: 'Ballia Main', city: 'Ballia', district: 'Ballia' },
-  CBIN0281920: { bankName: 'Central Bank of India', branch: 'Bansdeeh Branch', city: 'Bansdeeh', district: 'Ballia' },
-  IDIB000B029: { bankName: 'Indian Bank', branch: 'Ballia Main Branch', city: 'Ballia', district: 'Ballia' }
+  SBIN0001234: { bankName: 'State Bank of India', branch: 'Govt Treasury Branch', city: 'Uttar Pradesh', district: 'Uttar Pradesh' },
+  SBIN0004412: { bankName: 'State Bank of India', branch: 'Main Branch', city: '', district: 'Uttar Pradesh' },
+  SBIN0000019: { bankName: 'State Bank of India', branch: 'Uttar Pradesh Sadar Main', city: 'Uttar Pradesh', district: 'Uttar Pradesh' },
+  PUNB0182900: { bankName: 'Punjab National Bank', branch: 'Collectorate Branch', city: 'Uttar Pradesh', district: 'Uttar Pradesh' },
+  PUNB0002100: { bankName: 'Punjab National Bank', branch: ' Market', city: '', district: 'Uttar Pradesh' },
+  BARB0: { bankName: 'Bank of Baroda', branch: 'Civil Lines Branch', city: 'Uttar Pradesh', district: 'Uttar Pradesh' },
+  BARB0BANSDE: { bankName: 'Bank of Baroda', branch: 'Main Branch', city: '', district: 'Uttar Pradesh' },
+  UBIN0558490: { bankName: 'Union Bank of India', branch: 'Main Branch Branch', city: '', district: 'Uttar Pradesh' },
+  UBIN0538920: { bankName: 'Union Bank of India', branch: 'Uttar Pradesh Chowk', city: 'Uttar Pradesh', district: 'Uttar Pradesh' },
+  CNRB0001482: { bankName: 'Canara Bank', branch: 'Uttar Pradesh Sadar Branch', city: 'Uttar Pradesh', district: 'Uttar Pradesh' },
+  HDFC0001829: { bankName: 'HDFC Bank', branch: 'Civil Lines, Uttar Pradesh', city: 'Uttar Pradesh', district: 'Uttar Pradesh' },
+  ICIC0002109: { bankName: 'ICICI Bank', branch: 'Station Road, Uttar Pradesh', city: 'Uttar Pradesh', district: 'Uttar Pradesh' },
+  UTIB0001420: { bankName: 'Axis Bank', branch: 'Uttar Pradesh City Branch', city: 'Uttar Pradesh', district: 'Uttar Pradesh' },
+  KKBK0005120: { bankName: 'Kotak Mahindra Bank', branch: 'Uttar Pradesh Main', city: 'Uttar Pradesh', district: 'Uttar Pradesh' },
+  CBIN0281920: { bankName: 'Central Bank of India', branch: ' Branch', city: '', district: 'Uttar Pradesh' },
+  IDIB000B029: { bankName: 'Indian Bank', branch: 'Uttar Pradesh Main Branch', city: 'Uttar Pradesh', district: 'Uttar Pradesh' }
 };
 
 const BANK_PREFIX_MAP: Record<string, string> = {
@@ -191,9 +191,9 @@ export const lookupIfscDetails = (ifscCode: string): IfscLookupResult => {
   return {
     valid: true,
     bankName,
-    branch: `Branch Code: ${code.substring(6)} (Ballia/UP Zone)`,
-    city: 'Ballia',
-    district: 'Ballia',
+    branch: `Branch Code: ${code.substring(6)} (Uttar Pradesh/UP Zone)`,
+    city: 'Uttar Pradesh',
+    district: 'Uttar Pradesh',
     state: 'Uttar Pradesh'
   };
 };

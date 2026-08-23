@@ -73,7 +73,7 @@ export const ExaminationModule: React.FC = () => {
       'Room Allotment': e.roomNo,
       'Category': e.examType
     }));
-    exportToCSV('GP_Bansdeeh_Exam_Schedule', data);
+    exportToCSV('GP__Exam_Schedule', data);
   };
 
   return (

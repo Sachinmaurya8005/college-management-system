@@ -179,7 +179,7 @@ export const MarksheetModal: React.FC<MarksheetModalProps> = ({
               <div className="font-serif italic font-bold text-slate-700 dark:text-slate-300">
                 Principal / Center Supdt.
               </div>
-              <div className="text-[10px] text-slate-400">Govt. Polytechnic Bansdeeh, Ballia</div>
+              <div className="text-[10px] text-slate-400">Govt. Polytechnic Uttar Pradesh</div>
             </div>
           </div>
         </div>

@@ -42,7 +42,7 @@ export const TeacherMySalaryView: React.FC = () => {
     accountNumber: '30481920491',
     ifscCode: 'SBIN0004412',
     accountHolderName: currentTeacher?.name || 'Staff Member',
-    branchName: 'Bansdeeh Main Branch'
+    branchName: 'Main Branch'
   };
 
   const handlePrintSlip = () => {
@@ -133,7 +133,7 @@ export const TeacherMySalaryView: React.FC = () => {
           <div>
             <span className="text-[10px] uppercase font-bold text-slate-400">Institutional Direct Salary Credit Account</span>
             <h3 className="text-sm font-black text-slate-900 dark:text-white">
-              {teacherBank.bankName} ({teacherBank.branchName || 'Ballia Main Branch'})
+              {teacherBank.bankName} ({teacherBank.branchName || 'Uttar Pradesh Main Branch'})
             </h3>
             <p className="text-xs text-slate-500 font-mono">
               Account Holder: <strong>{teacherBank.accountHolderName}</strong> • IFSC: <strong>{teacherBank.ifscCode}</strong> • PAN: <strong>{teacherBank.panNumber || 'ABCPR1234F'}</strong>

@@ -61,7 +61,7 @@ export const FeesManagement: React.FC = () => {
       'Due Date': f.dueDate,
       'Status': f.paymentStatus
     }));
-    exportToCSV('GP_Bansdeeh_Fee_Ledger', data);
+    exportToCSV('GP__Fee_Ledger', data);
   };
 
   return (

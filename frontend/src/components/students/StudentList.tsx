@@ -78,7 +78,7 @@ export const StudentList: React.FC<StudentListProps> = ({
       'Fee Status': s.feeStatus,
       'Status': s.status
     }));
-    exportToCSV('GP_Bansdeeh_Students_List', exportData);
+    exportToCSV('GP__Students_List', exportData);
   };
 
   return (

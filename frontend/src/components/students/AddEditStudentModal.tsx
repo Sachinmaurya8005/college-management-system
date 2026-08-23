@@ -29,7 +29,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
     enrollmentNo: '',
     mobile: '',
     email: '',
-    address: 'Ballia, Uttar Pradesh',
+    address: 'Uttar Pradesh',
     category: 'General' as 'General' | 'OBC' | 'SC' | 'ST' | 'EWS',
     bloodGroup: 'B+',
     admissionYear: 2023,
@@ -77,7 +77,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
         enrollmentNo: `E234412${rand}`,
         mobile: '+91 94150 00000',
         email: '',
-        address: 'Bansdeeh, Ballia, Uttar Pradesh - 277202',
+        address: 'Uttar Pradesh - 277202',
         category: 'OBC',
         bloodGroup: 'B+',
         admissionYear: 2023,
@@ -428,7 +428,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
                 type="email"
                 value={formData.email}
                 onChange={e => setFormData({ ...formData, email: e.target.value })}
-                placeholder="student.name@gpbansdeeh.ac.in"
+                placeholder="student.name@Government Polytechnic.ac.in"
                 className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none"
               />
             </div>
@@ -441,7 +441,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
                 rows={2}
                 value={formData.address}
                 onChange={e => setFormData({ ...formData, address: e.target.value })}
-                placeholder="Village / Town, Post, District (Ballia), State, Pincode"
+                placeholder="Village / Town, Post, District (Uttar Pradesh), State, Pincode"
                 className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none resize-none"
               />
             </div>

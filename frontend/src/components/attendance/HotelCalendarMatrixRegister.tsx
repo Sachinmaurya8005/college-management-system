@@ -133,7 +133,7 @@ export const HotelCalendarMatrixRegister: React.FC = () => {
         return row;
       });
 
-      exportToCSV(`GP_Bansdeeh_Faculty_Attendance_${monthString}`, exportData);
+      exportToCSV(`GP__Faculty_Attendance_${monthString}`, exportData);
     } else {
       const exportData = filteredStudents.map(s => {
         const row: Record<string, any> = {
@@ -156,7 +156,7 @@ export const HotelCalendarMatrixRegister: React.FC = () => {
         return row;
       });
 
-      exportToCSV(`GP_Bansdeeh_Student_Attendance_${selectedBranch}_Sem${selectedSemester}_${monthString}`, exportData);
+      exportToCSV(`GP__Student_Attendance_${selectedBranch}_Sem${selectedSemester}_${monthString}`, exportData);
     }
   };
 

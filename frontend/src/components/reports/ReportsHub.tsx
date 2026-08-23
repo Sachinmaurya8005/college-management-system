@@ -53,7 +53,7 @@ export const ReportsHub: React.FC = () => {
           'Attendance %': s.attendancePercentage,
           'Fee Status': s.feeStatus
         }));
-        exportToCSV('GP_Bansdeeh_Students_Report', data);
+        exportToCSV('GP__Students_Report', data);
         break;
       }
       case 'attendance': {
@@ -65,7 +65,7 @@ export const ReportsHub: React.FC = () => {
           'Attendance %': s.attendancePercentage,
           'Status': s.attendancePercentage >= 75 ? 'Compliant' : 'Shortage'
         }));
-        exportToCSV('GP_Bansdeeh_Attendance_Report', data);
+        exportToCSV('GP__Attendance_Report', data);
         break;
       }
       case 'fees': {
@@ -79,7 +79,7 @@ export const ReportsHub: React.FC = () => {
           'Pending Amount': f.pendingAmount,
           'Status': f.paymentStatus
         }));
-        exportToCSV('GP_Bansdeeh_Fee_Collection_Report', data);
+        exportToCSV('GP__Fee_Collection_Report', data);
         break;
       }
       case 'exams': {
@@ -94,7 +94,7 @@ export const ReportsHub: React.FC = () => {
           'Division': r.division,
           'Status': r.status
         }));
-        exportToCSV('GP_Bansdeeh_Exam_Results_Report', data);
+        exportToCSV('GP__Exam_Results_Report', data);
         break;
       }
       case 'teachers': {
@@ -108,7 +108,7 @@ export const ReportsHub: React.FC = () => {
           'Mobile': t.mobile,
           'Subjects': t.subjects.join('; ')
         }));
-        exportToCSV('GP_Bansdeeh_Faculty_Report', data);
+        exportToCSV('GP__Faculty_Report', data);
         break;
       }
     }
@@ -386,7 +386,7 @@ export const ReportsHub: React.FC = () => {
         {/* Verification Signatures in Print */}
         <div className="pt-8 mt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
           <div className="text-slate-500 text-[10px]">
-            Statistical Records Section • Government Polytechnic Ballia
+            Statistical Records Section • Government Polytechnic Uttar Pradesh
           </div>
           <div className="text-center">
             <div className="font-serif italic font-bold text-slate-800 dark:text-slate-200 text-sm">

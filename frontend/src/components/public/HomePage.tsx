@@ -187,7 +187,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   >
                     Read Full Message <ChevronRight className="w-3 h-3" />
                   </button>
-                  <span className="text-[10px] text-blue-300">Government Polytechnic, Ballia</span>
+                  <span className="text-[10px] text-blue-300">Government Polytechnic, Uttar Pradesh</span>
                 </div>
               </div>
             </div>

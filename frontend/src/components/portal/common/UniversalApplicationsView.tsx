@@ -73,7 +73,7 @@ interface StaffNotice {
 }
 
 const FACULTY_MEMBERS = [
-  { name: 'Er. Sachin Maurya (Principal & Exam Controller)', email: 'principal.gpbansdeeh@gmail.com', role: 'principal', department: 'Administration' },
+  { name: 'Er. Sachin Maurya (Principal & Exam Controller)', email: 'principal.Government Polytechnic@gmail.com', role: 'principal', department: 'Administration' },
   { name: 'Dr. Alok Kumar Rai (HOD & Lecturer - CSE)', email: 'alok.rai@polytechnic.edu', role: 'teacher', department: 'Computer Science & Engineering' },
   { name: 'Er. Priya Sharma (Lecturer - CSE)', email: 'priya.sharma@polytechnic.edu', role: 'teacher', department: 'Computer Science & Engineering' },
   { name: 'Er. Amit Kumar Gupta (Lecturer - Mechanical)', email: 'amit.gupta@polytechnic.edu', role: 'teacher', department: 'Mechanical Engineering' },
@@ -109,7 +109,7 @@ export const UniversalApplicationsView: React.FC = () => {
       semester: 4,
       recipientRole: 'principal',
       recipientName: 'Er. Sachin Maurya (Principal & Exam Controller)',
-      recipientEmail: 'principal.gpbansdeeh@gmail.com',
+      recipientEmail: 'principal.Government Polytechnic@gmail.com',
       subject: 'Request for Name Spelling Correction on BTEUP Portal',
       category: 'Personal Information Correction',
       description: 'Respected Sir, My father name spelling in the matriculation marksheet is Shri Ramakant Verma. Please update the same on BTEUP college database record.',
@@ -146,7 +146,7 @@ export const UniversalApplicationsView: React.FC = () => {
       senderEmail: 'alok.rai@polytechnic.edu',
       recipientRole: 'principal',
       recipientName: 'Er. Sachin Maurya (Principal & Exam Controller)',
-      recipientEmail: 'principal.gpbansdeeh@gmail.com',
+      recipientEmail: 'principal.Government Polytechnic@gmail.com',
       subject: 'Requisition for 10 New Core i7 Workstations for CSE Python Lab',
       category: 'Academic / Lab Equipment Request',
       description: 'Respected Principal Sir, For the upcoming BTEUP practical examinations and AI Python workshop, the CSE computer lab requires 10 additional workstations and RAM upgrade.',

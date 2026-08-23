@@ -171,7 +171,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const validAdminUsernames = [
         'sachin_maurya8005',
         'sachin_maurya8005@polytechnic.edu',
-        'sachin_maurya8005@gpbansdeeh.ac.in',
+        'sachin_maurya8005@Government Polytechnic.ac.in',
         'admin@polytechnic.edu',
         'admin'
       ];

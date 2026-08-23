@@ -47,7 +47,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate, onGoToPubl
   const studentMother = user?.motherName || studentRecord?.motherName || 'Smt. Shanti Devi';
   const studentCategory = user?.category || studentRecord?.category || 'OBC';
   const studentBlood = user?.bloodGroup || studentRecord?.bloodGroup || 'B+';
-  const studentAddress = user?.address || studentRecord?.address || 'Bansdeeh, Ballia (U.P.) - 277202';
+  const studentAddress = user?.address || studentRecord?.address || 'Uttar Pradesh (U.P.) - 277202';
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -440,7 +440,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate, onGoToPubl
                   <strong className="text-slate-900 dark:text-white text-xs block leading-relaxed">
                     {studentAddress}
                   </strong>
-                  <span className="text-slate-500">Ballia, Uttar Pradesh - 277202</span>
+                  <span className="text-slate-500">Uttar Pradesh - 277202</span>
                 </div>
               </div>
             </div>
@@ -467,7 +467,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate, onGoToPubl
               <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700/60 space-y-1">
                 <span className="text-slate-400 text-[10px] uppercase font-bold block">Institution</span>
                 <strong className="text-slate-900 dark:text-white text-xs block">{settings.collegeName}</strong>
-                <span className="text-slate-500">BTEUP Code: {settings.bteupCode} • Ballia (U.P.)</span>
+                <span className="text-slate-500">BTEUP Code: {settings.bteupCode} • Uttar Pradesh (U.P.)</span>
               </div>
             </div>
           )}

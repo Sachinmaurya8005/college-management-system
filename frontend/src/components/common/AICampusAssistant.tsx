@@ -94,7 +94,7 @@ export const AICampusAssistant: React.FC<AICampusAssistantProps> = ({ onNavigate
 
     if (q.includes('principal') || q.includes('प्रिंसिपल') || q.includes('head') || q.includes('rc srivastava') || q.includes('प्राचार्य')) {
       return {
-        text: `👨‍🏫 हमारे संस्थान के प्राचार्य:\n\n• नाम: ${PRINCIPAL_DETAILS.name}\n• पद: ${PRINCIPAL_DETAILS.designation}\n• योग्यता: ${PRINCIPAL_DETAILS.qualification}\n• अनुभव: ${PRINCIPAL_DETAILS.experienceYears}+ वर्ष (प्राविधिक शिक्षा विभाग, उप्र)\n• ईमेल: ${PRINCIPAL_DETAILS.email}\n• फोन: ${PRINCIPAL_DETAILS.mobile}\n• चैंबर: प्रशासनिक ब्लॉक, बांसडीह।`,
+        text: `👨‍🏫 हमारे संस्थान के प्राचार्य:\n\n• नाम: ${PRINCIPAL_DETAILS.name}\n• पद: ${PRINCIPAL_DETAILS.designation}\n• योग्यता: ${PRINCIPAL_DETAILS.qualification}\n• अनुभव: ${PRINCIPAL_DETAILS.experienceYears}+ वर्ष (प्राविधिक शिक्षा विभाग, उप्र)\n• ईमेल: ${PRINCIPAL_DETAILS.email}\n• फोन: ${PRINCIPAL_DETAILS.mobile}\n• चैंबर: प्रशासनिक ब्लॉक, ।`,
         suggestions: ['📋 फैकल्टी सूची', '🏢 कॉलेज लोकेशन', '📢 हालिया सूचनाएं'],
         actionLink: { label: 'View Principal Dossier', view: 'faculty' }
       };
@@ -227,7 +227,7 @@ export const AICampusAssistant: React.FC<AICampusAssistantProps> = ({ onNavigate
                     LIVE
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-300">Govt. Polytechnic Bansdeeh Helpdesk</p>
+                <p className="text-[11px] text-slate-300">Government Polytechnic Helpdesk</p>
               </div>
             </div>
 

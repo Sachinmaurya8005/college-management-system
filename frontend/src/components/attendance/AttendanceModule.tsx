@@ -114,7 +114,7 @@ export const AttendanceModule: React.FC = () => {
       'Attendance %': `${s.attendancePercentage}%`,
       'Compliance Status': s.attendancePercentage >= 75 ? 'Eligible (>=75%)' : 'Shortage (<75%)'
     }));
-    exportToCSV('GP_Bansdeeh_Attendance_Report', reportData);
+    exportToCSV('GP__Attendance_Report', reportData);
   };
 
   return (

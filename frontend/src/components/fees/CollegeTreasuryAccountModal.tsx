@@ -59,7 +59,7 @@ export const CollegeTreasuryAccountModal: React.FC<CollegeTreasuryAccountModalPr
   const [isLookingUpIfsc, setIsLookingUpIfsc] = useState(false);
   const [ifscVerifiedStatus, setIfscVerifiedStatus] = useState<string | null>('State Bank of India (Govt Treasury Branch)');
 
-  const collegeUpiId = 'principal.gpbansdeeh@sbi';
+  const collegeUpiId = 'principal.Government Polytechnic@sbi';
 
   // Dynamic IFSC Lookup
   const handleIfscChange = (val: string) => {

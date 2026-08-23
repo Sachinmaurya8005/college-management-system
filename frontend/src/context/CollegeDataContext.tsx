@@ -244,7 +244,7 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
       id: 'act-init',
       type: 'general',
       message: 'Real-Time College Data Gateway Active',
-      detail: 'Govt. Polytechnic Bansdeeh Live Hub',
+      detail: 'Government Polytechnic Live Hub',
       timestamp: 'Just now'
     }
   ]);

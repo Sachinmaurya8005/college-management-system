@@ -172,8 +172,8 @@ export const FeeReceiptModal: React.FC<FeeReceiptModalProps> = ({
             <div className="flex items-center gap-3">
               <div className="w-16 h-16 border-2 border-dashed border-polytechnic-900/40 dark:border-blue-400/40 rounded-full flex flex-col items-center justify-center text-center p-1 text-[8px] font-bold text-polytechnic-900 dark:text-blue-400 rotate-[-12deg]">
                 <span>GOVT POLYTECHNIC</span>
-                <span>BANSDEEH</span>
-                <span>BALLIA (U.P.)</span>
+                <span></span>
+                <span> (U.P.)</span>
               </div>
               <div className="text-[10px] text-slate-400">
                 <div>Digitally Verified Receipt</div>

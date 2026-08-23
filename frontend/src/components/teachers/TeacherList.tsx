@@ -81,7 +81,7 @@ export const TeacherList: React.FC<TeacherListProps> = ({
       'Joining Date': t.joiningDate,
       'Status': t.status
     }));
-    exportToCSV('GP_Bansdeeh_Staff_Directory', data);
+    exportToCSV('GP__Staff_Directory', data);
   };
 
   return (

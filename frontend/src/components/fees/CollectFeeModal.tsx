@@ -109,7 +109,7 @@ export const CollectFeeModal: React.FC<CollectFeeModalProps> = ({
           >
             <option value="Online UPI">Online UPI (GooglePay / PhonePe / Paytm)</option>
             <option value="Net Banking">Net Banking / SBI Collect</option>
-            <option value="Challan">Bank Challan (Union Bank / SBI Bansdeeh)</option>
+            <option value="Challan">Bank Challan (Union Bank / SBI )</option>
             <option value="Cash">Cash at College Counter</option>
           </select>
         </div>

@@ -83,7 +83,7 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
         salary: teacher.salary || 78500,
         payScale: teacher.payScale || '7th CPC Level 10 (₹56,100 - ₹1,77,500)',
         promotionStatus: teacher.promotionStatus || 'Regular Confirmed • Eligible for Next CAS Review',
-        address: teacher.address || 'Government Polytechnic Staff Quarters, Bansdeeh, Ballia (U.P.) - 277202',
+        address: teacher.address || 'Government Polytechnic Staff Quarters, Uttar Pradesh (U.P.) - 277202',
         bloodGroup: teacher.bloodGroup || 'B+',
         staffType: teacher.staffType || 'Teaching Faculty',
         workDescription: teacher.workDescription || 'Conducts theory & practical lectures, departmental laboratory supervision',
@@ -312,7 +312,7 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
                   <MapPin className="w-4 h-4" /> Permanent &amp; Residential Address (पता)
                 </h4>
                 <p className="text-slate-800 dark:text-slate-200 font-medium leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700/60">
-                  {teacher.address || 'Government Polytechnic Campus Staff Quarters, Bansdeeh, Ballia (U.P.) - 277202'}
+                  {teacher.address || 'Government Polytechnic Campus Staff Quarters, Uttar Pradesh (U.P.) - 277202'}
                 </p>
               </div>
             </div>
@@ -390,7 +390,7 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
               <div className="flex items-center justify-between border-b border-white/20 pb-3">
                 <div>
                   <h4 className="text-xs font-black uppercase text-amber-400 tracking-wider">Government Polytechnic</h4>
-                  <p className="text-[10px] text-blue-200">Bansdeeh, Ballia (U.P.) • Inst. Code 4412</p>
+                  <p className="text-[10px] text-blue-200">Uttar Pradesh (U.P.) • Inst. Code 4412</p>
                 </div>
                 <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-white/20 text-white">STAFF ID</span>
               </div>

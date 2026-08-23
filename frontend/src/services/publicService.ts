@@ -82,7 +82,7 @@ export const DEFAULT_GALLERY: GalleryItem[] = [
     title: 'Main Institutional Administrative & Academic Complex',
     category: 'Campus',
     image_url: 'https://images.unsplash.com/photo-1562774053-701939374585?w=800&h=600&fit=crop',
-    description: 'Lush green 12.5-acre campus situated in Bansdeeh, Ballia, Uttar Pradesh.',
+    description: 'Lush green 12.5-acre campus situated in Uttar Pradesh.',
     date: '2026-02-20',
     status: 'Published'
   },
@@ -252,19 +252,19 @@ export const DEFAULT_ABOUT: AboutCollegeData = {
 
 export const DEFAULT_LOCATION: CollegeLocationData = {
   address: 'Government Polytechnic, Uttar Pradesh',
-  district: 'Ballia',
+  district: 'Uttar Pradesh',
   state: 'Uttar Pradesh',
   pincode: '277202',
-  landmark: 'Near Bansdeeh Stadium, Bansdeeh Road',
+  landmark: 'Near  Stadium, Campus Road',
   latitude: 25.86472,
   longitude: 84.22153,
-  map_embed_url: 'https://maps.google.com/maps?q=Bansdeeh,Ballia,Uttar+Pradesh&t=&z=13&ie=UTF8&iwloc=&output=embed',
+  map_embed_url: 'https://maps.google.com/maps?q=Uttar Pradesh,Uttar+Pradesh&t=&z=13&ie=UTF8&iwloc=&output=embed',
   map_view_url: 'https://maps.google.com/?q=25.86472,84.22153',
   directions_url: 'https://www.google.com/maps/dir/?api=1&destination=25.86472,84.22153',
-  connectivity_bus: 'Bansdeeh Bus Stand (2.5 km) with regular buses connecting Ballia City, Sikanderpur, and Patna.',
-  connectivity_train: 'Ballia Railway Station - BUI (18 km) connected to major trains via Varanasi and Gorakhpur.',
+  connectivity_bus: ' Bus Stand (2.5 km) with regular buses connecting Uttar Pradesh City, Sikanderpur, and Patna.',
+  connectivity_train: 'Uttar Pradesh Railway Station - BUI (18 km) connected to major trains via Varanasi and Gorakhpur.',
   contact_phone: '+91 94150 24510 / +91 5498 299100',
-  contact_email: 'principal.gpbansdeeh@gmail.com'
+  contact_email: 'principal.Government Polytechnic@gmail.com'
 };
 
 export const DEFAULT_HOME_PAYLOAD: PublicHomePayload = {

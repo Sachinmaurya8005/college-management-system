@@ -111,7 +111,7 @@ export const NoticeDetailModal: React.FC<NoticeDetailModalProps> = ({
               <div className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
                 {notice.issuedBy}
               </div>
-              <div className="text-[10px] text-slate-400">Govt. Polytechnic Bansdeeh, Ballia</div>
+              <div className="text-[10px] text-slate-400">Govt. Polytechnic Uttar Pradesh</div>
             </div>
           </div>
         </div>

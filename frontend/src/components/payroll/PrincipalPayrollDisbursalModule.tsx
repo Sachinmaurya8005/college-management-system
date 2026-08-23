@@ -89,7 +89,7 @@ export const PrincipalPayrollDisbursalModule: React.FC = () => {
       accountNumber: '30481920491',
       ifscCode: 'SBIN0004412',
       accountHolderName: teacher.name,
-      branchName: 'Bansdeeh Main Branch',
+      branchName: 'Main Branch',
       panNumber: 'ABCPR1234F'
     };
     setBankForm(existing);
@@ -250,7 +250,7 @@ export const PrincipalPayrollDisbursalModule: React.FC = () => {
       };
     });
 
-    exportToCSV(`GP_Bansdeeh_Staff_Payroll_${selectedMonth}`, exportData);
+    exportToCSV(`GP__Staff_Payroll_${selectedMonth}`, exportData);
   };
 
   return (
@@ -394,7 +394,7 @@ export const PrincipalPayrollDisbursalModule: React.FC = () => {
                   accountNumber: '30481920491',
                   ifscCode: 'SBIN0004412',
                   accountHolderName: teacher.name,
-                  branchName: 'Bansdeeh Main Branch'
+                  branchName: 'Main Branch'
                 };
 
                 return (

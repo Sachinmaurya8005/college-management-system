@@ -54,7 +54,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
       gender: 'Male',
       mobile: '+91 98381 23450',
       email: user?.email || 'student@polytechnic.edu',
-      address: 'Bansdeeh, Ballia (U.P.) - 277202',
+      address: 'Uttar Pradesh (U.P.) - 277202',
       branch: user?.branch || 'Computer Science & Engineering',
       semester: user?.semester || 4,
       admissionYear: 2023,
