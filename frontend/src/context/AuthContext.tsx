@@ -23,7 +23,7 @@ export const DEMO_USERS: Record<Role, User> = {
     designation: 'Principal & Chief Administrator',
     department: 'Administration',
     phone: '+91 94150 24510',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces',
+    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces',
     lastLogin: 'Today at 09:15 AM'
   },
   teacher: {
@@ -63,6 +63,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           return null;
         }
         if (parsed && typeof parsed === 'object' && parsed.role) {
+          if (parsed.avatar?.includes('photo-1534528741775-53994a69daeb')) {
+            parsed.avatar = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces';
+          }
           return parsed;
         }
       } catch (e) {
@@ -79,6 +82,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.removeItem('gpb_portal_user');
     }
   }, [user]);
+
+  // Real-time synchronization across Admin portal and Public Website for Principal updates
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      const bc = new BroadcastChannel('gpb_realtime_broadcast_channel');
+      bc.onmessage = (event) => {
+        if (event.data?.type === 'PUBLIC_CONTENT_UPDATED') {
+          const payload = event.data?.payload;
+          if (payload?.principal_photo || payload?.principal_name) {
+            setUser(prev => {
+              if (prev && prev.role === 'admin') {
+                return {
+                  ...prev,
+                  avatar: payload.principal_photo || prev.avatar,
+                  name: payload.principal_name || prev.name
+                };
+              }
+              return prev;
+            });
+          }
+        }
+      };
+      return () => {
+        bc.close();
+      };
+    }
+  }, []);
 
   const login = async (identifier: string, pass: string, role: Role): Promise<{ success: boolean; message?: string }> => {
     const trimmedId = identifier.trim().toLowerCase();
@@ -300,6 +330,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const updated = { ...user, ...updatedData };
     setUser(updated);
     authService.updateProfile(updatedData).catch(() => {});
+
+    // If admin/principal updates photo or name, sync immediately to public about and notify all open tabs
+    if (user.role === 'admin') {
+      try {
+        const storedAbout = localStorage.getItem('gpb_public_about');
+        const parsedAbout = storedAbout ? JSON.parse(storedAbout) : {};
+        const newAbout = {
+          ...parsedAbout,
+          principal_name: updated.name || parsedAbout.principal_name || 'Er. Sachin Maurya',
+          principal_photo: updated.avatar || parsedAbout.principal_photo || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces'
+        };
+        localStorage.setItem('gpb_public_about', JSON.stringify(newAbout));
+
+        if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+          const bc = new BroadcastChannel('gpb_realtime_broadcast_channel');
+          bc.postMessage({ type: 'PUBLIC_CONTENT_UPDATED', payload: newAbout });
+          bc.close();
+        }
+      } catch (e) {}
+    }
   };
 
   return (

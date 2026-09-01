@@ -291,7 +291,7 @@ export const INITIAL_STUDENTS: Student[] = [
     bloodGroup: "O-",
     admissionYear: 2021,
     status: "Active",
-    photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces",
+    photoUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=faces",
     attendancePercentage: 96,
     feeStatus: "Paid"
   },
@@ -454,7 +454,7 @@ export const INITIAL_TEACHERS: Teacher[] = [
     joiningDate: "2015-01-15",
     subjects: ["Thermodynamics", "CNC Machining & Automation", "Manufacturing Processes"],
     status: "Active",
-    photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces",
+    photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces",
     experienceYears: 11,
     age: 42,
     dob: "1984-06-20",

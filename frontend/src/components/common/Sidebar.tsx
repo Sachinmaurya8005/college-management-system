@@ -185,7 +185,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="p-4 border-t border-white/10 bg-black/20 space-y-2">
           <div className="flex items-center gap-3 mb-1 px-1">
             <img
-              src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop'}
+              src={user?.avatar || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=100&h=100&fit=crop&crop=faces'}
               alt={user?.name || 'User'}
               className="w-9 h-9 rounded-xl object-cover ring-2 ring-blue-500/40"
             />

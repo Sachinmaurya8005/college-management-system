@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { websiteContentService } from '../../../services/websiteContentService';
 import { useCollegeData } from '../../../context/CollegeDataContext';
+import { useAuth } from '../../../context/AuthContext';
 import {
   Facility,
   GalleryItem,
@@ -42,6 +43,7 @@ import confetti from 'canvas-confetti';
 
 export const WebsiteContentManager: React.FC = () => {
   const { updateSettings } = useCollegeData();
+  const { user, updateUser } = useAuth();
   const [activeTab, setActiveTab] = useState<'facilities' | 'gallery' | 'links' | 'fees' | 'location' | 'about'>('facilities');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -330,6 +332,12 @@ export const WebsiteContentManager: React.FC = () => {
         hindiName: aboutForm.hindi_name,
         principalName: aboutForm.principal_name
       });
+      if (user?.role === 'admin') {
+        updateUser({
+          avatar: aboutForm.principal_photo,
+          name: aboutForm.principal_name
+        });
+      }
       confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);

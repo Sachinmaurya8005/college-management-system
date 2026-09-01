@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCollegeData } from '../../context/CollegeDataContext';
+import { websiteContentService } from '../../services/websiteContentService';
 import { formatDate } from '../../utils/helpers';
 import { Globe, ArrowLeft } from 'lucide-react';
 
@@ -58,17 +59,19 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate, onGoToPubl
     phone: user?.phone || '+91 94150 24510',
     designation: user?.designation || (user?.role === 'admin' ? 'Principal & Administrator' : user?.role === 'teacher' ? 'Lecturer' : 'Diploma Student'),
     department: user?.department || (user?.role === 'student' ? user?.branch || 'Computer Science' : 'Administration'),
-    avatar: user?.avatar || 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&h=200&fit=crop'
+    avatar: user?.avatar || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces'
   });
 
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   // Suggested high quality profile photo presets
   const AVATAR_PRESETS = [
+    { label: 'Principal (Academician Male 1)', url: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces' },
+    { label: 'Principal (Academician Male 2)', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=faces' },
+    { label: 'Principal (Academician Male 3)', url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=faces' },
+    { label: 'Professor Female', url: 'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?w=200&h=200&fit=crop&crop=faces' },
     { label: 'Student Male', url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&h=200&fit=crop&crop=faces' },
     { label: 'Student Female', url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=faces' },
-    { label: 'Professor Male', url: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=faces' },
-    { label: 'Professor Female', url: 'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?w=200&h=200&fit=crop&crop=faces' },
   ];
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,9 +95,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate, onGoToPubl
 
     updateUser(formData);
 
-    // If admin/principal updates name, sync with official College Settings principalName
+    // If admin/principal updates name or photo, sync with official College Settings and Website Content
     if (user?.role === 'admin') {
       updateSettings({ principalName: formData.name });
+      websiteContentService.updateAboutCollege({
+        principal_name: formData.name,
+        principal_photo: formData.avatar
+      });
     }
 
     setIsEditing(false);

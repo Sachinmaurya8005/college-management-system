@@ -54,7 +54,7 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
   // Suggested high quality profile photo presets
   const STAFF_PHOTO_PRESETS = [
     { label: 'Professor 1 (Male)', url: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=faces' },
-    { label: 'Professor 2 (Male)', url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces' },
+    { label: 'Professor 2 (Male)', url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=faces' },
     { label: 'Lecturer (Female)', url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=faces' },
     { label: 'Lecturer 2 (Female)', url: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=faces' },
     { label: 'Technical Staff', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces' },
@@ -542,7 +542,7 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
                   {[
                     { label: 'Professor 1 (Male)', url: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=faces' },
-                    { label: 'Professor 2 (Male)', url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces' },
+                    { label: 'Professor 2 (Male)', url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=faces' },
                     { label: 'Lecturer (Female)', url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=faces' },
                     { label: 'Lecturer 2 (Female)', url: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=faces' },
                     { label: 'Lab Instructor', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=faces' },
