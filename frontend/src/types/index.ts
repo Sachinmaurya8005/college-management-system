@@ -546,3 +546,67 @@ export interface TPOPlacementData {
   };
 }
 
+export interface LibraryBook {
+  id: string;
+  title: string;
+  author: string;
+  branch: string;
+  code: string;
+  isbn?: string;
+  pages: number;
+  totalCopies: number;
+  copiesAvailable: number;
+  rackLocation?: string;
+  isBookBankEligible: boolean;
+  category: 'Core Curriculum' | 'Reference' | 'Competitive Exam' | 'General Reading' | 'Digital E-Book';
+  coverUrl: string;
+  pdfUrl?: string;
+  edition?: string;
+  status: 'Available' | 'Low Stock' | 'Out of Stock';
+}
+
+export interface IssuedBookRecord {
+  id: string;
+  bookId: string;
+  bookTitle: string;
+  bookCode: string;
+  borrowerName: string;
+  borrowerType: 'Student' | 'Teacher';
+  borrowerId: string;
+  borrowerEmail?: string;
+  borrowerPhone?: string;
+  branch?: string;
+  issueDate: string;
+  dueDate: string;
+  returnDate?: string;
+  status: 'Issued' | 'Overdue' | 'Returned';
+  fineAmount?: number;
+}
+
+export interface UpcomingLibraryBook {
+  id: string;
+  title: string;
+  author: string;
+  branch: string;
+  publisher?: string;
+  expectedDate: string;
+  copiesOrdered: number;
+  requestedByCount: number;
+  requestedByNames?: string[];
+  status: 'Recommended' | 'Approved' | 'In Transit' | 'Arrived';
+  estimatedCost?: string;
+}
+
+export interface LibrarySettingsData {
+  totalHoldings: string;
+  ebooksCount: string;
+  bookBankSets: string;
+  activeReaders: string;
+  maxBooksPerStudent: number;
+  maxDaysAllowed: number;
+  lateFinePerDay: number;
+  librarianName: string;
+  librarianEmail: string;
+  librarianPhone: string;
+}
+
