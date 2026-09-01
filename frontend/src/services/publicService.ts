@@ -235,7 +235,7 @@ export const DEFAULT_ABOUT: AboutCollegeData = {
   mission: 'To deliver rigorous industry-aligned engineering curricula, hands-on workshop training, and moral ethics, ensuring high employability and sustainable nation-building.',
   principal_name: 'Er. Sachin Maurya',
   principal_message: 'Technical education is the cornerstone of industrial transformation and self-reliance. At Government Polytechnic, we are committed to providing top-tier academic discipline, modern laboratory experiences, and career development to every student.',
-  principal_photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces',
+  principal_photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces',
   achievements: [
     'Affiliated to Board of Technical Education, Uttar Pradesh (BTEUP Code 4412)',
     'Approved by All India Council for Technical Education (AICTE), New Delhi',
@@ -251,20 +251,20 @@ export const DEFAULT_ABOUT: AboutCollegeData = {
 };
 
 export const DEFAULT_LOCATION: CollegeLocationData = {
-  address: 'Government Polytechnic, Uttar Pradesh',
+  address: 'Government Polytechnic Main Campus, Uttar Pradesh - 277202',
   district: 'Uttar Pradesh',
   state: 'Uttar Pradesh',
   pincode: '277202',
-  landmark: 'Near  Stadium, Campus Road',
+  landmark: 'Campus Main Road, Near Technical Complex',
   latitude: 25.86472,
   longitude: 84.22153,
-  map_embed_url: 'https://maps.google.com/maps?q=Uttar Pradesh,Uttar+Pradesh&t=&z=13&ie=UTF8&iwloc=&output=embed',
+  map_embed_url: 'https://maps.google.com/maps?q=25.86472,84.22153&t=&z=14&ie=UTF8&iwloc=&output=embed',
   map_view_url: 'https://maps.google.com/?q=25.86472,84.22153',
   directions_url: 'https://www.google.com/maps/dir/?api=1&destination=25.86472,84.22153',
-  connectivity_bus: ' Bus Stand (2.5 km) with regular buses connecting Uttar Pradesh City, Sikanderpur, and Patna.',
-  connectivity_train: 'Uttar Pradesh Railway Station - BUI (18 km) connected to major trains via Varanasi and Gorakhpur.',
+  connectivity_bus: 'Frequent UPSRTC state transport buses and shared transit available from Central City Bus Stand.',
+  connectivity_train: 'Major Railway Junctions connecting Lucknow, Varanasi, Gorakhpur, Patna, and Delhi.',
   contact_phone: '+91 94150 24510 / +91 5498 299100',
-  contact_email: 'principal.Government Polytechnic@gmail.com'
+  contact_email: 'principal.polytechnic@gmail.com'
 };
 
 export const DEFAULT_HOME_PAYLOAD: PublicHomePayload = {
@@ -273,7 +273,7 @@ export const DEFAULT_HOME_PAYLOAD: PublicHomePayload = {
   aicte_approval: 'Approved by AICTE New Delhi & Affiliated to BTEUP Lucknow',
   principal_name: 'Er. Sachin Maurya',
   principal_message: 'Our mission is to foster technical excellence, practical workshop competence, and disciplined leadership in every diploma engineer.',
-  principal_photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces',
+  principal_photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces',
   history_snippet: 'Government Polytechnic is a premier government institution dedicated to excellence in 3-year technical diploma engineering programs with world-class laboratories and workshop facilities.',
   location: DEFAULT_LOCATION,
   latest_notices: INITIAL_NOTICES,
@@ -294,6 +294,17 @@ function isArrayPayload<T>(val: any): val is T[] {
   return Array.isArray(val);
 }
 
+function getStorage<T>(key: string, fallback: T): T {
+  try {
+    const raw = localStorage.getItem(`gpb_public_${key}`);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed) return parsed;
+    }
+  } catch (e) {}
+  return fallback;
+}
+
 export const publicService = {
   getHomeOverview: async (): Promise<PublicHomePayload> => {
     try {
@@ -304,7 +315,26 @@ export const publicService = {
     } catch (e) {
       // Backend offline / not reachable
     }
-    return DEFAULT_HOME_PAYLOAD;
+
+    const localAbout = getStorage<AboutCollegeData>('about', DEFAULT_ABOUT);
+    const localLocation = getStorage<CollegeLocationData>('location', DEFAULT_LOCATION);
+    const localFacilities = getStorage<Facility[]>('facilities', DEFAULT_FACILITIES);
+    const localGallery = getStorage<GalleryItem[]>('gallery', DEFAULT_GALLERY);
+    const localLinks = getStorage<ImportantLink[]>('links', DEFAULT_LINKS);
+    const localFees = getStorage<PublicFeeStructure[]>('fees', DEFAULT_FEES);
+
+    return {
+      ...DEFAULT_HOME_PAYLOAD,
+      college_name: localAbout.college_name || 'Government Polytechnic',
+      principal_name: localAbout.principal_name || 'Er. Sachin Maurya',
+      principal_message: localAbout.principal_message || DEFAULT_ABOUT.principal_message,
+      principal_photo: localAbout.principal_photo || DEFAULT_ABOUT.principal_photo,
+      location: localLocation,
+      featured_facilities: localFacilities,
+      gallery_preview: localGallery,
+      important_links: localLinks,
+      public_fees: localFees
+    };
   },
 
   getAboutCollege: async (): Promise<AboutCollegeData> => {
@@ -316,7 +346,7 @@ export const publicService = {
     } catch (e) {
       // Backend offline
     }
-    return DEFAULT_ABOUT;
+    return getStorage<AboutCollegeData>('about', DEFAULT_ABOUT);
   },
 
   getCollegeLocation: async (): Promise<CollegeLocationData> => {
@@ -328,7 +358,7 @@ export const publicService = {
     } catch (e) {
       // Backend offline
     }
-    return DEFAULT_LOCATION;
+    return getStorage<CollegeLocationData>('location', DEFAULT_LOCATION);
   },
 
   getFacilities: async (category?: string): Promise<Facility[]> => {
@@ -341,10 +371,11 @@ export const publicService = {
     } catch (e) {
       // Backend offline
     }
+    const facilities = getStorage<Facility[]>('facilities', DEFAULT_FACILITIES);
     if (category && category !== 'All') {
-      return DEFAULT_FACILITIES.filter(f => f.category.toLowerCase() === category.toLowerCase());
+      return facilities.filter(f => f.category.toLowerCase() === category.toLowerCase());
     }
-    return DEFAULT_FACILITIES;
+    return facilities;
   },
 
   getGallery: async (category?: string): Promise<GalleryItem[]> => {

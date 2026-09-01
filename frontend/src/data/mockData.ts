@@ -397,7 +397,7 @@ export const PRINCIPAL_DETAILS: PrincipalProfile = {
   mobile: "+91 94150 24510",
   officeLocation: "Principal Chamber, Administrative Block, Government Polytechnic (U.P.) - 277202",
   joiningDate: "2012-07-01",
-  photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=300&fit=crop&crop=faces",
+  photoUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces",
   bio: "Senior Academician & Technical Administrator with over 28 years of distinguished service under the Department of Technical Education, Government of Uttar Pradesh. Dedicated to institutional discipline, 100% diploma curriculum execution, state-of-the-art laboratory modernisation, and industry-aligned training for Purvanchal students.",
   achievements: [
     "28+ Years of Service in UP Technical Education Department",

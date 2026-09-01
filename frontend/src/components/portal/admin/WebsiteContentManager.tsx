@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Building,
   Image as ImageIcon,
@@ -17,9 +17,19 @@ import {
   ExternalLink,
   ShieldCheck,
   Award,
-  BookOpen
+  BookOpen,
+  Sparkles,
+  RefreshCw,
+  Navigation,
+  Compass,
+  Eye,
+  Bus,
+  Train,
+  Camera,
+  Layers
 } from 'lucide-react';
 import { websiteContentService } from '../../../services/websiteContentService';
+import { useCollegeData } from '../../../context/CollegeDataContext';
 import {
   Facility,
   GalleryItem,
@@ -31,7 +41,9 @@ import {
 import confetti from 'canvas-confetti';
 
 export const WebsiteContentManager: React.FC = () => {
+  const { updateSettings } = useCollegeData();
   const [activeTab, setActiveTab] = useState<'facilities' | 'gallery' | 'links' | 'fees' | 'location' | 'about'>('facilities');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Facilities State
   const [facilities, setFacilities] = useState<Facility[]>([]);
@@ -289,6 +301,14 @@ export const WebsiteContentManager: React.FC = () => {
     setSaving(true);
     try {
       await websiteContentService.updateLocation(locationForm);
+      await updateSettings({
+        address: locationForm.address,
+        district: locationForm.district,
+        state: locationForm.state,
+        pincode: locationForm.pincode,
+        phone: locationForm.contact_phone,
+        email: locationForm.contact_email
+      });
       confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
@@ -305,6 +325,11 @@ export const WebsiteContentManager: React.FC = () => {
     setSaving(true);
     try {
       await websiteContentService.updateAboutCollege(aboutForm);
+      await updateSettings({
+        collegeName: aboutForm.college_name,
+        hindiName: aboutForm.hindi_name,
+        principalName: aboutForm.principal_name
+      });
       confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
@@ -312,6 +337,53 @@ export const WebsiteContentManager: React.FC = () => {
       console.error('Failed to save about info', err);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleDetectGps = () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const lat = parseFloat(pos.coords.latitude.toFixed(5));
+        const lng = parseFloat(pos.coords.longitude.toFixed(5));
+        setLocationForm(prev => ({
+          ...prev,
+          latitude: lat,
+          longitude: lng,
+          map_embed_url: `https://maps.google.com/maps?q=${lat},${lng}&t=&z=14&ie=UTF8&iwloc=&output=embed`,
+          map_view_url: `https://maps.google.com/?q=${lat},${lng}`,
+          directions_url: `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`
+        }));
+      },
+      err => {
+        alert('Could not detect GPS coordinates: ' + err.message);
+      }
+    );
+  };
+
+  const handleGenerateMapFromAddress = () => {
+    const q = encodeURIComponent(`${locationForm.address || 'Government Polytechnic'}, ${locationForm.district || 'Uttar Pradesh'}`);
+    setLocationForm(prev => ({
+      ...prev,
+      map_embed_url: `https://maps.google.com/maps?q=${q}&t=&z=14&ie=UTF8&iwloc=&output=embed`,
+      map_view_url: `https://maps.google.com/?q=${q}`,
+      directions_url: `https://www.google.com/maps/dir/?api=1&destination=${q}`
+    }));
+  };
+
+  const handlePhotoFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          setAboutForm(prev => ({ ...prev, principal_photo: reader.result as string }));
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -651,96 +723,224 @@ export const WebsiteContentManager: React.FC = () => {
       {activeTab === 'about' && (
         <form onSubmit={handleSaveAbout} className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-6">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-            <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Info className="w-5 h-5 text-blue-600" />
-              <span>About College &amp; Principal Message</span>
-            </h2>
+            <div>
+              <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Info className="w-5 h-5 text-blue-600" />
+                <span>Principal Profile, Desk Message &amp; Institutional Dossier</span>
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Changes saved here reflect in real-time on the Public Homepage Principal Desk, About Page, and Portals.
+              </p>
+            </div>
             {saveSuccess && (
-              <span className="text-xs text-emerald-600 font-bold flex items-center gap-1">
+              <span className="text-xs text-emerald-600 font-bold flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 rounded-xl border border-emerald-200 dark:border-emerald-800">
                 <CheckCircle2 className="w-4 h-4" /> Changes Saved Live!
               </span>
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-            <div>
-              <label className="block font-semibold mb-1">College Name</label>
-              <input
-                type="text"
-                value={aboutForm.college_name}
-                onChange={e => setAboutForm({ ...aboutForm, college_name: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none font-bold"
-              />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left Column: Form Controls (7 cols) */}
+            <div className="lg:col-span-7 space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">College Name (English)</label>
+                  <input
+                    type="text"
+                    value={aboutForm.college_name}
+                    onChange={e => setAboutForm({ ...aboutForm, college_name: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none font-bold"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Hindi Title (हिंदी शीर्षक)</label>
+                  <input
+                    type="text"
+                    value={aboutForm.hindi_name}
+                    onChange={e => setAboutForm({ ...aboutForm, hindi_name: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Principal Name *</label>
+                  <input
+                    type="text"
+                    required
+                    value={aboutForm.principal_name}
+                    onChange={e => setAboutForm({ ...aboutForm, principal_name: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-blue-300 dark:border-blue-700 bg-blue-50/40 dark:bg-blue-950/20 outline-none font-bold text-blue-600 dark:text-blue-400"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">BTEUP Institute Code</label>
+                  <input
+                    type="text"
+                    value={aboutForm.bteup_code}
+                    onChange={e => setAboutForm({ ...aboutForm, bteup_code: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none font-mono"
+                  />
+                </div>
+              </div>
+
+              {/* Photo & Avatar Controls */}
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700 space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <Camera className="w-4 h-4 text-blue-600" />
+                    <span>Principal Photo &amp; Avatar Selection</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] flex items-center gap-1 shadow-sm"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>Upload from Device</span>
+                  </button>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept="image/*"
+                    onChange={handlePhotoFileUpload}
+                    className="hidden"
+                  />
+                </div>
+
+                <div>
+                  <span className="text-[11px] text-slate-500 block mb-1.5 font-medium">Quick Avatar Presets:</span>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {[
+                      { label: 'Academician 1 (Male)', url: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces' },
+                      { label: 'Academician 2 (Male)', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=faces' },
+                      { label: 'Academician 3 (Male)', url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=faces' },
+                      { label: 'Emblem Logo', url: '/college-logo.svg' }
+                    ].map((preset, idx) => (
+                      <button
+                        type="button"
+                        key={idx}
+                        onClick={() => setAboutForm({ ...aboutForm, principal_photo: preset.url })}
+                        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-[11px] transition-all ${
+                          aboutForm.principal_photo === preset.url
+                            ? 'bg-blue-600 text-white border-blue-600 shadow-md font-bold'
+                            : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-blue-400'
+                        }`}
+                      >
+                        <img src={preset.url} alt={preset.label} className="w-5 h-5 rounded-full object-cover" />
+                        <span>{preset.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                    Or Enter Custom Photo URL:
+                  </label>
+                  <input
+                    type="url"
+                    value={aboutForm.principal_photo}
+                    onChange={e => setAboutForm({ ...aboutForm, principal_photo: e.target.value })}
+                    placeholder="https://..."
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 font-mono text-[11px] outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Principal Desk Message (प्राचार्य संदेश) *</label>
+                <textarea
+                  rows={4}
+                  required
+                  value={aboutForm.principal_message}
+                  onChange={e => setAboutForm({ ...aboutForm, principal_message: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">College Genesis &amp; Institutional History</label>
+                <textarea
+                  rows={3}
+                  value={aboutForm.history}
+                  onChange={e => setAboutForm({ ...aboutForm, history: e.target.value })}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none resize-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Vision Statement</label>
+                  <textarea
+                    rows={2}
+                    value={aboutForm.vision}
+                    onChange={e => setAboutForm({ ...aboutForm, vision: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Mission Statement</label>
+                  <textarea
+                    rows={2}
+                    value={aboutForm.mission}
+                    onChange={e => setAboutForm({ ...aboutForm, mission: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none resize-none"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">Hindi Title</label>
-              <input
-                type="text"
-                value={aboutForm.hindi_name}
-                onChange={e => setAboutForm({ ...aboutForm, hindi_name: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none"
-              />
-            </div>
+            {/* Right Column: Live Principal Card Preview (5 cols) */}
+            <div className="lg:col-span-5 space-y-4">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
+                <Eye className="w-4 h-4" /> Live Public Card Preview
+              </div>
 
-            <div>
-              <label className="block font-semibold mb-1">Principal Name</label>
-              <input
-                type="text"
-                value={aboutForm.principal_name}
-                onChange={e => setAboutForm({ ...aboutForm, principal_name: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none font-bold text-blue-600"
-              />
-            </div>
+              <div className="p-6 rounded-3xl bg-gradient-to-br from-polytechnic-950 via-slate-900 to-indigo-950 text-white border border-polytechnic-800 shadow-2xl space-y-4 text-left">
+                <div className="flex items-center gap-4">
+                  <img
+                    src={aboutForm.principal_photo || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces'}
+                    alt="Principal"
+                    className="w-16 h-16 rounded-2xl object-cover ring-2 ring-amber-400/80 shadow-lg flex-shrink-0"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces';
+                    }}
+                  />
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider block">
+                      From the Principal's Desk
+                    </span>
+                    <h3 className="text-base font-extrabold text-white">
+                      {aboutForm.principal_name || 'Er. Sachin Maurya'}
+                    </h3>
+                    <p className="text-[11px] text-blue-200">
+                      Principal &amp; Chief Administrator
+                    </p>
+                  </div>
+                </div>
 
-            <div>
-              <label className="block font-semibold mb-1">Principal Photo URL</label>
-              <input
-                type="url"
-                value={aboutForm.principal_photo}
-                onChange={e => setAboutForm({ ...aboutForm, principal_photo: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none"
-              />
-            </div>
+                <p className="text-xs text-blue-100/90 leading-relaxed italic bg-white/5 p-3.5 rounded-2xl border border-white/10">
+                  "{aboutForm.principal_message || 'Technical education is the cornerstone of industrial transformation and self-reliance.'}"
+                </p>
 
-            <div className="sm:col-span-2">
-              <label className="block font-semibold mb-1">Principal Message</label>
-              <textarea
-                rows={3}
-                value={aboutForm.principal_message}
-                onChange={e => setAboutForm({ ...aboutForm, principal_message: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none resize-none"
-              />
-            </div>
+                <div className="pt-2 flex items-center justify-between border-t border-white/10 text-[11px] text-slate-400 font-mono">
+                  <span>{aboutForm.college_name}</span>
+                  <span className="text-amber-400 font-bold">BTEUP: {aboutForm.bteup_code}</span>
+                </div>
+              </div>
 
-            <div className="sm:col-span-2">
-              <label className="block font-semibold mb-1">College History &amp; Genesis</label>
-              <textarea
-                rows={4}
-                value={aboutForm.history}
-                onChange={e => setAboutForm({ ...aboutForm, history: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none resize-none"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold mb-1">Vision Statement</label>
-              <textarea
-                rows={3}
-                value={aboutForm.vision}
-                onChange={e => setAboutForm({ ...aboutForm, vision: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none resize-none"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold mb-1">Mission Statement</label>
-              <textarea
-                rows={3}
-                value={aboutForm.mission}
-                onChange={e => setAboutForm({ ...aboutForm, mission: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none resize-none"
-              />
+              <div className="p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 text-xs text-blue-900 dark:text-blue-200 space-y-1.5">
+                <div className="font-bold flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-blue-600" />
+                  <span>Real-Time Website Synchronization</span>
+                </div>
+                <p className="text-[11px] text-blue-700 dark:text-blue-300 leading-relaxed">
+                  When you click <strong>"Save About &amp; Principal Dossier"</strong>, this new name and photo will automatically replace the details on the public homepage, about section, and all official receipts.
+                </p>
+              </div>
             </div>
           </div>
 
@@ -748,10 +948,10 @@ export const WebsiteContentManager: React.FC = () => {
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-lg shadow-blue-600/30 flex items-center gap-1.5"
+              className="px-8 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xl shadow-blue-600/30 flex items-center gap-2 active:scale-95 transition-all"
             >
               <Save className="w-4 h-4" />
-              <span>{saving ? 'Saving...' : 'Save About & Principal Dossier'}</span>
+              <span>{saving ? 'Saving & Publishing Live...' : 'Save & Publish Principal Profile Live'}</span>
             </button>
           </div>
         </form>
@@ -761,79 +961,241 @@ export const WebsiteContentManager: React.FC = () => {
       {activeTab === 'location' && (
         <form onSubmit={handleSaveLocation} className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-6">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-            <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-rose-500" />
-              <span>Campus Coordinates &amp; Map Settings</span>
-            </h2>
+            <div>
+              <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-rose-500" />
+                <span>Campus Location, Coordinates &amp; Interactive Map Manager</span>
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Control the college map, GPS pin coordinates, and transit guides displayed on the Public Website.
+              </p>
+            </div>
             {saveSuccess && (
-              <span className="text-xs text-emerald-600 font-bold flex items-center gap-1">
+              <span className="text-xs text-emerald-600 font-bold flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 rounded-xl border border-emerald-200 dark:border-emerald-800">
                 <CheckCircle2 className="w-4 h-4" /> Location Saved Live!
               </span>
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Campus Postal Address *
-              </label>
-              <input
-                type="text"
-                required
-                value={locationForm.address}
-                onChange={e => setLocationForm({ ...locationForm, address: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none"
-              />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left Column: Form (7 cols) */}
+            <div className="lg:col-span-7 space-y-4 text-xs">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Campus Postal Address *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={locationForm.address}
+                  onChange={e => setLocationForm({ ...locationForm, address: e.target.value })}
+                  placeholder="e.g. Government Polytechnic Main Campus, Uttar Pradesh - 277202"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none font-medium"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    District
+                  </label>
+                  <input
+                    type="text"
+                    value={locationForm.district}
+                    onChange={e => setLocationForm({ ...locationForm, district: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    State
+                  </label>
+                  <input
+                    type="text"
+                    value={locationForm.state}
+                    onChange={e => setLocationForm({ ...locationForm, state: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Pincode
+                  </label>
+                  <input
+                    type="text"
+                    value={locationForm.pincode}
+                    onChange={e => setLocationForm({ ...locationForm, pincode: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-mono outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Coordinates & Auto-detect bar */}
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700 space-y-3">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <Navigation className="w-4 h-4 text-rose-500" />
+                    <span>GPS Coordinates (Lat / Long)</span>
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleDetectGps}
+                      className="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold flex items-center gap-1 shadow-sm"
+                    >
+                      <MapPin className="w-3 h-3" />
+                      <span>Detect My Device GPS</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleGenerateMapFromAddress}
+                      className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold flex items-center gap-1 shadow-sm"
+                    >
+                      <RefreshCw className="w-3 h-3" />
+                      <span>Generate Map from Address</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                      Latitude
+                    </label>
+                    <input
+                      type="number"
+                      step="0.00001"
+                      value={locationForm.latitude}
+                      onChange={e => setLocationForm({ ...locationForm, latitude: parseFloat(e.target.value) })}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-mono font-bold outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                      Longitude
+                    </label>
+                    <input
+                      type="number"
+                      step="0.00001"
+                      value={locationForm.longitude}
+                      onChange={e => setLocationForm({ ...locationForm, longitude: parseFloat(e.target.value) })}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-mono font-bold outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Google Maps Embed Iframe URL *
+                </label>
+                <input
+                  type="url"
+                  required
+                  value={locationForm.map_embed_url}
+                  onChange={e => setLocationForm({ ...locationForm, map_embed_url: e.target.value })}
+                  placeholder="https://maps.google.com/maps?q=...&output=embed"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-mono outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                    <Bus className="w-3.5 h-3.5 text-amber-500" />
+                    <span>Bus &amp; Road Transit Info</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={locationForm.connectivity_bus}
+                    onChange={e => setLocationForm({ ...locationForm, connectivity_bus: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                    <Train className="w-3.5 h-3.5 text-indigo-500" />
+                    <span>Railway Connectivity Info</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={locationForm.connectivity_train}
+                    onChange={e => setLocationForm({ ...locationForm, connectivity_train: e.target.value })}
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none resize-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Official Phone Number</label>
+                  <input
+                    type="text"
+                    value={locationForm.contact_phone}
+                    onChange={e => setLocationForm({ ...locationForm, contact_phone: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Official Email</label>
+                  <input
+                    type="email"
+                    value={locationForm.contact_email}
+                    onChange={e => setLocationForm({ ...locationForm, contact_email: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Latitude Coordinates
-              </label>
-              <input
-                type="number"
-                step="0.0001"
-                value={locationForm.latitude}
-                onChange={e => setLocationForm({ ...locationForm, latitude: parseFloat(e.target.value) })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-mono focus:ring-2 focus:ring-blue-600 outline-none"
-              />
-            </div>
+            {/* Right Column: Live Embedded Map Preview (5 cols) */}
+            <div className="lg:col-span-5 space-y-4">
+              <div className="flex items-center justify-between text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider">
+                <span className="flex items-center gap-1.5">
+                  <Eye className="w-4 h-4" /> Live Map Preview
+                </span>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  {locationForm.latitude?.toFixed(4)}, {locationForm.longitude?.toFixed(4)}
+                </span>
+              </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Longitude Coordinates
-              </label>
-              <input
-                type="number"
-                step="0.0001"
-                value={locationForm.longitude}
-                onChange={e => setLocationForm({ ...locationForm, longitude: parseFloat(e.target.value) })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-mono focus:ring-2 focus:ring-blue-600 outline-none"
-              />
-            </div>
+              <div className="p-4 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-card overflow-hidden space-y-3">
+                <div className="h-[280px] rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 relative border border-slate-200 dark:border-slate-700">
+                  {locationForm.map_embed_url ? (
+                    <iframe
+                      title="Campus Map Preview"
+                      src={locationForm.map_embed_url}
+                      className="w-full h-full border-0"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 gap-2">
+                      <MapPin className="w-8 h-8 text-slate-300" />
+                      <span className="text-xs">Enter Embed URL or Click Generate Map</span>
+                    </div>
+                  )}
+                </div>
 
-            <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Google Maps Embed URL
-              </label>
-              <input
-                type="url"
-                value={locationForm.map_embed_url}
-                onChange={e => setLocationForm({ ...locationForm, map_embed_url: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-mono focus:ring-2 focus:ring-blue-600 outline-none"
-              />
-            </div>
-
-            <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Google Maps Directions URL
-              </label>
-              <input
-                type="url"
-                value={locationForm.directions_url}
-                onChange={e => setLocationForm({ ...locationForm, directions_url: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-mono focus:ring-2 focus:ring-blue-600 outline-none"
-              />
+                <div className="space-y-1.5 text-xs">
+                  <div className="font-bold text-slate-900 dark:text-white truncate">
+                    {locationForm.address || 'Government Polytechnic'}
+                  </div>
+                  <div className="text-[11px] text-slate-500 flex items-center justify-between">
+                    <span>{locationForm.district || 'Uttar Pradesh'}, {locationForm.state || 'Uttar Pradesh'}</span>
+                    <a
+                      href={locationForm.directions_url || `https://maps.google.com/?q=${locationForm.latitude},${locationForm.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 dark:text-blue-400 font-bold hover:underline flex items-center gap-1"
+                    >
+                      <span>Open Directions</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -841,10 +1203,10 @@ export const WebsiteContentManager: React.FC = () => {
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-lg shadow-blue-600/30 flex items-center gap-1.5"
+              className="px-8 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xl shadow-blue-600/30 flex items-center gap-2 active:scale-95 transition-all"
             >
               <Save className="w-4 h-4" />
-              <span>{saving ? 'Saving...' : 'Save Location Settings'}</span>
+              <span>{saving ? 'Saving & Publishing Location...' : 'Save & Publish Location Live'}</span>
             </button>
           </div>
         </form>

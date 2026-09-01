@@ -147,6 +147,75 @@ const IFSC_DATABASE: Record<string, { bankName: string; branch: string; city: st
   IDIB000B029: { bankName: 'Indian Bank', branch: 'Uttar Pradesh Main Branch', city: 'Uttar Pradesh', district: 'Uttar Pradesh' }
 };
 
+export interface BankOption {
+  code: string;
+  name: string;
+  category: 'indian_public' | 'indian_private' | 'foreign_intl' | 'treasury_rural';
+  country: string;
+  countryFlag: string;
+  ifscPrefix: string;
+  swiftCode?: string;
+  popular?: boolean;
+}
+
+export const COMPREHENSIVE_BANK_LIST: BankOption[] = [
+  // --- Indian Public Sector Banks ---
+  { code: 'SBI', name: 'State Bank of India (SBI)', category: 'indian_public', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'SBIN', popular: true },
+  { code: 'PNB', name: 'Punjab National Bank (PNB)', category: 'indian_public', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'PUNB', popular: true },
+  { code: 'BOB', name: 'Bank of Baroda', category: 'indian_public', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'BARB', popular: true },
+  { code: 'CANARA', name: 'Canara Bank', category: 'indian_public', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'CNRB', popular: true },
+  { code: 'UNION', name: 'Union Bank of India', category: 'indian_public', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'UBIN', popular: true },
+  { code: 'BOI', name: 'Bank of India', category: 'indian_public', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'BKID' },
+  { code: 'INDIAN', name: 'Indian Bank', category: 'indian_public', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'IDIB' },
+  { code: 'CBI', name: 'Central Bank of India', category: 'indian_public', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'CBIN' },
+  { code: 'IOB', name: 'Indian Overseas Bank', category: 'indian_public', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'IOBA' },
+  { code: 'UCO', name: 'UCO Bank', category: 'indian_public', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'UCBA' },
+  { code: 'MAHABANK', name: 'Bank of Maharashtra', category: 'indian_public', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'MAHB' },
+  { code: 'PSB', name: 'Punjab & Sind Bank', category: 'indian_public', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'PSIB' },
+
+  // --- Indian Private Sector Banks ---
+  { code: 'HDFC', name: 'HDFC Bank', category: 'indian_private', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'HDFC', popular: true },
+  { code: 'ICICI', name: 'ICICI Bank', category: 'indian_private', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'ICIC', popular: true },
+  { code: 'AXIS', name: 'Axis Bank', category: 'indian_private', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'UTIB', popular: true },
+  { code: 'KOTAK', name: 'Kotak Mahindra Bank', category: 'indian_private', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'KKBK', popular: true },
+  { code: 'INDUSIND', name: 'IndusInd Bank', category: 'indian_private', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'INDB' },
+  { code: 'YES', name: 'Yes Bank', category: 'indian_private', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'YESB' },
+  { code: 'FEDERAL', name: 'Federal Bank', category: 'indian_private', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'FDRL' },
+  { code: 'IDFC', name: 'IDFC FIRST Bank', category: 'indian_private', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'IDFB' },
+  { code: 'BANDHAN', name: 'Bandhan Bank', category: 'indian_private', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'BDBL' },
+  { code: 'RBL', name: 'RBL Bank', category: 'indian_private', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'RATN' },
+  { code: 'SOUTHINDIAN', name: 'South Indian Bank', category: 'indian_private', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'SIBL' },
+  { code: 'AUBANK', name: 'AU Small Finance Bank', category: 'indian_private', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'AUBL' },
+
+  // --- Foreign / International Banks ---
+  { code: 'HSBC', name: 'HSBC Bank (Hongkong & Shanghai Banking Corp)', category: 'foreign_intl', country: 'United Kingdom / Hong Kong', countryFlag: '🇬🇧', ifscPrefix: 'HSBC', swiftCode: 'HSBCINBB', popular: true },
+  { code: 'CITI', name: 'Citibank N.A.', category: 'foreign_intl', country: 'United States', countryFlag: '🇺🇸', ifscPrefix: 'CITI', swiftCode: 'CITIINBX', popular: true },
+  { code: 'SCB', name: 'Standard Chartered Bank', category: 'foreign_intl', country: 'United Kingdom', countryFlag: '🇬🇧', ifscPrefix: 'SCBL', swiftCode: 'SCBLINBB', popular: true },
+  { code: 'DEUTSCHE', name: 'Deutsche Bank AG', category: 'foreign_intl', country: 'Germany', countryFlag: '🇩🇪', ifscPrefix: 'DEUT', swiftCode: 'DEUTINBB', popular: true },
+  { code: 'BARCLAYS', name: 'Barclays Bank PLC', category: 'foreign_intl', country: 'United Kingdom', countryFlag: '🇬🇧', ifscPrefix: 'BARC', swiftCode: 'BARCINBB' },
+  { code: 'JPMORGAN', name: 'JPMorgan Chase Bank N.A.', category: 'foreign_intl', country: 'United States', countryFlag: '🇺🇸', ifscPrefix: 'CHAS', swiftCode: 'CHASINBB' },
+  { code: 'BOFA', name: 'Bank of America N.A.', category: 'foreign_intl', country: 'United States', countryFlag: '🇺🇸', ifscPrefix: 'BOFA', swiftCode: 'BOFAIN4X' },
+  { code: 'DBS', name: 'DBS Bank India (Development Bank of Singapore)', category: 'foreign_intl', country: 'Singapore', countryFlag: '🇸🇬', ifscPrefix: 'DBSS', swiftCode: 'DBSSINBB', popular: true },
+  { code: 'BNPPARIBAS', name: 'BNP Paribas', category: 'foreign_intl', country: 'France', countryFlag: '🇫🇷', ifscPrefix: 'BNPA', swiftCode: 'BNPAINBB' },
+  { code: 'MUFG', name: 'MUFG Bank (Mitsubishi UFJ Financial Group)', category: 'foreign_intl', country: 'Japan', countryFlag: '🇯🇵', ifscPrefix: 'BOTM', swiftCode: 'BOTMINBB' },
+  { code: 'MIZUHO', name: 'Mizuho Bank Ltd.', category: 'foreign_intl', country: 'Japan', countryFlag: '🇯🇵', ifscPrefix: 'MHCB', swiftCode: 'MHCBINBB' },
+  { code: 'SMBC', name: 'Sumitomo Mitsui Banking Corporation', category: 'foreign_intl', country: 'Japan', countryFlag: '🇯🇵', ifscPrefix: 'SMBC', swiftCode: 'SMBCINBB' },
+  { code: 'SCOTIABANK', name: 'Scotiabank (Bank of Nova Scotia)', category: 'foreign_intl', country: 'Canada', countryFlag: '🇨🇦', ifscPrefix: 'NOSC', swiftCode: 'NOSCINBB' },
+  { code: 'SOCGEN', name: 'Societe Generale', category: 'foreign_intl', country: 'France', countryFlag: '🇫🇷', ifscPrefix: 'SOGE', swiftCode: 'SOGEINBB' },
+  { code: 'SBM', name: 'SBM Bank (State Bank of Mauritius)', category: 'foreign_intl', country: 'Mauritius', countryFlag: '🇲🇺', ifscPrefix: 'STCB', swiftCode: 'STCBINBB' },
+  { code: 'QNB', name: 'Qatar National Bank Q.P.S.C.', category: 'foreign_intl', country: 'Qatar', countryFlag: '🇶🇦', ifscPrefix: 'QNBA', swiftCode: 'QNBAINBB' },
+  { code: 'FAB', name: 'First Abu Dhabi Bank PJSC', category: 'foreign_intl', country: 'United Arab Emirates', countryFlag: '🇦🇪', ifscPrefix: 'FABX', swiftCode: 'FABXINBB' },
+  { code: 'EMIRATES', name: 'Emirates NBD Bank PJSC', category: 'foreign_intl', country: 'United Arab Emirates', countryFlag: '🇦🇪', ifscPrefix: 'EBIL', swiftCode: 'EBILINBB' },
+  { code: 'SHINHAN', name: 'Shinhan Bank', category: 'foreign_intl', country: 'South Korea', countryFlag: '🇰🇷', ifscPrefix: 'SHBK', swiftCode: 'SHBKINBB' },
+
+  // --- Treasury & Regional Rural Banks ---
+  { code: 'RBI_TREASURY', name: 'State Treasury / Institutional Account (UP Govt / RBI)', category: 'treasury_rural', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'RBIS', popular: true },
+  { code: 'ARYAVART', name: 'Aryavart Bank (Gramin Bank)', category: 'treasury_rural', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'ARYA' },
+  { code: 'BARODA_UP', name: 'Baroda UP Bank (Gramin Bank)', category: 'treasury_rural', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'BARB0BUPGBX' },
+  { code: 'PRATHAMA', name: 'Prathama UP Gramin Bank', category: 'treasury_rural', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'PRTH' },
+  { code: 'UP_COOP', name: 'UP State Cooperative Bank Ltd.', category: 'treasury_rural', country: 'India', countryFlag: '🇮🇳', ifscPrefix: 'UPCB' }
+];
+
 const BANK_PREFIX_MAP: Record<string, string> = {
   SBIN: 'State Bank of India',
   PUNB: 'Punjab National Bank',
@@ -163,7 +232,27 @@ const BANK_PREFIX_MAP: Record<string, string> = {
   IOBA: 'Indian Overseas Bank',
   MAHB: 'Bank of Maharashtra',
   UCBA: 'UCO Bank',
-  PSIB: 'Punjab & Sind Bank'
+  PSIB: 'Punjab & Sind Bank',
+  INDB: 'IndusInd Bank',
+  YESB: 'Yes Bank',
+  FDRL: 'Federal Bank',
+  IDFB: 'IDFC FIRST Bank',
+  HSBC: 'HSBC Bank',
+  CITI: 'Citibank N.A.',
+  SCBL: 'Standard Chartered Bank',
+  DEUT: 'Deutsche Bank AG',
+  BARC: 'Barclays Bank PLC',
+  CHAS: 'JPMorgan Chase Bank',
+  BOFA: 'Bank of America',
+  DBSS: 'DBS Bank India',
+  BNPA: 'BNP Paribas',
+  BOTM: 'MUFG Bank',
+  MHCB: 'Mizuho Bank',
+  SMBC: 'Sumitomo Mitsui Banking Corp',
+  NOSC: 'Scotiabank',
+  SOGE: 'Societe Generale',
+  STCB: 'SBM Bank India',
+  RBIS: 'Reserve Bank of India / Treasury'
 };
 
 export const lookupIfscDetails = (ifscCode: string): IfscLookupResult => {

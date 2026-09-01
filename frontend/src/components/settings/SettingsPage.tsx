@@ -21,6 +21,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { CollegeLogo } from '../common/CollegeLogo';
 import { ConfirmDialog } from '../common/ConfirmDialog';
+import { websiteContentService } from '../../services/websiteContentService';
 import confetti from 'canvas-confetti';
 
 export const SettingsPage: React.FC = () => {
@@ -44,9 +45,15 @@ export const SettingsPage: React.FC = () => {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
 
-  const handleSaveCollege = (e: React.FormEvent) => {
+  const handleSaveCollege = async (e: React.FormEvent) => {
     e.preventDefault();
-    updateSettings(collegeForm);
+    await updateSettings(collegeForm);
+    await websiteContentService.updateAboutCollege({
+      college_name: collegeForm.collegeName,
+      hindi_name: collegeForm.hindiName,
+      bteup_code: collegeForm.bteupCode,
+      principal_name: collegeForm.principalName
+    });
     setSaveSuccess(true);
     confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
     setTimeout(() => setSaveSuccess(false), 3000);

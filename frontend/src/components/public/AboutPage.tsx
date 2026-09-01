@@ -32,6 +32,18 @@ export const AboutPage: React.FC = () => {
       }
     };
     fetchAbout();
+
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      const bc = new BroadcastChannel('gpb_realtime_broadcast_channel');
+      bc.onmessage = (event) => {
+        if (event.data?.type === 'PUBLIC_CONTENT_UPDATED') {
+          fetchAbout();
+        }
+      };
+      return () => {
+        bc.close();
+      };
+    }
   }, []);
 
   return (
@@ -123,7 +135,7 @@ export const AboutPage: React.FC = () => {
           <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-polytechnic-950 to-slate-900 text-white border border-polytechnic-800 shadow-xl space-y-5">
             <div className="text-center space-y-3">
               <img
-                src={about?.principal_photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=faces'}
+                src={about?.principal_photo || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces'}
                 alt="Principal"
                 className="w-32 h-32 rounded-3xl object-cover ring-4 ring-amber-400/50 shadow-2xl mx-auto"
               />

@@ -17,14 +17,18 @@ import {
   Smartphone,
   RefreshCw,
   Search,
-  Check
+  Check,
+  Globe,
+  ChevronDown
 } from 'lucide-react';
 import { useCollegeData } from '../../context/CollegeDataContext';
 import {
   formatCurrencyINR,
   lookupIfscDetails,
   verifyBankAccountOnline,
-  generateUpiPaymentUrl
+  generateUpiPaymentUrl,
+  COMPREHENSIVE_BANK_LIST,
+  BankOption
 } from '../../utils/helpers';
 import confetti from 'canvas-confetti';
 
@@ -82,6 +86,37 @@ export const CollegeTreasuryAccountModal: React.FC<CollegeTreasuryAccountModalPr
     } else {
       setIfscVerifiedStatus(null);
     }
+  };
+
+  // Bank Selector Dropdown / Modal State
+  const [isBankSelectorOpen, setIsBankSelectorOpen] = useState(false);
+  const [bankSearchQuery, setBankSearchQuery] = useState('');
+  const [selectedBankCategory, setSelectedBankCategory] = useState<'all' | 'indian_public' | 'indian_private' | 'foreign_intl' | 'treasury_rural'>('all');
+
+  const filteredBanks = COMPREHENSIVE_BANK_LIST.filter(bank => {
+    const matchesCat = selectedBankCategory === 'all' || bank.category === selectedBankCategory;
+    const matchesSearch = bank.name.toLowerCase().includes(bankSearchQuery.toLowerCase()) ||
+                          bank.code.toLowerCase().includes(bankSearchQuery.toLowerCase()) ||
+                          bank.country.toLowerCase().includes(bankSearchQuery.toLowerCase()) ||
+                          bank.ifscPrefix.toLowerCase().includes(bankSearchQuery.toLowerCase());
+    return matchesCat && matchesSearch;
+  });
+
+  const handleSelectBank = (bank: BankOption) => {
+    setBankName(bank.name);
+    const sampleIfsc = bank.ifscPrefix ? `${bank.ifscPrefix}0001234` : 'SBIN0001234';
+    setIfscCode(sampleIfsc);
+    if (bank.category === 'foreign_intl') {
+      setBranchName(`International Banking Division (${bank.country}) • New Delhi / Mumbai`);
+      setIfscVerifiedStatus(`${bank.name} (${bank.countryFlag} ${bank.country}) • Swift: ${bank.swiftCode || 'N/A'}`);
+    } else if (bank.category === 'treasury_rural') {
+      setBranchName(`Govt Institutional / Regional Branch, Uttar Pradesh`);
+      setIfscVerifiedStatus(`${bank.name} • Institutional Treasury Account`);
+    } else {
+      setBranchName(`Main Branch, Uttar Pradesh`);
+      setIfscVerifiedStatus(`${bank.name} • Verified Commercial Bank`);
+    }
+    setIsBankSelectorOpen(false);
   };
 
   const handleCopyUpi = () => {
@@ -409,6 +444,105 @@ export const CollegeTreasuryAccountModal: React.FC<CollegeTreasuryAccountModalPr
         {/* TAB 3: EDIT COLLEGE ACCOUNT WITH AUTO-IFSC */}
         {activeTab === 'edit' && (
           <form onSubmit={handleSaveChanges} className="space-y-4 animate-fade-in">
+            {/* Indian & Foreign Bank Selector Directory */}
+            <div className="p-3.5 rounded-2xl bg-blue-50/70 dark:bg-slate-800/80 border border-blue-200 dark:border-blue-800/60 space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 text-xs">
+                    <Globe className="w-4 h-4 text-blue-600" />
+                    <span>Select Bank (भारतीय व विदेशी बैंक सूची)</span>
+                  </span>
+                  <span className="text-[10px] text-slate-500 block">
+                    Choose from 35+ Indian Public, Private, and International Foreign Banks
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsBankSelectorOpen(!isBankSelectorOpen)}
+                  className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-1 shadow-sm transition-all"
+                >
+                  <Building2 className="w-3.5 h-3.5" />
+                  <span>{isBankSelectorOpen ? 'Close Bank Directory' : 'Browse & Pick Bank'}</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isBankSelectorOpen ? 'rotate-180' : ''}`} />
+                </button>
+              </div>
+
+              {isBankSelectorOpen && (
+                <div className="space-y-3 pt-2 border-t border-blue-200/60 dark:border-slate-700 animate-fade-in">
+                  {/* Category Tabs */}
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px]">
+                    {[
+                      { id: 'all', label: '🌐 All Banks' },
+                      { id: 'indian_public', label: '🇮🇳 Public Sector' },
+                      { id: 'indian_private', label: '🇮🇳 Private Banks' },
+                      { id: 'foreign_intl', label: '🌍 Foreign / Intl Banks' },
+                      { id: 'treasury_rural', label: '🏦 Treasury / RRB' },
+                    ].map(cat => (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setSelectedBankCategory(cat.id as any)}
+                        className={`px-2.5 py-1 rounded-lg font-bold whitespace-nowrap transition-colors ${
+                          selectedBankCategory === cat.id
+                            ? 'bg-blue-600 text-white shadow-sm'
+                            : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100'
+                        }`}
+                      >
+                        {cat.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Search Bar */}
+                  <div className="relative">
+                    <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                    <input
+                      type="text"
+                      value={bankSearchQuery}
+                      onChange={e => setBankSearchQuery(e.target.value)}
+                      placeholder="Search bank by name (e.g. SBI, HDFC, HSBC, Citibank, Barclays)..."
+                      className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-xs outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  {/* Bank List Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1">
+                    {filteredBanks.map(b => (
+                      <button
+                        key={b.code}
+                        type="button"
+                        onClick={() => handleSelectBank(b)}
+                        className={`p-2 rounded-xl border text-left transition-all flex items-start gap-2 ${
+                          bankName.includes(b.code) || bankName === b.name
+                            ? 'bg-blue-50 dark:bg-blue-950/60 border-blue-500 ring-1 ring-blue-500'
+                            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 hover:border-blue-400 hover:bg-blue-50/30'
+                        }`}
+                      >
+                        <span className="text-base flex-shrink-0">{b.countryFlag}</span>
+                        <div className="min-w-0 flex-1">
+                          <div className="font-bold text-slate-900 dark:text-white text-xs truncate">
+                            {b.name}
+                          </div>
+                          <div className="flex items-center gap-1.5 text-[10px] text-slate-500 flex-wrap">
+                            <span>{b.country}</span>
+                            <span>•</span>
+                            <span className="font-mono font-semibold text-blue-600 dark:text-blue-400">
+                              {b.category === 'foreign_intl' ? `SWIFT: ${b.swiftCode}` : `IFSC: ${b.ifscPrefix}`}
+                            </span>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                    {filteredBanks.length === 0 && (
+                      <div className="sm:col-span-2 text-center py-4 text-slate-400 text-xs">
+                        No banks found matching "{bankSearchQuery}"
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex items-center gap-2 text-emerald-800 dark:text-emerald-200 text-xs">
               <ShieldCheck className="w-4 h-4 flex-shrink-0" />
               <span>

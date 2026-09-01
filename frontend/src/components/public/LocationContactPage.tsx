@@ -31,6 +31,18 @@ export const LocationContactPage: React.FC = () => {
       }
     };
     fetchLocation();
+
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      const bc = new BroadcastChannel('gpb_realtime_broadcast_channel');
+      bc.onmessage = (event) => {
+        if (event.data?.type === 'PUBLIC_CONTENT_UPDATED') {
+          fetchLocation();
+        }
+      };
+      return () => {
+        bc.close();
+      };
+    }
   }, []);
 
   const defaultLocation: CollegeLocationData = {

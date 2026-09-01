@@ -51,6 +51,18 @@ export const HomePage: React.FC<HomePageProps> = ({
       }
     };
     fetchData();
+
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      const bc = new BroadcastChannel('gpb_realtime_broadcast_channel');
+      bc.onmessage = (event) => {
+        if (event.data?.type === 'PUBLIC_CONTENT_UPDATED') {
+          fetchData();
+        }
+      };
+      return () => {
+        bc.close();
+      };
+    }
   }, []);
 
   const latestNotices = data?.latest_notices || [];
@@ -159,7 +171,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               <div className="p-6 rounded-3xl bg-white/10 dark:bg-slate-900/60 backdrop-blur-xl border border-white/20 shadow-2xl space-y-4 text-left">
                 <div className="flex items-center gap-4">
                   <img
-                    src={data?.principal_photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=faces'}
+                    src={data?.principal_photo || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces'}
                     alt="Principal"
                     className="w-16 h-16 rounded-2xl object-cover ring-2 ring-amber-400/60 shadow-lg flex-shrink-0"
                   />
