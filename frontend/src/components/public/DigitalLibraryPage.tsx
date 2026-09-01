@@ -57,21 +57,59 @@ const BRANCH_OPTIONS = [
 
 export const DigitalLibraryPage: React.FC = () => {
   const { user } = useAuth();
-  const { students } = useCollegeData();
+  const { students, teachers, updateTeacher } = useCollegeData();
 
   const isAdmin = user?.role === 'admin';
   const isTeacher = user?.role === 'teacher';
   const isStudent = user?.role === 'student';
-  const isLibrarian = isAdmin || isTeacher || user?.department?.toLowerCase().includes('library') || user?.designation?.toLowerCase().includes('librarian');
+
+  // Data State
+  const [settings, setSettings] = useState<LibrarySettingsData>(() => libraryService.getSettings());
+  const [books, setBooks] = useState<LibraryBook[]>(() => libraryService.getBooks());
+  const [issuedRecords, setIssuedRecords] = useState<IssuedBookRecord[]>(() => libraryService.getIssuedRecords());
+  const [upcomingBooks, setUpcomingBooks] = useState<UpcomingLibraryBook[]>(() => libraryService.getUpcomingBooks());
 
   // Active Tab: catalog | issued | upcoming | rules
   const [activeTab, setActiveTab] = useState<'catalog' | 'issued' | 'upcoming' | 'rules'>('catalog');
 
-  // Data State
-  const [books, setBooks] = useState<LibraryBook[]>(() => libraryService.getBooks());
-  const [issuedRecords, setIssuedRecords] = useState<IssuedBookRecord[]>(() => libraryService.getIssuedRecords());
-  const [upcomingBooks, setUpcomingBooks] = useState<UpcomingLibraryBook[]>(() => libraryService.getUpcomingBooks());
-  const [settings, setSettings] = useState<LibrarySettingsData>(() => libraryService.getSettings());
+  const currentLoggedInTeacher = teachers.find(
+    t => (user?.email && t.email.toLowerCase() === user.email.toLowerCase()) ||
+         (user?.empCode && t.empCode.toLowerCase() === user.empCode.toLowerCase()) ||
+         (user?.name && t.name.toLowerCase() === user.name.toLowerCase())
+  );
+
+  const isLibrarian =
+    isAdmin ||
+    user?.isLibraryIncharge ||
+    currentLoggedInTeacher?.isLibraryIncharge ||
+    user?.department?.toLowerCase().includes('library') ||
+    currentLoggedInTeacher?.department?.toLowerCase().includes('library') ||
+    user?.designation?.toLowerCase().includes('librarian') ||
+    currentLoggedInTeacher?.designation?.toLowerCase().includes('librarian') ||
+    (user?.email && settings?.librarianEmail?.toLowerCase() === user?.email?.toLowerCase()) ||
+    (user?.name && settings?.librarianName?.toLowerCase().includes(user?.name?.toLowerCase()));
+
+  const handleAssignTeacherAsLibrarian = (teacherId: string) => {
+    const targetTeacher = teachers.find(t => t.id === teacherId);
+    if (!targetTeacher) return;
+
+    teachers.forEach(t => {
+      if (t.id === teacherId) {
+        updateTeacher(t.id, { isLibraryIncharge: true });
+      } else if (t.isLibraryIncharge) {
+        updateTeacher(t.id, { isLibraryIncharge: false });
+      }
+    });
+
+    const updated = libraryService.updateSettings({
+      librarianName: targetTeacher.name,
+      librarianEmail: targetTeacher.email,
+      librarianPhone: targetTeacher.mobile || '+91 94150 12345'
+    });
+    setSettings(updated);
+    showToast(`👑 ${targetTeacher.name} को आधिकारिक रूप से पुस्तकालय प्रभारी (Library In-Charge) नियुक्त कर दिया गया है!`);
+    confetti({ particleCount: 60, spread: 70 });
+  };
 
   // Search & Filter
   const [searchTerm, setSearchTerm] = useState('');
@@ -421,21 +459,44 @@ export const DigitalLibraryPage: React.FC = () => {
       {/* LIBRARIAN / ADMIN CONTROLLER BAR */}
       {isLibrarian && (
         <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-emerald-950 via-slate-900 to-polytechnic-950 text-white shadow-xl border border-emerald-700/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-500/30 border border-emerald-400/40 flex items-center justify-center text-emerald-300">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-500/30 border border-emerald-400/40 flex items-center justify-center text-emerald-300 flex-shrink-0">
               <Sliders className="w-5 h-5" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-sm font-black tracking-wide text-white">Digital Library In-Charge Controller</span>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-400 text-slate-950 uppercase">
-                  {isAdmin ? 'Admin Principal' : 'Librarian In-Charge'}
+                  {isAdmin ? '👑 Principal' : '📚 Library In-Charge'}
                 </span>
+                {currentLoggedInTeacher && (
+                  <span className="text-xs text-emerald-300 font-bold">
+                    ({currentLoggedInTeacher.name})
+                  </span>
+                )}
               </div>
               <p className="text-xs text-emerald-200">
                 उपलब्ध पुस्तकें जोड़ें/हटाएं, जारी पुस्तकें ट्रैक करें, व भविष्य में आने वाले ऑर्डर प्रबंधित करें।
               </p>
             </div>
+
+            {isAdmin && (
+              <div className="sm:ml-4 flex items-center gap-1.5 bg-black/40 p-1.5 rounded-2xl border border-emerald-500/30">
+                <span className="text-[10px] font-bold text-amber-300 whitespace-nowrap">प्रभारी शिक्षक:</span>
+                <select
+                  value={teachers.find(t => t.isLibraryIncharge || t.email === settings.librarianEmail)?.id || ''}
+                  onChange={e => handleAssignTeacherAsLibrarian(e.target.value)}
+                  className="bg-slate-900 text-white text-[11px] font-bold px-2 py-1 rounded-xl border border-slate-700 outline-none focus:ring-1 focus:ring-emerald-400"
+                >
+                  <option value="">-- शिक्षक को प्रभार दें --</option>
+                  {teachers.map(t => (
+                    <option key={t.id} value={t.id}>
+                      {t.name} ({t.department?.split(' ')[0]})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">

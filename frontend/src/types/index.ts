@@ -21,6 +21,7 @@ export interface User {
   branch?: string;
   semester?: number;
   lastLogin?: string;
+  isLibraryIncharge?: boolean;
 }
 
 export interface Student {
@@ -71,6 +72,7 @@ export interface Teacher {
   bloodGroup?: string;
   staffType?: 'Teaching Faculty' | 'Technical Staff' | 'Administrative Staff' | 'Support Staff';
   workDescription?: string;
+  isLibraryIncharge?: boolean;
   bankAccount?: TeacherBankAccount;
 }
 

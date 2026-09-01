@@ -719,6 +719,30 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
                   className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none focus:ring-2 focus:ring-blue-600"
                 />
               </div>
+
+              {/* Library In-Charge Assignment Tag */}
+              <div className="sm:col-span-2 p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 flex items-center justify-center flex-shrink-0">
+                    <BookOpen className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <label htmlFor="modalIsLibraryIncharge" className="text-xs font-black text-emerald-900 dark:text-emerald-200 cursor-pointer block">
+                      Assign as Central Digital Library In-Charge (पुस्तकालय प्रबंधन का प्रभार दें)
+                    </label>
+                    <p className="text-[10px] text-emerald-700/80 dark:text-emerald-400">
+                      इस शिक्षक को पूरी लाइब्रेरी में पुस्तकें जोड़ने, बदलने, हटाने, जारी करने और नए ऑर्डर का पूरा अधिकार मिलेगा।
+                    </p>
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  id="modalIsLibraryIncharge"
+                  checked={formData.isLibraryIncharge || false}
+                  onChange={e => setFormData({ ...formData, isLibraryIncharge: e.target.checked })}
+                  className="w-5 h-5 text-emerald-600 rounded cursor-pointer accent-emerald-600"
+                />
+              </div>
             </div>
 
             <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">

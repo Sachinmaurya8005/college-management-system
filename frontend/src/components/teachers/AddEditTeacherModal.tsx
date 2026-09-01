@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Teacher } from '../../types';
 import { Modal } from '../common/Modal';
 import { useCollegeData } from '../../context/CollegeDataContext';
-import { Upload } from 'lucide-react';
+import { Upload, BookOpen } from 'lucide-react';
 
 interface AddEditTeacherModalProps {
   isOpen: boolean;
@@ -29,7 +29,8 @@ export const AddEditTeacherModal: React.FC<AddEditTeacherModalProps> = ({
     subjects: 'Data Structures, Operating Systems',
     status: 'Active' as 'Active' | 'On Leave' | 'Relieved',
     photoUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=faces',
-    experienceYears: 5
+    experienceYears: 5,
+    isLibraryIncharge: false
   });
 
   useEffect(() => {
@@ -46,7 +47,8 @@ export const AddEditTeacherModal: React.FC<AddEditTeacherModalProps> = ({
         subjects: teacher.subjects.join(', '),
         status: teacher.status,
         photoUrl: teacher.photoUrl,
-        experienceYears: teacher.experienceYears
+        experienceYears: teacher.experienceYears,
+        isLibraryIncharge: teacher.isLibraryIncharge || teacher.department?.toLowerCase().includes('library') || teacher.designation?.toLowerCase().includes('librarian') || false
       });
     } else {
       const rand = Math.floor(10 + Math.random() * 90);
@@ -62,7 +64,8 @@ export const AddEditTeacherModal: React.FC<AddEditTeacherModalProps> = ({
         subjects: 'Computer Networks, Python Programming',
         status: 'Active',
         photoUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=faces',
-        experienceYears: 4
+        experienceYears: 4,
+        isLibraryIncharge: false
       });
     }
   }, [teacher, isOpen]);
@@ -356,6 +359,30 @@ export const AddEditTeacherModal: React.FC<AddEditTeacherModalProps> = ({
               value={formData.photoUrl}
               onChange={e => setFormData({ ...formData, photoUrl: e.target.value })}
               className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none"
+            />
+          </div>
+
+          {/* Library In-Charge Assignment Tag */}
+          <div className="sm:col-span-2 p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 flex items-center justify-center flex-shrink-0">
+                <BookOpen className="w-4 h-4" />
+              </div>
+              <div>
+                <label htmlFor="isLibraryIncharge" className="text-xs font-black text-emerald-900 dark:text-emerald-200 cursor-pointer block">
+                  Assign as Central Digital Library In-Charge (पुस्तकालय प्रबंधन का प्रभार दें)
+                </label>
+                <p className="text-[10px] text-emerald-700/80 dark:text-emerald-400">
+                  इस शिक्षक को पूरी लाइब्रेरी में पुस्तकें जोड़ने, बदलने, हटाने, जारी करने और नए ऑर्डर का पूरा अधिकार मिलेगा।
+                </p>
+              </div>
+            </div>
+            <input
+              type="checkbox"
+              id="isLibraryIncharge"
+              checked={formData.isLibraryIncharge || false}
+              onChange={e => setFormData({ ...formData, isLibraryIncharge: e.target.checked })}
+              className="w-5 h-5 text-emerald-600 rounded cursor-pointer accent-emerald-600"
             />
           </div>
         </div>
