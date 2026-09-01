@@ -65,10 +65,23 @@ export const CollegeTreasuryAccountModal: React.FC<CollegeTreasuryAccountModalPr
 
   const collegeUpiId = 'principal.Government Polytechnic@sbi';
 
-  // Dynamic IFSC Lookup
+  // Validation errors state
+  const [errors, setErrors] = useState<{
+    ifscCode?: string;
+    bankName?: string;
+    accountNumber?: string;
+    branchName?: string;
+    accountHolderName?: string;
+  }>({});
+  const [showValidationAlert, setShowValidationAlert] = useState(false);
+
+  // Dynamic IFSC Lookup & Real-time Validation
   const handleIfscChange = (val: string) => {
-    const uppercaseVal = val.toUpperCase();
+    const uppercaseVal = val.toUpperCase().trim();
     setIfscCode(uppercaseVal);
+    if (errors.ifscCode) {
+      setErrors(prev => ({ ...prev, ifscCode: undefined }));
+    }
 
     if (uppercaseVal.length === 11) {
       setIsLookingUpIfsc(true);
@@ -78,8 +91,17 @@ export const CollegeTreasuryAccountModal: React.FC<CollegeTreasuryAccountModalPr
           setBankName(info.bankName);
           setBranchName(info.branch);
           setIfscVerifiedStatus(`${info.bankName} • ${info.branch}`);
+          setErrors(prev => ({ ...prev, ifscCode: undefined, bankName: undefined, branchName: undefined }));
         } else {
           setIfscVerifiedStatus(null);
+          // Check regex
+          const ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+          if (!ifscRegex.test(uppercaseVal)) {
+            setErrors(prev => ({
+              ...prev,
+              ifscCode: '❌ गलत IFSC फॉर्मेट! पहले 4 अक्षर बैंक कोड (A-Z), 5वाँ अक्षर 0, और अंतिम 6 अक्षर शाखा कोड होने चाहिए (उदा. SBIN0001234 या UBIN0544124)'
+            }));
+          }
         }
         setIsLookingUpIfsc(false);
       }, 300);
@@ -116,6 +138,8 @@ export const CollegeTreasuryAccountModal: React.FC<CollegeTreasuryAccountModalPr
       setBranchName(`Main Branch, Uttar Pradesh`);
       setIfscVerifiedStatus(`${bank.name} • Verified Commercial Bank`);
     }
+    setErrors({});
+    setShowValidationAlert(false);
     setIsBankSelectorOpen(false);
   };
 
@@ -150,17 +174,84 @@ export const CollegeTreasuryAccountModal: React.FC<CollegeTreasuryAccountModalPr
     }, 1000);
   };
 
+  const validateEditForm = (): boolean => {
+    const newErrors: {
+      ifscCode?: string;
+      bankName?: string;
+      accountNumber?: string;
+      branchName?: string;
+      accountHolderName?: string;
+    } = {};
+
+    const cleanIfsc = (ifscCode || '').trim().toUpperCase();
+    const cleanAcc = (accountNumber || '').trim().replace(/\s+/g, '');
+    const cleanBank = (bankName || '').trim();
+    const cleanBranch = (branchName || '').trim();
+    const cleanHolder = (accountHolderName || '').trim();
+
+    // 1. IFSC Validation
+    const ifscRegex = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+    if (!cleanIfsc) {
+      newErrors.ifscCode = '⚠️ कृपया बैंक का IFSC कोड दर्ज करें।';
+    } else if (cleanIfsc.length !== 11) {
+      newErrors.ifscCode = `❌ अमान्य IFSC कोड! IFSC कोड ठीक 11 अक्षरों का होना चाहिए (आपने केवल ${cleanIfsc.length} अक्षर दर्ज किए हैं)। उदा. SBIN0001234 या UBIN0544124`;
+    } else if (!ifscRegex.test(cleanIfsc)) {
+      newErrors.ifscCode = '❌ गलत IFSC फॉर्मेट! पहले 4 अक्षर बैंक कोड (A-Z), 5वाँ अक्षर 0, और अंतिम 6 अक्षर शाखा कोड होने चाहिए। (उदा. SBIN0001234)';
+    }
+
+    // 2. Bank Name Validation
+    if (!cleanBank) {
+      newErrors.bankName = '⚠️ कृपया बैंक का नाम दर्ज करें अथवा ऊपर दी गई सूची से चुनें।';
+    } else if (cleanBank.length < 3) {
+      newErrors.bankName = '❌ बैंक का नाम बहुत छोटा है (कम से कम 3 अक्षर होने चाहिए)।';
+    }
+
+    // 3. Account Number Validation
+    if (!cleanAcc) {
+      newErrors.accountNumber = '⚠️ कृपया बैंक खाता संख्या (Account Number) दर्ज करें।';
+    } else if (!/^\d+$/.test(cleanAcc)) {
+      newErrors.accountNumber = '❌ खाता संख्या में केवल अंक (0-9) होने चाहिए (अक्षर या विशेष चिन्ह मान्य नहीं हैं)।';
+    } else if (cleanAcc.length < 9 || cleanAcc.length > 18) {
+      newErrors.accountNumber = `❌ अमान्य खाता संख्या! बैंक खाता संख्या 9 से 18 अंकों के बीच होनी चाहिए (वर्तमान में केवल ${cleanAcc.length} अंक हैं)।`;
+    }
+
+    // 4. Branch Name Validation
+    if (!cleanBranch) {
+      newErrors.branchName = '⚠️ कृपया बैंक शाखा का नाम (Branch Name) दर्ज करें।';
+    } else if (cleanBranch.length < 3) {
+      newErrors.branchName = '❌ शाखा का नाम कम से कम 3 अक्षरों का होना चाहिए।';
+    }
+
+    // 5. Account Holder Validation
+    if (!cleanHolder) {
+      newErrors.accountHolderName = '⚠️ कृपया खाता धारक का आधिकारिक पद / नाम दर्ज करें।';
+    } else if (cleanHolder.length < 3) {
+      newErrors.accountHolderName = '❌ खाता धारक का नाम कम से कम 3 अक्षरों का होना चाहिए।';
+    }
+
+    setErrors(newErrors);
+    const hasErrors = Object.keys(newErrors).length > 0;
+    setShowValidationAlert(hasErrors);
+    return !hasErrors;
+  };
+
   const handleSaveChanges = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateEditForm()) {
+      return;
+    }
+
+    setShowValidationAlert(false);
     updateCollegeBankAccount({
-      bankName,
-      accountNumber,
-      ifscCode,
-      branchName,
-      accountHolderName,
-      treasuryCode
+      bankName: bankName.trim(),
+      accountNumber: accountNumber.trim(),
+      ifscCode: ifscCode.trim().toUpperCase(),
+      branchName: branchName.trim(),
+      accountHolderName: accountHolderName.trim(),
+      treasuryCode: treasuryCode.trim()
     });
-    alert('College Institutional Treasury Bank details updated successfully!');
+    confetti({ particleCount: 60, spread: 60 });
+    alert('✅ कॉलेज सरकारी कोषागार बैंक खाता सफलतापूर्वक अपडेट हो गया है!');
     onClose();
   };
 
@@ -543,88 +634,173 @@ export const CollegeTreasuryAccountModal: React.FC<CollegeTreasuryAccountModalPr
               )}
             </div>
 
+            {/* Validation Error Summary Alert */}
+            {showValidationAlert && (
+              <div className="p-3.5 rounded-2xl bg-red-50 dark:bg-red-950/80 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 text-xs font-bold flex items-start gap-2.5 animate-shake shadow-md">
+                <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <div className="font-extrabold text-red-800 dark:text-red-200">
+                    गलत विवरण! कृपया नीचे लाल बॉक्स में चिह्नित त्रुटियों को ठीक करें।
+                  </div>
+                  <p className="text-[11px] font-normal text-red-600 dark:text-red-400">
+                    जब तक सभी बॉक्स में सही IFSC कोड और वैध खाता संख्या (9-18 अंक) नहीं भरी जाएगी, तब तक खाता सेव नहीं होगा।
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex items-center gap-2 text-emerald-800 dark:text-emerald-200 text-xs">
-              <ShieldCheck className="w-4 h-4 flex-shrink-0" />
+              <ShieldCheck className="w-4 h-4 flex-shrink-0 text-emerald-600" />
               <span>
                 IFSC कोड डालते ही सिस्टम सर्वर से बैंक का नाम और शाखा स्वचालित (Auto-detect) रूप से प्राप्त कर लेगा।
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* IFSC Code */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  IFSC Code (आईएफएससी कोड दर्ज करें)
+                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
+                  <span>IFSC Code (आईएफएससी कोड दर्ज करें) *</span>
+                  <span className="text-[10px] text-slate-400 font-normal">11 Chars (e.g. SBIN0001234)</span>
                 </label>
                 <div className="relative">
                   <input
                     type="text"
                     value={ifscCode}
-                    onChange={e => handleIfscChange(e.target.value)}
+                    onChange={e => {
+                      handleIfscChange(e.target.value);
+                      if (errors.ifscCode) setErrors(prev => ({ ...prev, ifscCode: undefined }));
+                    }}
                     placeholder="e.g. SBIN0001234"
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-mono uppercase font-bold outline-none"
-                    required
+                    className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono uppercase font-bold outline-none transition-all ${
+                      errors.ifscCode
+                        ? 'border-red-500 ring-2 ring-red-500/20 bg-red-50/40 dark:bg-red-950/30 text-red-900 dark:text-red-200'
+                        : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-600'
+                    }`}
                   />
                   {isLookingUpIfsc && (
-                    <RefreshCw className="w-3.5 h-3.5 text-blue-600 animate-spin absolute right-3 top-2.5" />
+                    <RefreshCw className="w-3.5 h-3.5 text-blue-600 animate-spin absolute right-3 top-3" />
                   )}
                 </div>
-                {ifscVerifiedStatus && (
+                {errors.ifscCode ? (
+                  <div className="mt-1.5 p-2 rounded-xl bg-red-50 dark:bg-red-950/70 border border-red-200 dark:border-red-800/80 text-red-600 dark:text-red-400 text-[11px] font-bold flex items-start gap-1.5 animate-fade-in shadow-xs">
+                    <AlertCircle className="w-3.5 h-3.5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <span>{errors.ifscCode}</span>
+                  </div>
+                ) : ifscVerifiedStatus ? (
                   <span className="text-[10px] text-emerald-600 font-bold mt-1 flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3" /> {ifscVerifiedStatus}
                   </span>
-                )}
+                ) : null}
               </div>
 
+              {/* Bank Name */}
               <div>
                 <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  Bank Name (बैंक का नाम)
+                  Bank Name (बैंक का नाम) *
                 </label>
                 <input
                   type="text"
                   value={bankName}
-                  onChange={e => setBankName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs outline-none"
-                  required
+                  onChange={e => {
+                    setBankName(e.target.value);
+                    if (errors.bankName) setErrors(prev => ({ ...prev, bankName: undefined }));
+                  }}
+                  placeholder="e.g. State Bank of India"
+                  className={`w-full px-3.5 py-2.5 rounded-xl border text-xs outline-none transition-all font-semibold ${
+                    errors.bankName
+                      ? 'border-red-500 ring-2 ring-red-500/20 bg-red-50/40 dark:bg-red-950/30 text-red-900 dark:text-red-200'
+                      : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-600'
+                  }`}
                 />
+                {errors.bankName && (
+                  <div className="mt-1.5 p-2 rounded-xl bg-red-50 dark:bg-red-950/70 border border-red-200 dark:border-red-800/80 text-red-600 dark:text-red-400 text-[11px] font-bold flex items-start gap-1.5 animate-fade-in shadow-xs">
+                    <AlertCircle className="w-3.5 h-3.5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <span>{errors.bankName}</span>
+                  </div>
+                )}
               </div>
 
+              {/* Account Number */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  Account Number (खाता संख्या)
+                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
+                  <span>Account Number (खाता संख्या) *</span>
+                  <span className="text-[10px] text-slate-400 font-normal">9-18 Digits</span>
                 </label>
                 <input
                   type="text"
                   value={accountNumber}
-                  onChange={e => setAccountNumber(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs font-mono font-bold outline-none"
-                  required
+                  onChange={e => {
+                    setAccountNumber(e.target.value);
+                    if (errors.accountNumber) setErrors(prev => ({ ...prev, accountNumber: undefined }));
+                  }}
+                  placeholder="e.g. 401234567890"
+                  className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono font-bold outline-none transition-all ${
+                    errors.accountNumber
+                      ? 'border-red-500 ring-2 ring-red-500/20 bg-red-50/40 dark:bg-red-950/30 text-red-900 dark:text-red-200'
+                      : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-600'
+                  }`}
                 />
+                {errors.accountNumber && (
+                  <div className="mt-1.5 p-2 rounded-xl bg-red-50 dark:bg-red-950/70 border border-red-200 dark:border-red-800/80 text-red-600 dark:text-red-400 text-[11px] font-bold flex items-start gap-1.5 animate-fade-in shadow-xs">
+                    <AlertCircle className="w-3.5 h-3.5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <span>{errors.accountNumber}</span>
+                  </div>
+                )}
               </div>
 
+              {/* Branch Name */}
               <div>
                 <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  Branch Name (शाखा का नाम)
+                  Branch Name (शाखा का नाम) *
                 </label>
                 <input
                   type="text"
                   value={branchName}
-                  onChange={e => setBranchName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs outline-none"
-                  required
+                  onChange={e => {
+                    setBranchName(e.target.value);
+                    if (errors.branchName) setErrors(prev => ({ ...prev, branchName: undefined }));
+                  }}
+                  placeholder="e.g. Main Institutional Branch, Uttar Pradesh"
+                  className={`w-full px-3.5 py-2.5 rounded-xl border text-xs outline-none transition-all ${
+                    errors.branchName
+                      ? 'border-red-500 ring-2 ring-red-500/20 bg-red-50/40 dark:bg-red-950/30 text-red-900 dark:text-red-200'
+                      : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-600'
+                  }`}
                 />
+                {errors.branchName && (
+                  <div className="mt-1.5 p-2 rounded-xl bg-red-50 dark:bg-red-950/70 border border-red-200 dark:border-red-800/80 text-red-600 dark:text-red-400 text-[11px] font-bold flex items-start gap-1.5 animate-fade-in shadow-xs">
+                    <AlertCircle className="w-3.5 h-3.5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <span>{errors.branchName}</span>
+                  </div>
+                )}
               </div>
 
+              {/* Account Holder Official Title */}
               <div className="sm:col-span-2">
                 <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  Account Holder Official Title (खाता धारक का नाम)
+                  Account Holder Official Title (खाता धारक का नाम) *
                 </label>
                 <input
                   type="text"
                   value={accountHolderName}
-                  onChange={e => setAccountHolderName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs outline-none"
-                  required
+                  onChange={e => {
+                    setAccountHolderName(e.target.value);
+                    if (errors.accountHolderName) setErrors(prev => ({ ...prev, accountHolderName: undefined }));
+                  }}
+                  placeholder="e.g. Principal, Government Polytechnic (Institutional Treasury A/C)"
+                  className={`w-full px-3.5 py-2.5 rounded-xl border text-xs outline-none transition-all font-medium ${
+                    errors.accountHolderName
+                      ? 'border-red-500 ring-2 ring-red-500/20 bg-red-50/40 dark:bg-red-950/30 text-red-900 dark:text-red-200'
+                      : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-600'
+                  }`}
                 />
+                {errors.accountHolderName && (
+                  <div className="mt-1.5 p-2 rounded-xl bg-red-50 dark:bg-red-950/70 border border-red-200 dark:border-red-800/80 text-red-600 dark:text-red-400 text-[11px] font-bold flex items-start gap-1.5 animate-fade-in shadow-xs">
+                    <AlertCircle className="w-3.5 h-3.5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <span>{errors.accountHolderName}</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -632,13 +808,13 @@ export const CollegeTreasuryAccountModal: React.FC<CollegeTreasuryAccountModalPr
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold"
+                className="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black shadow-md shadow-blue-600/30"
+                className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black shadow-lg shadow-blue-600/30 active:scale-95 transition-all"
               >
                 Save Account Changes
               </button>
