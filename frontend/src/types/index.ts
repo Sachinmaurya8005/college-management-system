@@ -499,3 +499,50 @@ export interface LiveActivityItem {
   timestamp: string;
 }
 
+export interface PlacementDrive {
+  id: string;
+  company: string;
+  role: string;
+  package: number; // in INR e.g. 420000
+  eligibleBranches: string[];
+  minPercentage: number;
+  date: string;
+  location: string;
+  openings: number;
+  status: 'Open' | 'Upcoming' | 'Completed' | 'Closed';
+  contactPerson?: string;
+  description?: string;
+}
+
+export interface TopRecruiter {
+  id: string;
+  name: string;
+  logo: string;
+  domain: string;
+  hires: string;
+  packageRange?: string;
+}
+
+export interface PlacementStats {
+  highestPackage: string;
+  highestPackageCompany: string;
+  averagePackage: string;
+  averagePackageRole: string;
+  totalPlaced: string;
+  placementRate: string;
+  corporateRecruitersCount: string;
+  natsCertified: boolean;
+}
+
+export interface TPOPlacementData {
+  stats: PlacementStats;
+  recruiters: TopRecruiter[];
+  drives: PlacementDrive[];
+  tpoOfficer: {
+    name: string;
+    designation: string;
+    email: string;
+    phone: string;
+  };
+}
+

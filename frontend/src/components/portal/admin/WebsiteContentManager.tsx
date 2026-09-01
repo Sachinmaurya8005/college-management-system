@@ -26,11 +26,13 @@ import {
   Bus,
   Train,
   Camera,
-  Layers
+  Layers,
+  Briefcase
 } from 'lucide-react';
 import { websiteContentService } from '../../../services/websiteContentService';
 import { useCollegeData } from '../../../context/CollegeDataContext';
 import { useAuth } from '../../../context/AuthContext';
+import { PlacementCellPage } from '../../public/PlacementCellPage';
 import {
   Facility,
   GalleryItem,
@@ -44,7 +46,7 @@ import confetti from 'canvas-confetti';
 export const WebsiteContentManager: React.FC = () => {
   const { updateSettings } = useCollegeData();
   const { user, updateUser } = useAuth();
-  const [activeTab, setActiveTab] = useState<'facilities' | 'gallery' | 'links' | 'fees' | 'location' | 'about'>('facilities');
+  const [activeTab, setActiveTab] = useState<'facilities' | 'gallery' | 'links' | 'fees' | 'location' | 'about' | 'placements'>('facilities');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Facilities State
@@ -424,6 +426,7 @@ export const WebsiteContentManager: React.FC = () => {
           { id: 'gallery', label: 'Photo Gallery', icon: ImageIcon },
           { id: 'links', label: 'Important Links', icon: Link2 },
           { id: 'fees', label: 'Public Fees', icon: IndianRupee },
+          { id: 'placements', label: 'TPO Placements', icon: Briefcase },
           { id: 'about', label: 'About & Principal', icon: Info },
           { id: 'location', label: 'Location & Map', icon: MapPin },
         ].map(tab => {
@@ -1218,6 +1221,13 @@ export const WebsiteContentManager: React.FC = () => {
             </button>
           </div>
         </form>
+      )}
+
+      {/* Tab 7: TPO Placements Management */}
+      {activeTab === 'placements' && (
+        <div className="space-y-4">
+          <PlacementCellPage />
+        </div>
       )}
 
       {/* Facility Modal */}
