@@ -56,12 +56,12 @@ const BRANCH_OPTIONS = [
 ];
 
 export const DigitalLibraryPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { students, teachers, updateTeacher } = useCollegeData();
 
-  const isAdmin = user?.role === 'admin';
-  const isTeacher = user?.role === 'teacher';
-  const isStudent = user?.role === 'student';
+  const isAdmin = Boolean(isAuthenticated && user && user.role === 'admin');
+  const isTeacher = Boolean(isAuthenticated && user && user.role === 'teacher');
+  const isStudent = Boolean(isAuthenticated && user && user.role === 'student');
 
   // Data State
   const [settings, setSettings] = useState<LibrarySettingsData>(() => libraryService.getSettings());

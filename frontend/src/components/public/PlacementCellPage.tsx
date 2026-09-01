@@ -47,8 +47,8 @@ const ALL_AVAILABLE_BRANCHES = [
 ];
 
 export const PlacementCellPage: React.FC = () => {
-  const { user } = useAuth();
-  const isAdmin = user?.role === 'admin';
+  const { user, isAuthenticated } = useAuth();
+  const isAdmin = Boolean(isAuthenticated && user && user.role === 'admin');
 
   // Data State
   const [stats, setStats] = useState<PlacementStats>(() => tpoPlacementService.getStats());

@@ -5,6 +5,7 @@ import {
   Sun,
   Moon,
   LogIn,
+  LogOut,
   Home,
   Info,
   BookOpen,
@@ -20,12 +21,12 @@ import {
   Shield,
   GraduationCap,
   Briefcase,
-  ShieldCheck
+  ShieldCheck,
+  ArrowLeft
 } from 'lucide-react';
 import { CollegeLogo } from '../common/CollegeLogo';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
-import { ArrowLeft } from 'lucide-react';
 
 interface PublicNavbarProps {
   currentRoute: string;
@@ -35,7 +36,7 @@ interface PublicNavbarProps {
 
 export const PublicNavbar: React.FC<PublicNavbarProps> = ({ currentRoute, onNavigate, onReturnToPortal }) => {
   const { theme, toggleTheme } = useTheme();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const NAV_LINKS = [
@@ -81,50 +82,36 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ currentRoute, onNavi
           <span className="text-white/30">•</span>
           <button
             onClick={() => handleNavClick('location')}
-            className="hover:text-white flex items-center gap-1 transition-colors"
+            className="hover:text-amber-300 transition-colors flex items-center gap-1"
           >
-            <MapPin className="w-3 h-3 text-amber-400" /> Uttar Pradesh (U.P.)
+            <MapPin className="w-3 h-3 text-amber-400" />
+            <span>Campus Location</span>
           </button>
           <span className="text-white/30">•</span>
+          {/* Dark / Light Toggle */}
           <button
             onClick={toggleTheme}
-            aria-label="Toggle theme"
-            className="p-1 rounded-lg hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+            aria-label="Toggle Theme"
+            className="p-1 rounded-md hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
           >
-            {theme === 'dark' ? <Sun className="w-3.5 h-3.5 text-amber-300" /> : <Moon className="w-3.5 h-3.5" />}
+            {theme === 'dark' ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-blue-300" />}
           </button>
         </div>
       </div>
 
-      {/* Main Header Branding & Navigation */}
+      {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* College Logo & Title */}
-          <div
+          {/* College Brand Logo */}
+          <button
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-3.5 cursor-pointer group select-none"
+            className="text-left flex items-center gap-3 group focus:outline-none"
           >
-            <div className="relative">
-              <CollegeLogo size="lg" showText={false} className="rounded-xl shadow-lg ring-2 ring-white/20 transition-transform group-hover:scale-105" />
-              <div className="absolute -bottom-1 -right-1 bg-amber-500 text-[9px] font-black text-slate-950 px-1.5 py-0.2 rounded-full shadow">
-                GP
-              </div>
-            </div>
-            <div className="leading-tight">
-              <span className="text-[10px] sm:text-xs font-bold text-amber-400 tracking-wider uppercase block">
-                राजकीय पॉलिटेक्निक
-              </span>
-              <h1 className="text-sm sm:text-base md:text-lg font-black tracking-tight text-white group-hover:text-blue-200 transition-colors">
-                GOVERNMENT POLYTECHNIC
-              </h1>
-              <span className="text-[10px] text-blue-200/80 font-medium block">
-                Approved by AICTE • Affiliated to BTEUP Lucknow
-              </span>
-            </div>
-          </div>
+            <CollegeLogo size="md" textColor="light" subtitle={true} />
+          </button>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden xl:flex items-center gap-1">
+          <nav className="hidden xl:flex items-center space-x-1">
             {NAV_LINKS.slice(0, 8).map(link => {
               const Icon = link.icon;
               const isActive = currentRoute === link.id;
@@ -134,19 +121,19 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ currentRoute, onNavi
                   onClick={() => handleNavClick(link.id)}
                   className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                     isActive
-                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
-                      : 'text-slate-200 hover:text-white hover:bg-white/10'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30 ring-1 ring-white/20'
+                      : 'text-slate-300 hover:text-white hover:bg-white/10'
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5 opacity-80" />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-blue-400'}`} />
                   <span>{link.label}</span>
                 </button>
               );
             })}
 
-            {/* Dropdown / More links */}
+            {/* Dropdown for Remaining Links */}
             <div className="relative group">
-              <button className="px-3 py-2 rounded-xl text-xs font-bold text-slate-200 hover:text-white hover:bg-white/10 flex items-center gap-1">
+              <button className="px-3 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white hover:bg-white/10 transition-all flex items-center gap-1">
                 <span>More</span>
                 <span className="text-[10px]">▼</span>
               </button>
@@ -174,23 +161,36 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ currentRoute, onNavi
           {/* Action CTAs: Portal Login or Return to Portal */}
           <div className="flex items-center gap-2">
             {isAuthenticated && user ? (
-              <button
-                onClick={() => {
-                  if (onReturnToPortal) onReturnToPortal();
-                  else handleNavClick('login');
-                }}
-                className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-extrabold shadow-lg shadow-emerald-600/30 ring-1 ring-white/20 transition-all flex items-center gap-1.5 active:scale-95"
-                title="Return to your authenticated portal dashboard"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span>
-                  {user.role === 'admin'
-                    ? '⬅ Principal Portal'
-                    : user.role === 'teacher'
-                    ? '⬅ Faculty Portal'
-                    : '⬅ Student Portal'}
-                </span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    if (onReturnToPortal) onReturnToPortal();
+                    else handleNavClick('login');
+                  }}
+                  className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-extrabold shadow-lg shadow-emerald-600/30 ring-1 ring-white/20 transition-all flex items-center gap-1.5 active:scale-95"
+                  title="Return to your authenticated portal dashboard"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>
+                    {user.role === 'admin'
+                      ? '⬅ Principal Portal'
+                      : user.role === 'teacher'
+                      ? '⬅ Faculty Portal'
+                      : '⬅ Student Portal'}
+                  </span>
+                </button>
+                <button
+                  onClick={() => {
+                    logout();
+                    handleNavClick('home');
+                  }}
+                  className="px-2.5 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 hover:text-white border border-red-500/30 text-xs font-bold transition-all flex items-center gap-1"
+                  title="Logout Session"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Logout</span>
+                </button>
+              </div>
             ) : (
               <button
                 onClick={() => handleNavClick('login')}
@@ -229,21 +229,11 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ currentRoute, onNavi
                     : 'text-slate-300 hover:text-white hover:bg-white/10'
                 }`}
               >
-                <Icon className="w-4 h-4 text-blue-400" />
+                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-blue-400'}`} />
                 <span>{link.label}</span>
               </button>
             );
           })}
-
-          <div className="pt-3 border-t border-white/10 mt-2">
-            <button
-              onClick={() => handleNavClick('login')}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold text-center flex items-center justify-center gap-2 shadow-lg"
-            >
-              <LogIn className="w-4 h-4" />
-              <span>Student / Staff Login</span>
-            </button>
-          </div>
         </div>
       )}
     </header>
