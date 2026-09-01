@@ -22,7 +22,8 @@ import {
   GraduationCap,
   Briefcase,
   ShieldCheck,
-  ArrowLeft
+  ArrowLeft,
+  QrCode
 } from 'lucide-react';
 import { CollegeLogo } from '../common/CollegeLogo';
 import { useTheme } from '../../context/ThemeContext';
@@ -32,9 +33,15 @@ interface PublicNavbarProps {
   currentRoute: string;
   onNavigate: (route: string) => void;
   onReturnToPortal?: () => void;
+  onOpenQrModal?: () => void;
 }
 
-export const PublicNavbar: React.FC<PublicNavbarProps> = ({ currentRoute, onNavigate, onReturnToPortal }) => {
+export const PublicNavbar: React.FC<PublicNavbarProps> = ({
+  currentRoute,
+  onNavigate,
+  onReturnToPortal,
+  onOpenQrModal
+}) => {
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -75,10 +82,16 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ currentRoute, onNavi
         </div>
 
         <div className="flex items-center gap-3 text-blue-200">
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-            Live Real-Time
-          </span>
+          {/* QR Code Trigger Button */}
+          <button
+            onClick={() => onOpenQrModal && onOpenQrModal()}
+            className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/30 text-[10px] font-black flex items-center gap-1 transition-all"
+            title="Scan or Download Official College QR Code"
+          >
+            <QrCode className="w-3.5 h-3.5 text-emerald-400" />
+            <span>📱 College QR Code</span>
+          </button>
+
           <span className="text-white/30">•</span>
           <button
             onClick={() => handleNavClick('location')}
@@ -160,6 +173,15 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ currentRoute, onNavi
 
           {/* Action CTAs: Portal Login or Return to Portal */}
           <div className="flex items-center gap-2">
+            {/* Quick QR Button in Main Navbar */}
+            <button
+              onClick={() => onOpenQrModal && onOpenQrModal()}
+              className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-emerald-300 hover:text-white border border-white/10 transition-all"
+              title="Official College QR Code"
+            >
+              <QrCode className="w-4 h-4" />
+            </button>
+
             {isAuthenticated && user ? (
               <div className="flex items-center gap-2">
                 <button
@@ -216,6 +238,17 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ currentRoute, onNavi
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="xl:hidden bg-polytechnic-950 dark:bg-slate-950 border-t border-polytechnic-800 dark:border-slate-800 px-4 py-4 space-y-1 shadow-2xl max-h-[80vh] overflow-y-auto">
+          <button
+            onClick={() => {
+              if (onOpenQrModal) onOpenQrModal();
+              setMobileMenuOpen(false);
+            }}
+            className="w-full px-4 py-2.5 rounded-xl text-xs font-black text-left bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 mb-2 flex items-center gap-2"
+          >
+            <QrCode className="w-4 h-4" />
+            <span>📱 Official College QR Code (क्यूआर कोड)</span>
+          </button>
+
           {NAV_LINKS.map(link => {
             const Icon = link.icon;
             const isActive = currentRoute === link.id;

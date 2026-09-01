@@ -8,15 +8,17 @@ import {
   GraduationCap,
   Globe,
   Award,
-  ChevronRight
+  ChevronRight,
+  QrCode
 } from 'lucide-react';
 import { CollegeLogo } from '../common/CollegeLogo';
 
 interface PublicFooterProps {
   onNavigate: (route: string) => void;
+  onOpenQrModal?: () => void;
 }
 
-export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate }) => {
+export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate, onOpenQrModal }) => {
   return (
     <footer className="bg-polytechnic-950 dark:bg-slate-950 text-slate-300 border-t border-polytechnic-800 dark:border-slate-800 pt-14 pb-8 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -131,7 +133,15 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate }) => {
               </div>
             </div>
 
-            <div className="pt-2">
+            <div className="pt-2 space-y-2">
+              <button
+                onClick={() => onOpenQrModal && onOpenQrModal()}
+                className="w-full py-2 px-3 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/50 border border-emerald-500/40 text-xs font-black text-emerald-300 text-center flex items-center justify-center gap-2 transition-all shadow-sm"
+              >
+                <QrCode className="w-4 h-4 text-emerald-400" />
+                <span>📱 Scan Official College QR (क्यूआर कोड)</span>
+              </button>
+
               <button
                 onClick={() => {
                   onNavigate('location');

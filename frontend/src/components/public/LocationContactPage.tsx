@@ -10,14 +10,17 @@ import {
   ExternalLink,
   Shield,
   Clock,
-  Building
+  Building,
+  QrCode
 } from 'lucide-react';
 import { publicService } from '../../services/publicService';
 import { CollegeLocationData } from '../../types';
+import { CollegeOfficialQrModal } from '../common/CollegeOfficialQrModal';
 
 export const LocationContactPage: React.FC = () => {
   const [location, setLocation] = useState<CollegeLocationData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [qrModalOpen, setQrModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchLocation = async () => {

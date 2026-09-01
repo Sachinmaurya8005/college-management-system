@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PublicNavbar } from './PublicNavbar';
 import { PublicFooter } from './PublicFooter';
 import { useAuth } from '../../context/AuthContext';
-import { ArrowLeft, LogOut } from 'lucide-react';
+import { ArrowLeft, LogOut, QrCode } from 'lucide-react';
+import { CollegeOfficialQrModal } from '../common/CollegeOfficialQrModal';
 
 interface PublicLayoutProps {
   currentRoute: string;
@@ -18,6 +19,7 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({
   children
 }) => {
   const { user, isAuthenticated, logout } = useAuth();
+  const [qrModalOpen, setQrModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors">
@@ -53,7 +55,7 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({
               className="px-2.5 py-1 rounded-lg bg-red-600/80 hover:bg-red-600 text-white text-xs font-bold flex items-center gap-1 transition-all"
               title="लॉगआउट करें"
             >
-              <LogOut className="w-3.5 h-3.5" />
+              <LogOut className="w-3 h-3" />
               <span>लॉगआउट</span>
             </button>
           </div>
@@ -65,6 +67,7 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({
         currentRoute={currentRoute}
         onNavigate={onNavigate}
         onReturnToPortal={onReturnToPortal}
+        onOpenQrModal={() => setQrModalOpen(true)}
       />
 
       {/* Main Page Content */}
@@ -73,7 +76,16 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({
       </main>
 
       {/* Public Footer */}
-      <PublicFooter onNavigate={onNavigate} />
+      <PublicFooter
+        onNavigate={onNavigate}
+        onOpenQrModal={() => setQrModalOpen(true)}
+      />
+
+      {/* Global College Official QR Code Modal */}
+      <CollegeOfficialQrModal
+        isOpen={qrModalOpen}
+        onClose={() => setQrModalOpen(false)}
+      />
     </div>
   );
 };
