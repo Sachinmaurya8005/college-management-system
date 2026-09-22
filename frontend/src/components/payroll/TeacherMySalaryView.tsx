@@ -26,7 +26,14 @@ export const TeacherMySalaryView: React.FC = () => {
   const { user } = useAuth();
   const { teachers, salaryDisbursements, calculateTeacherMonthlySalary } = useCollegeData();
 
-  const currentTeacher = teachers.find(t => t.email === user?.email) || teachers[0];
+  const currentTeacher =
+    teachers.find(
+      t =>
+        (user?.email && t.email?.toLowerCase() === user.email.toLowerCase()) ||
+        t.id === user?.id ||
+        (user?.empCode && t.empCode?.toLowerCase() === user.empCode.toLowerCase()) ||
+        (user?.name && t.name?.toLowerCase().includes(user.name.toLowerCase()))
+    ) || teachers[0];
   const [selectedMonth, setSelectedMonth] = useState('2026-08');
   const [viewingSlip, setViewingSlip] = useState<SalaryDisbursementRecord | null>(null);
 
