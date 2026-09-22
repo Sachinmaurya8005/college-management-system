@@ -22,6 +22,8 @@ export interface User {
   semester?: number;
   lastLogin?: string;
   isLibraryIncharge?: boolean;
+  assignedBranch?: string;
+  assignedSemester?: number;
 }
 
 export interface Student {
@@ -73,6 +75,8 @@ export interface Teacher {
   staffType?: 'Teaching Faculty' | 'Technical Staff' | 'Administrative Staff' | 'Support Staff';
   workDescription?: string;
   isLibraryIncharge?: boolean;
+  assignedBranch?: string;
+  assignedSemester?: number;
   bankAccount?: TeacherBankAccount;
 }
 

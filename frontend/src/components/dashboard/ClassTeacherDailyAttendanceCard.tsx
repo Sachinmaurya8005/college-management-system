@@ -85,23 +85,41 @@ const BRANCH_SUBJECTS_MAP: Record<string, string[]> = {
 
 export const ClassTeacherDailyAttendanceCard: React.FC = () => {
   const { user } = useAuth();
-  const { students, saveAttendance } = useCollegeData();
+  const { students, teachers, saveAttendance } = useCollegeData();
 
-  // Class selection state: Auto-assigned based on teacher's department or Admin master
   const isTeacher = user?.role === 'teacher';
-  const teacherDept = user?.department || '';
+  const isAdmin = user?.role === 'admin';
 
-  const getInitialBranch = () => {
-    if (teacherDept.toLowerCase().includes('mechanical')) return 'Mechanical Engineering (Production)';
-    if (teacherDept.toLowerCase().includes('civil')) return 'Civil Engineering';
-    if (teacherDept.toLowerCase().includes('electrical')) return 'Electrical Engineering';
-    if (teacherDept.toLowerCase().includes('electronics')) return 'Electronics Engineering';
-    if (teacherDept.toLowerCase().includes('information')) return 'Information Technology';
-    return 'Computer Science & Engineering';
-  };
+  // Find logged-in teacher from teachers collection to get live assigned branch & semester
+  const currentTeacherObj = teachers.find(
+    t =>
+      (user?.email && t.email?.toLowerCase() === user.email.toLowerCase()) ||
+      t.id === user?.id ||
+      (user?.empCode && t.empCode?.toLowerCase() === user.empCode.toLowerCase()) ||
+      (user?.name && t.name?.toLowerCase().includes(user.name.toLowerCase()))
+  );
 
-  const [selectedBranchName, setSelectedBranchName] = useState<string>(() => getInitialBranch());
-  const [selectedSemester, setSelectedSemester] = useState<number>(() => (isTeacher ? 4 : 4));
+  const teacherAssignedBranch = currentTeacherObj?.assignedBranch || currentTeacherObj?.department || 'Computer Science & Engineering';
+  const teacherAssignedSemester = currentTeacherObj?.assignedSemester || 4;
+
+  const [selectedBranchName, setSelectedBranchName] = useState<string>(() =>
+    isTeacher ? teacherAssignedBranch : 'Computer Science & Engineering'
+  );
+  const [selectedSemester, setSelectedSemester] = useState<number>(() =>
+    isTeacher ? teacherAssignedSemester : 4
+  );
+
+  // Real-time synchronization: If Admin reassigns this teacher to another class, update immediately
+  useEffect(() => {
+    if (isTeacher && currentTeacherObj) {
+      if (currentTeacherObj.assignedBranch) {
+        setSelectedBranchName(currentTeacherObj.assignedBranch);
+      }
+      if (currentTeacherObj.assignedSemester) {
+        setSelectedSemester(currentTeacherObj.assignedSemester);
+      }
+    }
+  }, [isTeacher, currentTeacherObj?.assignedBranch, currentTeacherObj?.assignedSemester]);
   const [selectedSubject, setSelectedSubject] = useState('CS-401 Data Structures & Algorithms');
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -292,40 +310,54 @@ export const ClassTeacherDailyAttendanceCard: React.FC = () => {
         <div>
           <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1">
             <GraduationCap className="w-3.5 h-3.5 text-blue-500" />
-            <span>Select Branch (शाखा)</span>
+            <span>{isTeacher ? 'Assigned Branch (नियुक्त शाखा)' : 'Select Branch (शाखा)'}</span>
+            {isTeacher && <span className="text-[10px] text-amber-500 font-bold">🔒 Locked</span>}
           </label>
-          <select
-            value={selectedBranchName}
-            onChange={e => handleBranchChange(e.target.value)}
-            className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold outline-none text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500"
-          >
-            {ALL_BRANCHES.map(b => (
-              <option key={b.id} value={b.name}>
-                {b.name}
-              </option>
-            ))}
-          </select>
+          {isTeacher ? (
+            <div className="w-full px-3 py-2 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/60 dark:bg-blue-950/40 font-black text-blue-900 dark:text-blue-200 truncate">
+              {selectedBranchName}
+            </div>
+          ) : (
+            <select
+              value={selectedBranchName}
+              onChange={e => handleBranchChange(e.target.value)}
+              className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold outline-none text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500"
+            >
+              {ALL_BRANCHES.map(b => (
+                <option key={b.id} value={b.name}>
+                  {b.name}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
 
         {/* Filter 2: Semester */}
         <div>
           <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1">
             <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
-            <span>Class / Semester (सेमेस्टर)</span>
+            <span>{isTeacher ? 'Assigned Class (नियुक्त कक्षा)' : 'Class / Semester (सेमेस्टर)'}</span>
+            {isTeacher && <span className="text-[10px] text-amber-500 font-bold">🔒 Locked</span>}
           </label>
-          <select
-            value={selectedSemester}
-            onChange={e => setSelectedSemester(Number(e.target.value))}
-            className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold outline-none text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500"
-          >
-            <option value={1}>1st Semester (1st Year)</option>
-            <option value={2}>2nd Semester (1st Year)</option>
-            <option value={3}>3rd Semester (2nd Year)</option>
-            <option value={4}>4th Semester (Regular - 2nd Year)</option>
-            <option value={5}>5th Semester (Final Year)</option>
-            <option value={6}>6th Semester (Final Year)</option>
-            <option value={0}>All Semesters (सभी सेमेस्टर)</option>
-          </select>
+          {isTeacher ? (
+            <div className="w-full px-3 py-2 rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/60 dark:bg-indigo-950/40 font-black text-indigo-900 dark:text-indigo-200">
+              Semester {selectedSemester} (Class In-Charge)
+            </div>
+          ) : (
+            <select
+              value={selectedSemester}
+              onChange={e => setSelectedSemester(Number(e.target.value))}
+              className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold outline-none text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500"
+            >
+              <option value={1}>1st Semester (1st Year)</option>
+              <option value={2}>2nd Semester (1st Year)</option>
+              <option value={3}>3rd Semester (2nd Year)</option>
+              <option value={4}>4th Semester (2nd Year)</option>
+              <option value={5}>5th Semester (Final Year)</option>
+              <option value={6}>6th Semester (Final Year)</option>
+              <option value={0}>All Semesters (सभी सेमेस्टर)</option>
+            </select>
+          )}
         </div>
 
         {/* Filter 3: Subject / Period */}
