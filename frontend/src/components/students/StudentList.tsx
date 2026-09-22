@@ -11,9 +11,14 @@ import {
   GraduationCap,
   Sparkles,
   Download,
-  AlertCircle
+  AlertCircle,
+  Lock,
+  ShieldCheck,
+  Building,
+  CheckCircle2
 } from 'lucide-react';
 import { useCollegeData } from '../../context/CollegeDataContext';
+import { useAuth } from '../../context/AuthContext';
 import { Student } from '../../types';
 import { Pagination } from '../common/Pagination';
 import { ConfirmDialog } from '../common/ConfirmDialog';
@@ -30,7 +35,23 @@ export const StudentList: React.FC<StudentListProps> = ({
   onOpenEditModal,
   onOpenProfileModal
 }) => {
-  const { students, deleteStudent, courses } = useCollegeData();
+  const { user } = useAuth();
+  const { students, deleteStudent, courses, teachers } = useCollegeData();
+
+  const isTeacher = user?.role === 'teacher';
+  const isAdmin = user?.role === 'admin';
+
+  // Find live assigned branch and semester for the logged-in teacher
+  const currentTeacherObj = teachers.find(
+    t =>
+      (user?.email && t.email?.toLowerCase() === user.email.toLowerCase()) ||
+      t.id === user?.id ||
+      (user?.empCode && t.empCode?.toLowerCase() === user.empCode.toLowerCase()) ||
+      (user?.name && t.name?.toLowerCase().includes(user.name.toLowerCase()))
+  );
+
+  const teacherAssignedBranch = currentTeacherObj?.assignedBranch || currentTeacherObj?.department || 'Computer Science & Engineering';
+  const teacherAssignedSemester = currentTeacherObj?.assignedSemester || 4;
 
   const [searchTerm, setSearchTerm] = useState('');
   const [branchFilter, setBranchFilter] = useState('All');
@@ -41,8 +62,32 @@ export const StudentList: React.FC<StudentListProps> = ({
 
   const [deleteTarget, setDeleteTarget] = useState<Student | null>(null);
 
-  // Filtering
+  // Normalize string for fuzzy branch matching
+  const normalize = (str: string) => (str || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+  // Filtering: If Teacher, strictly lock to assigned branch & semester
   const filteredStudents = students.filter(student => {
+    if (isTeacher) {
+      const sNorm = normalize(student.branch);
+      const assignedNorm = normalize(teacherAssignedBranch);
+      const branchMatch =
+        sNorm.includes(assignedNorm) ||
+        assignedNorm.includes(sNorm) ||
+        (assignedNorm.includes('computer') && sNorm.includes('computer')) ||
+        (assignedNorm.includes('mechanical') && sNorm.includes('mechanical')) ||
+        (assignedNorm.includes('civil') && sNorm.includes('civil')) ||
+        (assignedNorm.includes('electrical') && sNorm.includes('electrical')) ||
+        (assignedNorm.includes('electronics') && sNorm.includes('electronics')) ||
+        (assignedNorm.includes('information') && sNorm.includes('information'));
+
+      const semesterMatch = student.semester === teacherAssignedSemester;
+      if (!branchMatch || !semesterMatch) return false;
+    } else {
+      const matchesBranch = branchFilter === 'All' || student.branch.includes(branchFilter);
+      const matchesSemester = semesterFilter === 'All' || student.semester.toString() === semesterFilter;
+      if (!matchesBranch || !matchesSemester) return false;
+    }
+
     const matchesSearch =
       student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.rollNo.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -50,11 +95,9 @@ export const StudentList: React.FC<StudentListProps> = ({
       student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.mobile.includes(searchTerm);
 
-    const matchesBranch = branchFilter === 'All' || student.branch.includes(branchFilter);
-    const matchesSemester = semesterFilter === 'All' || student.semester.toString() === semesterFilter;
     const matchesStatus = statusFilter === 'All' || student.status === statusFilter;
 
-    return matchesSearch && matchesBranch && matchesSemester && matchesStatus;
+    return matchesSearch && matchesStatus;
   });
 
   const paginatedStudents = filteredStudents.slice(
@@ -78,7 +121,10 @@ export const StudentList: React.FC<StudentListProps> = ({
       'Fee Status': s.feeStatus,
       'Status': s.status
     }));
-    exportToCSV('GP__Students_List', exportData);
+    const fileName = isTeacher 
+      ? `GP__Students_${teacherAssignedBranch}_Sem${teacherAssignedSemester}`
+      : 'GP__Students_Master_List';
+    exportToCSV(fileName, exportData);
   };
 
   return (
@@ -86,12 +132,27 @@ export const StudentList: React.FC<StudentListProps> = ({
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-card">
         <div>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
-            <GraduationCap className="w-6 h-6 text-blue-600" />
-            Student Directory &amp; Records
-          </h1>
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+              <GraduationCap className="w-6 h-6 text-blue-600" />
+              {isTeacher ? 'Class Student Directory & Dossiers (कक्षा छात्र सूची)' : 'Student Directory & Records (Admin Master)'}
+            </h1>
+            {isTeacher && (
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 border border-blue-300">
+                Class Teacher Mode
+              </span>
+            )}
+          </div>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            Government Polytechnic • Total Enrolled: {students.length} Candidates
+            {isTeacher ? (
+              <span>
+                🏛️ Assigned Class: <strong>{teacherAssignedBranch}</strong> • <strong>Semester {teacherAssignedSemester}</strong> • Total <strong>{filteredStudents.length} Students</strong> in your class
+              </span>
+            ) : (
+              <span>
+                Government Polytechnic • Total Enrolled: <strong>{students.length} Candidates</strong> (All Branches & Semesters)
+              </span>
+            )}
           </p>
         </div>
 
@@ -106,10 +167,32 @@ export const StudentList: React.FC<StudentListProps> = ({
             onClick={onOpenAddModal}
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-lg shadow-blue-600/30 transition-all"
           >
-            <UserPlus className="w-4 h-4" /> Add Student
+            <UserPlus className="w-4 h-4" /> {isTeacher ? 'Add Class Student' : 'Add Student'}
           </button>
         </div>
       </div>
+
+      {/* Teacher Isolation Banner */}
+      {isTeacher && (
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-transparent border border-blue-200 dark:border-blue-900/60 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center flex-shrink-0">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-900 dark:text-white">
+                🔒 Class Teacher Privacy & Isolation Active
+              </p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300">
+                Principal ke nirdesh anusar aapko <strong>{teacherAssignedBranch} (Semester {teacherAssignedSemester})</strong> assign kiya gaya hai. Yahan keval aapki class ke bache dikhayi de rahe hain.
+              </p>
+            </div>
+          </div>
+          <span className="hidden sm:inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Verified Class Teacher
+          </span>
+        </div>
+      )}
 
       {/* Filters Bar */}
       <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-card flex flex-col md:flex-row gap-3">
@@ -118,7 +201,7 @@ export const StudentList: React.FC<StudentListProps> = ({
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
           <input
             type="text"
-            placeholder="Search by name, roll no, enrollment no..."
+            placeholder={isTeacher ? "Search students in your class by name, roll no, mobile..." : "Search by name, roll no, enrollment no..."}
             value={searchTerm}
             onChange={e => {
               setSearchTerm(e.target.value);
@@ -128,41 +211,55 @@ export const StudentList: React.FC<StudentListProps> = ({
           />
         </div>
 
-        {/* Branch Filter */}
-        <select
-          value={branchFilter}
-          onChange={e => {
-            setBranchFilter(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-600 outline-none"
-        >
-          <option value="All">All Branches</option>
-          <option value="Computer">Computer Science &amp; Engg</option>
-          <option value="Mechanical">Mechanical Engg</option>
-          <option value="Civil">Civil Engg</option>
-          <option value="Electrical">Electrical Engg</option>
-          <option value="Electronics">Electronics Engg</option>
-          <option value="Information">Information Technology</option>
-        </select>
+        {/* Branch Control: Locked for Teacher, Selectable for Admin */}
+        {isTeacher ? (
+          <div className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+            <Lock className="w-3.5 h-3.5 text-blue-600" />
+            <span className="truncate max-w-[200px]">{teacherAssignedBranch}</span>
+          </div>
+        ) : (
+          <select
+            value={branchFilter}
+            onChange={e => {
+              setBranchFilter(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-600 outline-none"
+          >
+            <option value="All">All Branches</option>
+            <option value="Computer">Computer Science &amp; Engg</option>
+            <option value="Mechanical">Mechanical Engg</option>
+            <option value="Civil">Civil Engg</option>
+            <option value="Electrical">Electrical Engg</option>
+            <option value="Electronics">Electronics Engg</option>
+            <option value="Information">Information Technology</option>
+          </select>
+        )}
 
-        {/* Semester Filter */}
-        <select
-          value={semesterFilter}
-          onChange={e => {
-            setSemesterFilter(e.target.value);
-            setCurrentPage(1);
-          }}
-          className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-600 outline-none"
-        >
-          <option value="All">All Semesters</option>
-          <option value="1">1st Semester</option>
-          <option value="2">2nd Semester</option>
-          <option value="3">3rd Semester</option>
-          <option value="4">4th Semester</option>
-          <option value="5">5th Semester</option>
-          <option value="6">6th Semester</option>
-        </select>
+        {/* Semester Control: Locked for Teacher, Selectable for Admin */}
+        {isTeacher ? (
+          <div className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+            <Lock className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Semester {teacherAssignedSemester}</span>
+          </div>
+        ) : (
+          <select
+            value={semesterFilter}
+            onChange={e => {
+              setSemesterFilter(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-xs text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-blue-600 outline-none"
+          >
+            <option value="All">All Semesters</option>
+            <option value="1">1st Semester</option>
+            <option value="2">2nd Semester</option>
+            <option value="3">3rd Semester</option>
+            <option value="4">4th Semester</option>
+            <option value="5">5th Semester</option>
+            <option value="6">6th Semester</option>
+          </select>
+        )}
 
         {/* Status Filter */}
         <select
@@ -200,7 +297,10 @@ export const StudentList: React.FC<StudentListProps> = ({
               {paginatedStudents.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-12 text-center text-slate-400">
-                    No students match the selected filters.
+                    {isTeacher 
+                      ? `No active students found in ${teacherAssignedBranch} (Semester ${teacherAssignedSemester}). Click "+ Add Class Student" to enroll.`
+                      : "No students match the selected filters."
+                    }
                   </td>
                 </tr>
               ) : (
@@ -316,13 +416,15 @@ export const StudentList: React.FC<StudentListProps> = ({
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
-                          <button
-                            onClick={() => setDeleteTarget(student)}
-                            title="Delete Record"
-                            className="p-1.5 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/50 transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          {isAdmin && (
+                            <button
+                              onClick={() => setDeleteTarget(student)}
+                              title="Delete Record (Admin Only)"
+                              className="p-1.5 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/50 transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>

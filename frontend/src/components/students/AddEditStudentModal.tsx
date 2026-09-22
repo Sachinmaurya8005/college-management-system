@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Student } from '../../types';
 import { Modal } from '../common/Modal';
 import { useCollegeData } from '../../context/CollegeDataContext';
+import { useAuth } from '../../context/AuthContext';
 import { Upload } from 'lucide-react';
 
 interface AddEditStudentModalProps {
@@ -15,7 +16,20 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
   onClose,
   student
 }) => {
-  const { addStudent, updateStudent, courses } = useCollegeData();
+  const { addStudent, updateStudent, courses, teachers } = useCollegeData();
+  const { user } = useAuth();
+  const isTeacher = user?.role === 'teacher';
+
+  const currentTeacherObj = teachers.find(
+    t =>
+      (user?.email && t.email?.toLowerCase() === user.email.toLowerCase()) ||
+      t.id === user?.id ||
+      (user?.empCode && t.empCode?.toLowerCase() === user.empCode.toLowerCase()) ||
+      (user?.name && t.name?.toLowerCase().includes(user.name.toLowerCase()))
+  );
+
+  const teacherAssignedBranch = currentTeacherObj?.assignedBranch || currentTeacherObj?.department || 'Computer Science & Engineering';
+  const teacherAssignedSemester = currentTeacherObj?.assignedSemester || 4;
 
   const [formData, setFormData] = useState({
     name: '',
@@ -24,7 +38,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
     dob: '2004-01-01',
     gender: 'Male' as 'Male' | 'Female' | 'Other',
     branch: 'Diploma in Computer Science & Engineering',
-    semester: 1,
+    semester: isTeacher ? teacherAssignedSemester : 1,
     rollNo: '',
     enrollmentNo: '',
     mobile: '',
@@ -71,7 +85,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
         motherName: '',
         dob: '2004-06-15',
         gender: 'Male',
-        branch: 'Computer Science & Engineering',
+        branch: isTeacher ? teacherAssignedBranch : 'Computer Science & Engineering',
         semester: 1,
         rollNo: `E234412355${rand}`,
         enrollmentNo: `E234412${rand}`,

@@ -37,11 +37,35 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onNavigate }
   const [selectedStudentForModal, setSelectedStudentForModal] = useState<Student | null>(null);
   const [isPrincipalModalOpen, setIsPrincipalModalOpen] = useState(false);
   const [isGeoModalOpen, setIsGeoModalOpen] = useState(false);
-  const deptKeyword = user?.department ? user.department.split(' ')[0] : 'Computer';
-  const assignedStudents = students.filter(s =>
-    user?.department ? s.branch.toLowerCase().includes(deptKeyword.toLowerCase()) : s.branch.includes('Computer')
+    // Find logged-in teacher and live assigned branch & semester
+  const currentTeacherObj = teachers.find(
+    t =>
+      (user?.email && t.email?.toLowerCase() === user.email.toLowerCase()) ||
+      t.id === user?.id ||
+      (user?.empCode && t.empCode?.toLowerCase() === user.empCode.toLowerCase()) ||
+      (user?.name && t.name?.toLowerCase().includes(user.name.toLowerCase()))
   );
-  const classStudentsList = assignedStudents.length > 0 ? assignedStudents : students.slice(0, 12);
+
+  const teacherAssignedBranch = currentTeacherObj?.assignedBranch || currentTeacherObj?.department || 'Computer Science & Engineering';
+  const teacherAssignedSemester = currentTeacherObj?.assignedSemester || 4;
+
+  const normalize = (str: string) => (str || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+  // Filter students strictly belonging to this teacher's assigned branch & semester
+  const classStudentsList = students.filter(s => {
+    const sNorm = normalize(s.branch);
+    const selNorm = normalize(teacherAssignedBranch);
+    const branchMatch =
+      sNorm.includes(selNorm) ||
+      selNorm.includes(sNorm) ||
+      (selNorm.includes('computer') && sNorm.includes('computer')) ||
+      (selNorm.includes('mechanical') && sNorm.includes('mechanical')) ||
+      (selNorm.includes('civil') && sNorm.includes('civil')) ||
+      (selNorm.includes('electrical') && sNorm.includes('electrical')) ||
+      (selNorm.includes('electronics') && sNorm.includes('electronics')) ||
+      (selNorm.includes('information') && sNorm.includes('information'));
+    return branchMatch && s.semester === teacherAssignedSemester && s.status === 'Active';
+  });
   const todayClasses = timetable.filter(
     t => t.day === 'Monday' && (
       (user?.name && t.teacherName.toLowerCase().includes(user.name.toLowerCase().split(' ')[1] || 'xyz')) ||
@@ -88,7 +112,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onNavigate }
         <StatCard
           title="Assigned Students"
           value={classStudentsList.length.toString()}
-          description={`Dept of ${user?.department?.split(' ')[0] || 'Engineering'}`}
+          description={`${teacherAssignedBranch.split(' ')[0]} • Sem ${teacherAssignedSemester}`}
           icon={Users}
           trend={{ value: '100%', isPositive: true, label: 'Enrolled' }}
           color="blue"
@@ -126,7 +150,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onNavigate }
           <div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Users className="w-5 h-5 text-blue-600" />
-              <span>Department Students Roster (Click Any Name for 360° Dossier &amp; Edit)</span>
+              <span>Class Students Roster: {`${teacherAssignedBranch} • Semester ${teacherAssignedSemester}`}</span>
             </h3>
             <p className="text-xs text-slate-500">
               Click on any student's name to view their complete profile, attendance breakdown, fees, marksheets, or edit personal details.
