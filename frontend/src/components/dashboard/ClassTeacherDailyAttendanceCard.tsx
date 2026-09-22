@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   CheckSquare,
   Users,
@@ -12,41 +12,145 @@ import {
   Check,
   X,
   ShieldCheck,
-  AlertCircle
+  AlertCircle,
+  BookOpen,
+  Filter,
+  GraduationCap,
+  UserPlus
 } from 'lucide-react';
 import { useCollegeData } from '../../context/CollegeDataContext';
 import { useAuth } from '../../context/AuthContext';
 import { AttendanceRecord, AttendanceSession } from '../../types';
 import confetti from 'canvas-confetti';
 
+const ALL_BRANCHES = [
+  { id: 'all', name: 'All Branches (सभी शाखाएं)' },
+  { id: 'cse', name: 'Computer Science & Engineering', short: 'CSE' },
+  { id: 'me', name: 'Mechanical Engineering (Production)', short: 'ME' },
+  { id: 'ce', name: 'Civil Engineering', short: 'CE' },
+  { id: 'ee', name: 'Electrical Engineering', short: 'EE' },
+  { id: 'ece', name: 'Electronics Engineering', short: 'ECE' },
+  { id: 'it', name: 'Information Technology', short: 'IT' }
+];
+
+const BRANCH_SUBJECTS_MAP: Record<string, string[]> = {
+  cse: [
+    'CS-401 Data Structures & Algorithms',
+    'CS-402 Database Management Systems',
+    'CS-403 Operating Systems',
+    'CS-404 Web Development & Python Lab',
+    'Daily Class Roll-Call (दैनिक हाजिरी)'
+  ],
+  me: [
+    'ME-401 Thermal Engineering',
+    'ME-402 Manufacturing Processes & Workshop',
+    'ME-403 Theory of Machines',
+    'ME-404 Hydraulics & Pneumatics',
+    'Daily Class Roll-Call (दैनिक हाजिरी)'
+  ],
+  ce: [
+    'CE-401 Surveying & Leveling',
+    'CE-402 Building Construction & Materials',
+    'CE-403 Concrete Technology',
+    'CE-404 Structural Mechanics',
+    'Daily Class Roll-Call (दैनिक हाजिरी)'
+  ],
+  ee: [
+    'EE-401 Electrical Machines & Transformers',
+    'EE-402 Power Systems & Transmission',
+    'EE-403 Control Systems',
+    'EE-404 Electrical Circuits & Networks',
+    'Daily Class Roll-Call (दैनिक हाजिरी)'
+  ],
+  ece: [
+    'EC-401 Digital Electronics & Logic Design',
+    'EC-402 Analog Circuits & Semiconductor Devices',
+    'EC-403 Signals & Systems',
+    'EC-404 Communication Engineering',
+    'Daily Class Roll-Call (दैनिक हाजिरी)'
+  ],
+  it: [
+    'IT-401 Web Programming & Scripting',
+    'IT-402 Software Engineering & Agile Methods',
+    'IT-403 Computer Networks & Security',
+    'IT-404 Cloud Computing Basics',
+    'Daily Class Roll-Call (दैनिक हाजिरी)'
+  ],
+  all: [
+    'Daily Class Roll-Call (दैनिक हाजिरी)',
+    'Common Applied Engineering Sciences',
+    'Professional Communication & Soft Skills'
+  ]
+};
+
 export const ClassTeacherDailyAttendanceCard: React.FC = () => {
   const { user } = useAuth();
   const { students, saveAttendance } = useCollegeData();
 
-  // Class teacher's assigned branch & semester
-  const [selectedBranch, setSelectedBranch] = useState('Computer Science & Engineering');
-  const [selectedSemester, setSelectedSemester] = useState(4);
+  // Class selection state
+  const [selectedBranchName, setSelectedBranchName] = useState('Computer Science & Engineering');
+  const [selectedSemester, setSelectedSemester] = useState<number>(4);
   const [selectedSubject, setSelectedSubject] = useState('CS-401 Data Structures & Algorithms');
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successBanner, setSuccessBanner] = useState<string | null>(null);
 
-  // Filter students for this class
-  const classStudents = students.filter(
-    s =>
-      (s.branch.includes(selectedBranch) || selectedBranch.includes(s.branch)) &&
-      (s.semester === selectedSemester || !selectedSemester)
-  );
+  // Normalize branch name helper
+  const normalize = (str: string) => (str || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+  // Filter students dynamically for the selected branch & semester
+  const classStudents = useMemo(() => {
+    return students.filter(s => {
+      // Branch matching
+      let branchMatches = false;
+      if (selectedBranchName === 'All Branches (सभी शाखाएं)' || selectedBranchName === 'all') {
+        branchMatches = true;
+      } else {
+        const sNorm = normalize(s.branch);
+        const selNorm = normalize(selectedBranchName);
+        branchMatches =
+          sNorm.includes(selNorm) ||
+          selNorm.includes(sNorm) ||
+          (selNorm.includes('computer') && sNorm.includes('computer')) ||
+          (selNorm.includes('mechanical') && sNorm.includes('mechanical')) ||
+          (selNorm.includes('civil') && sNorm.includes('civil')) ||
+          (selNorm.includes('electrical') && sNorm.includes('electrical')) ||
+          (selNorm.includes('electronics') && sNorm.includes('electronics')) ||
+          (selNorm.includes('information') && sNorm.includes('information'));
+      }
+
+      // Semester matching
+      const semesterMatches = selectedSemester === 0 || s.semester === selectedSemester;
+      const activeMatches = s.status === 'Active';
+
+      return branchMatches && semesterMatches && activeMatches;
+    });
+  }, [students, selectedBranchName, selectedSemester]);
 
   // Attendance status mapping: studentId -> 'present' | 'absent' | 'late'
-  const [attendanceMap, setAttendanceMap] = useState<Record<string, 'present' | 'absent' | 'late'>>(() => {
-    const map: Record<string, 'present' | 'absent' | 'late'> = {};
-    classStudents.forEach(s => {
-      map[s.id] = 'present';
+  const [attendanceMap, setAttendanceMap] = useState<Record<string, 'present' | 'absent' | 'late'>>({});
+
+  // Sync attendance map whenever class students change
+  useEffect(() => {
+    setAttendanceMap(prev => {
+      const nextMap = { ...prev };
+      classStudents.forEach(s => {
+        if (!nextMap[s.id]) {
+          nextMap[s.id] = 'present';
+        }
+      });
+      return nextMap;
     });
-    return map;
-  });
+  }, [classStudents]);
+
+  // When branch changes, update subjects list
+  const handleBranchChange = (newBranchName: string) => {
+    setSelectedBranchName(newBranchName);
+    const branchKey = ALL_BRANCHES.find(b => b.name === newBranchName)?.id || 'cse';
+    const subList = BRANCH_SUBJECTS_MAP[branchKey] || BRANCH_SUBJECTS_MAP.cse;
+    setSelectedSubject(subList[0]);
+  };
 
   const setStatusForStudent = (studentId: string, status: 'present' | 'absent' | 'late') => {
     setAttendanceMap(prev => ({
@@ -71,11 +175,17 @@ export const ClassTeacherDailyAttendanceCard: React.FC = () => {
   const percentage = totalStudents > 0 ? Math.round(((presentCount + lateCount * 0.5) / totalStudents) * 100) : 0;
 
   // Filtered by search query
-  const filteredStudents = classStudents.filter(s => {
-    if (!searchQuery) return true;
-    const q = searchQuery.toLowerCase();
-    return s.name.toLowerCase().includes(q) || s.rollNo.toLowerCase().includes(q);
-  });
+  const filteredStudents = useMemo(() => {
+    if (!searchQuery.trim()) return classStudents;
+    const q = searchQuery.toLowerCase().trim();
+    return classStudents.filter(
+      s =>
+        s.name.toLowerCase().includes(q) ||
+        s.rollNo.toLowerCase().includes(q) ||
+        (s.enrollmentNo && s.enrollmentNo.toLowerCase().includes(q)) ||
+        (s.fatherName && s.fatherName.toLowerCase().includes(q))
+    );
+  }, [classStudents, searchQuery]);
 
   const handleSubmitAttendance = async () => {
     if (totalStudents === 0) return;
@@ -91,44 +201,49 @@ export const ClassTeacherDailyAttendanceCard: React.FC = () => {
 
       const session: Omit<AttendanceSession, 'id'> = {
         date: selectedDate,
-        branch: selectedBranch,
+        branch: selectedBranchName,
         semester: selectedSemester,
         subject: selectedSubject,
         records,
         presentCount,
         absentCount,
         percentage,
-        markedBy: `${user?.name || 'Class Teacher'} (Class Teacher In-Charge)`
+        markedBy: user?.name || 'Class Teacher'
       };
 
-      await saveAttendance(session);
-      confetti({ particleCount: 70, spread: 80, origin: { y: 0.6 } });
-
+      saveAttendance(session);
+      confetti({ particleCount: 70, spread: 60, origin: { y: 0.7 } });
       setSuccessBanner(
-        `कक्षा ${selectedBranch} (सेमेस्टर ${selectedSemester}) की हाजिरी सफलतापूर्वक दर्ज कर दी गई! (Total: ${totalStudents} • Present: ${presentCount} • Attendance Rate: ${percentage}%)`
+        `✅ ${selectedBranchName} (सेमेस्टर ${selectedSemester === 0 ? 'सभी' : selectedSemester}) की हाजिरी सफलतापूर्वक सुरक्षित और लॉक कर दी गई है! कुल छात्र: ${totalStudents}, उपस्थित: ${presentCount}, अनुपस्थित: ${absentCount}`
       );
-      setTimeout(() => setSuccessBanner(null), 6000);
-    } catch (err) {
-      console.error('Failed to submit class attendance', err);
+
+      setTimeout(() => {
+        setSuccessBanner(null);
+      }, 5000);
+    } catch (e) {
+      console.error(e);
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const currentBranchKey = ALL_BRANCHES.find(b => b.name === selectedBranchName)?.id || 'cse';
+  const availableSubjects = BRANCH_SUBJECTS_MAP[currentBranchKey] || BRANCH_SUBJECTS_MAP.cse;
+
   return (
-    <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-5">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold border border-emerald-200 dark:border-emerald-800">
+    <div className="p-6 sm:p-7 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xl space-y-6 animate-fade-in text-xs text-slate-800 dark:text-slate-100">
+      {/* Header with Title & Quick Action Buttons */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-bold border border-emerald-200 dark:border-emerald-800 text-[11px] mb-1.5">
             <CheckSquare className="w-3.5 h-3.5" />
             <span>Class Teacher Roll-Call • कक्षा अध्यापक हाजिरी रजिस्टर</span>
           </div>
-          <h2 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h3 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
             Take Class Attendance (मेरी कक्षा के बच्चों की हाजिरी)
-          </h2>
+          </h3>
           <p className="text-xs text-slate-500">
-            Assigned Class: <strong className="text-blue-600 dark:text-blue-400">{selectedBranch} • Semester {selectedSemester}</strong> (In-Charge: {user?.name})
+            Selected Class: <strong className="text-blue-600 dark:text-blue-400">{selectedBranchName} • {selectedSemester === 0 ? 'All Semesters' : `Semester ${selectedSemester}`}</strong> (In-Charge: {user?.name || 'Faculty'})
           </p>
         </div>
 
@@ -137,14 +252,14 @@ export const ClassTeacherDailyAttendanceCard: React.FC = () => {
           <button
             type="button"
             onClick={() => setAllStatus('present')}
-            className="px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-xs font-bold hover:bg-emerald-100 transition-all flex items-center gap-1.5"
+            className="px-3.5 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-xs font-bold hover:bg-emerald-100 dark:hover:bg-emerald-900/60 transition-all flex items-center gap-1.5 shadow-xs"
           >
             <Check className="w-3.5 h-3.5" /> All Present (सभी उपस्थित)
           </button>
           <button
             type="button"
             onClick={() => setAllStatus('absent')}
-            className="px-3 py-2 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 text-xs font-bold hover:bg-rose-100 transition-all flex items-center gap-1.5"
+            className="px-3.5 py-2 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800 text-xs font-bold hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-all flex items-center gap-1.5 shadow-xs"
           >
             <X className="w-3.5 h-3.5" /> All Absent (सभी अनुपस्थित)
           </button>
@@ -159,92 +274,131 @@ export const ClassTeacherDailyAttendanceCard: React.FC = () => {
         </div>
       )}
 
-      {/* Selection Filter Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 text-xs">
+      {/* Selection Filter Bar with Full Branch & Semester Dropdowns */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 text-xs">
+        {/* Filter 1: Branch */}
         <div>
-          <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Select Date (तारीख)</label>
+          <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1">
+            <GraduationCap className="w-3.5 h-3.5 text-blue-500" />
+            <span>Select Branch (शाखा)</span>
+          </label>
+          <select
+            value={selectedBranchName}
+            onChange={e => handleBranchChange(e.target.value)}
+            className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold outline-none text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500"
+          >
+            {ALL_BRANCHES.map(b => (
+              <option key={b.id} value={b.name}>
+                {b.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Filter 2: Semester */}
+        <div>
+          <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1">
+            <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
+            <span>Class / Semester (सेमेस्टर)</span>
+          </label>
+          <select
+            value={selectedSemester}
+            onChange={e => setSelectedSemester(Number(e.target.value))}
+            className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold outline-none text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500"
+          >
+            <option value={1}>1st Semester (1st Year)</option>
+            <option value={2}>2nd Semester (1st Year)</option>
+            <option value={3}>3rd Semester (2nd Year)</option>
+            <option value={4}>4th Semester (Regular - 2nd Year)</option>
+            <option value={5}>5th Semester (Final Year)</option>
+            <option value={6}>6th Semester (Final Year)</option>
+            <option value={0}>All Semesters (सभी सेमेस्टर)</option>
+          </select>
+        </div>
+
+        {/* Filter 3: Subject / Period */}
+        <div>
+          <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1">
+            <CheckSquare className="w-3.5 h-3.5 text-emerald-500" />
+            <span>Subject / Period (विषय)</span>
+          </label>
+          <select
+            value={selectedSubject}
+            onChange={e => setSelectedSubject(e.target.value)}
+            className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold outline-none text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500"
+          >
+            {availableSubjects.map((sub, idx) => (
+              <option key={idx} value={sub}>
+                {sub}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Filter 4: Date */}
+        <div>
+          <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1">
+            <Calendar className="w-3.5 h-3.5 text-amber-500" />
+            <span>Select Date (तारीख)</span>
+          </label>
           <input
             type="date"
             value={selectedDate}
             onChange={e => setSelectedDate(e.target.value)}
-            className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold outline-none"
+            className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold outline-none text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
+        {/* Filter 5: Search Student */}
         <div>
-          <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Class / Semester (सेमेस्टर)</label>
-          <select
-            value={selectedSemester}
-            onChange={e => setSelectedSemester(Number(e.target.value))}
-            className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold outline-none"
-          >
-            <option value={1}>1st Semester</option>
-            <option value={2}>2nd Semester</option>
-            <option value={3}>3rd Semester</option>
-            <option value={4}>4th Semester (Regular)</option>
-            <option value={5}>5th Semester</option>
-            <option value={6}>6th Semester</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Subject / Period (विषय)</label>
-          <select
-            value={selectedSubject}
-            onChange={e => setSelectedSubject(e.target.value)}
-            className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold outline-none"
-          >
-            <option value="CS-401 Data Structures & Algorithms">CS-401 Data Structures &amp; Algorithms</option>
-            <option value="CS-402 Database Management Systems">CS-402 Database Management Systems</option>
-            <option value="CS-403 Operating Systems">CS-403 Operating Systems</option>
-            <option value="CS-404 Web Development & Python Lab">CS-404 Web Development &amp; Python Lab</option>
-            <option value="Daily Class Roll-Call (दैनिक हाजिरी)">Daily Class Roll-Call (दैनिक हाजिरी)</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Search Student (छात्र खोजें)</label>
-          <div className="relative">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search by name or roll..."
-              className="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 outline-none"
-            />
-          </div>
+          <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center gap-1">
+            <Search className="w-3.5 h-3.5 text-slate-400" />
+            <span>Search Student (छात्र खोजें)</span>
+          </label>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search by name, roll no..."
+            className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 outline-none text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500"
+          />
         </div>
       </div>
 
       {/* Live Statistics Meter Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 text-center">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block">Total Students</span>
-          <span className="text-xl font-black text-blue-900 dark:text-blue-100">{totalStudents}</span>
+        <div className="p-3.5 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 text-center shadow-xs">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block">Total Students (कुल छात्र)</span>
+          <span className="text-2xl font-black text-blue-900 dark:text-blue-100">{totalStudents}</span>
         </div>
-        <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900 text-center">
+        <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900 text-center shadow-xs">
           <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">Present (उपस्थित)</span>
-          <span className="text-xl font-black text-emerald-700 dark:text-emerald-300">{presentCount}</span>
+          <span className="text-2xl font-black text-emerald-700 dark:text-emerald-300">{presentCount}</span>
         </div>
-        <div className="p-3 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-100 dark:border-rose-900 text-center">
+        <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-100 dark:border-rose-900 text-center shadow-xs">
           <span className="text-[10px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 block">Absent (अनुपस्थित)</span>
-          <span className="text-xl font-black text-rose-700 dark:text-rose-300">{absentCount}</span>
+          <span className="text-2xl font-black text-rose-700 dark:text-rose-300">{absentCount}</span>
         </div>
-        <div className="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900 text-center">
+        <div className="p-3.5 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900 text-center shadow-xs">
           <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 block">Attendance Rate</span>
-          <span className="text-xl font-black text-indigo-700 dark:text-indigo-300">{percentage}%</span>
+          <span className="text-2xl font-black text-indigo-700 dark:text-indigo-300">{percentage}%</span>
         </div>
       </div>
 
       {/* Students Roll Call List */}
-      <div className="space-y-2.5 max-h-96 overflow-y-auto pr-1">
+      <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
         {filteredStudents.length === 0 ? (
-          <div className="p-8 text-center text-xs text-slate-500 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
-            No students found matching current class filter.
+          <div className="p-8 text-center text-xs text-slate-500 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 space-y-2">
+            <Users className="w-8 h-8 text-slate-400 mx-auto" />
+            <p className="font-bold text-slate-700 dark:text-slate-300">
+              No students enrolled in {selectedBranchName} • Semester {selectedSemester === 0 ? 'All' : selectedSemester}
+            </p>
+            <p className="text-[11px] text-slate-400">
+              जब भी किसी छात्र का इस शाखा/सेमेस्टर में एडमिशन होगा, वह यहाँ स्वतः हाजिरी रजिस्टर में दिखने लगेगा।
+            </p>
           </div>
         ) : (
-          filteredStudents.map(student => {
+          filteredStudents.map((student, index) => {
             const currentStatus = attendanceMap[student.id] || 'present';
             const isPresent = currentStatus === 'present';
             const isAbsent = currentStatus === 'absent';
@@ -253,70 +407,97 @@ export const ClassTeacherDailyAttendanceCard: React.FC = () => {
             return (
               <div
                 key={student.id}
-                className={`p-3.5 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                className={`p-3.5 rounded-2xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
                   isPresent
-                    ? 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/60'
+                    ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xs'
                     : isAbsent
-                    ? 'bg-rose-50/60 dark:bg-rose-950/20 border-rose-200 dark:border-rose-800/60'
-                    : 'bg-amber-50/50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800/60'
+                    ? 'bg-rose-50/40 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/60'
+                    : 'bg-amber-50/40 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/60'
                 }`}
               >
                 {/* Student Info */}
                 <div className="flex items-center gap-3">
-                  <img
-                    src={student.photoUrl}
-                    alt={student.name}
-                    className="w-10 h-10 rounded-xl object-cover ring-2 ring-white dark:ring-slate-800 flex-shrink-0"
-                  />
+                  <div className="relative">
+                    <img
+                      src={student.photoUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120&h=120&fit=crop&crop=faces'}
+                      alt={student.name}
+                      className="w-10 h-10 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700 shadow-xs"
+                    />
+                    <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-slate-800 text-[9px] font-black text-white flex items-center justify-center">
+                      {index + 1}
+                    </span>
+                  </div>
+
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                      <span>{student.name}</span>
-                      <span className="font-mono text-[10px] px-2 py-0.5 rounded-md bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                    <div className="flex items-center gap-2">
+                      <strong className="text-slate-900 dark:text-white text-xs font-black">
+                        {student.name}
+                      </strong>
+                      <span className="font-mono text-[10px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold">
                         {student.rollNo}
                       </span>
-                    </h4>
-                    <p className="text-[10px] text-slate-500">
-                      Father: {student.fatherName} • Total Att: <strong className="text-blue-600">{student.attendancePercentage}%</strong>
-                    </p>
+                      {student.admissionYear === 2026 && (
+                        <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[9px] font-black">
+                          New Admission
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-500 mt-0.5">
+                      <span>{student.branch} • Sem {student.semester}</span>
+                      {student.fatherName && (
+                        <>
+                          <span>•</span>
+                          <span>Father: {student.fatherName}</span>
+                        </>
+                      )}
+                      <span>•</span>
+                      <span className={`font-bold ${(student.attendancePercentage || 85) >= 75 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                        Total Att: {student.attendancePercentage || 85}%
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                {/* 3-State Quick Attendance Buttons */}
+                {/* Status Toggle Buttons */}
                 <div className="flex items-center gap-1.5 self-end sm:self-center">
                   <button
                     type="button"
                     onClick={() => setStatusForStudent(student.id, 'present')}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
+                    className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1 transition-all active:scale-95 ${
                       isPresent
-                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
-                        : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-emerald-50'
+                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30 ring-1 ring-white/20'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
                     }`}
                   >
-                    <Check className="w-3.5 h-3.5" /> Present (P)
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Present (P)</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setStatusForStudent(student.id, 'absent')}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
+                    className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1 transition-all active:scale-95 ${
                       isAbsent
-                        ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
-                        : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-rose-50'
+                        ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30 ring-1 ring-white/20'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
                     }`}
                   >
-                    <X className="w-3.5 h-3.5" /> Absent (A)
+                    <X className="w-3.5 h-3.5" />
+                    <span>Absent (A)</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setStatusForStudent(student.id, 'late')}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
+                    className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1 transition-all active:scale-95 ${
                       isLate
-                        ? 'bg-amber-500 text-slate-950 font-black shadow-md'
-                        : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-amber-50'
+                        ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30 ring-1 ring-white/20'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
                     }`}
                   >
-                    <Clock className="w-3.5 h-3.5" /> Late (L)
+                    <Clock className="w-3.5 h-3.5" />
+                    <span>Late (L)</span>
                   </button>
                 </div>
               </div>
@@ -325,20 +506,24 @@ export const ClassTeacherDailyAttendanceCard: React.FC = () => {
         )}
       </div>
 
-      {/* Bottom Final Submit & Lock Action */}
-      <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="text-xs text-slate-500">
-          Marked attendance will automatically update students' live semester eligibility records.
-        </div>
+      {/* Footer Submit Button */}
+      <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p className="text-[11px] text-slate-500">
+          Marked attendance will automatically update students' live semester eligibility records &amp; BTEUP exam compliance.
+        </p>
 
         <button
           type="button"
           disabled={isSubmitting || totalStudents === 0}
           onClick={handleSubmitAttendance}
-          className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+          className={`px-6 py-3 rounded-2xl font-black text-xs text-white shadow-lg transition-all flex items-center gap-2 active:scale-95 ${
+            totalStudents === 0
+              ? 'bg-slate-400 cursor-not-allowed opacity-60'
+              : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-600/30'
+          }`}
         >
           <Save className="w-4 h-4" />
-          <span>{isSubmitting ? 'Saving...' : 'Submit & Lock Today\'s Class Attendance (हाजिरी सुरक्षित करें)'}</span>
+          <span>{isSubmitting ? 'Saving Attendance...' : "Submit & Lock Today's Class Attendance (हाजिरी सुरक्षित करें)"}</span>
         </button>
       </div>
     </div>

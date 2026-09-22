@@ -69,12 +69,32 @@ export const HotelCalendarMatrixRegister: React.FC = () => {
   const monthString = `${selectedYear}-${String(selectedMonthIndex + 1).padStart(2, '0')}`;
   const daysInMonth = getDaysInMonthDetails(selectedYear, selectedMonthIndex);
 
-  // Filtered Students
-  const filteredStudents = students.filter(s =>
-    (s.branch.includes(selectedBranch) || selectedBranch.includes(s.branch)) &&
-    (s.semester === selectedSemester || selectedSemester === 0) &&
-    (s.name.toLowerCase().includes(searchFilter.toLowerCase()) || s.rollNo.includes(searchFilter))
-  );
+  // Filtered Students with Smart Multi-Branch Matching
+  const filteredStudents = students.filter(s => {
+    let branchMatches = false;
+    if (selectedBranch === 'all' || selectedBranch === 'All Branches') {
+      branchMatches = true;
+    } else {
+      const sNorm = (s.branch || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const selNorm = (selectedBranch || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      branchMatches =
+        sNorm.includes(selNorm) ||
+        selNorm.includes(sNorm) ||
+        (selNorm.includes('computer') && sNorm.includes('computer')) ||
+        (selNorm.includes('mechanical') && sNorm.includes('mechanical')) ||
+        (selNorm.includes('civil') && sNorm.includes('civil')) ||
+        (selNorm.includes('electrical') && sNorm.includes('electrical')) ||
+        (selNorm.includes('electronics') && sNorm.includes('electronics')) ||
+        (selNorm.includes('information') && sNorm.includes('information'));
+    }
+    const semesterMatches = selectedSemester === 0 || s.semester === selectedSemester;
+    const searchMatches =
+      !searchFilter.trim() ||
+      s.name.toLowerCase().includes(searchFilter.toLowerCase().trim()) ||
+      s.rollNo.toLowerCase().includes(searchFilter.toLowerCase().trim()) ||
+      (s.enrollmentNo && s.enrollmentNo.toLowerCase().includes(searchFilter.toLowerCase().trim()));
+    return branchMatches && semesterMatches && searchMatches && s.status === 'Active';
+  });
 
   // Object-Level Teacher Attendance Privacy Isolation:
   // When logged in as Teacher, find the current teacher matching email or name or ID
