@@ -265,7 +265,12 @@ export const TeacherList: React.FC<TeacherListProps> = ({
                     <p className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 line-clamp-1">
                       {teacher.designation}
                     </p>
-                    <span className="text-[10px] text-slate-400">{teacher.department}</span>
+                    <div className="flex flex-wrap items-center gap-1 mt-0.5">
+                      <span className="text-[10px] text-slate-400">{teacher.department}</span>
+                      <span className="px-2 py-0.2 rounded-md bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-300 text-[9px] font-bold">
+                        Class: {teacher.assignedBranch ? `${teacher.assignedBranch.split(' ')[0]} Sem ${teacher.assignedSemester || 4}` : 'CSE Sem 4'}
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
