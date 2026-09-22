@@ -150,7 +150,7 @@ export const StudentList: React.FC<StudentListProps> = ({
               </span>
             ) : (
               <span>
-                Government Polytechnic • Total Enrolled: <strong>{students.length} Candidates</strong> (All Branches & Semesters)
+                GP Bansdih Ballia • Total Enrolled: <strong>{students.length} Candidates</strong> (All Branches & Semesters)
               </span>
             )}
           </p>

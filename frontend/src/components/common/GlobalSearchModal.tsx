@@ -122,7 +122,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         <div className="max-h-[60vh] overflow-y-auto p-4 space-y-4">
           {!query && (
             <div className="py-8 text-center text-slate-400 dark:text-slate-500 text-sm">
-              Type keywords above to search across the entire Government Polytechnic portal.
+              Type keywords above to search across the entire Government Polytechnic Bansdih, Ballia portal.
               <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs">
                 <span className="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                   Tip: Press Esc to close

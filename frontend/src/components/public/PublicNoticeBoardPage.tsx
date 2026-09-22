@@ -56,7 +56,7 @@ export const PublicNoticeBoardPage: React.FC = () => {
             Institutional Notice Board &amp; Circulars
           </h1>
           <p className="text-xs sm:text-sm text-blue-200 max-w-2xl">
-            Official administrative notices, academic circulars, fee deadlines, and board notifications for Government Polytechnic.
+            Official administrative notices, academic circulars, fee deadlines, and board notifications for Government Polytechnic Bansdih, Ballia.
           </p>
         </div>
 

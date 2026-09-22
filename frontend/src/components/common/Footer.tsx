@@ -29,7 +29,7 @@ export const Footer: React.FC = () => {
               <span>for Technical Excellence</span>
             </div>
             <div className="font-medium">
-              &copy; 2026 Government Polytechnic
+              &copy; 2026 Government Polytechnic Bansdih, Ballia
             </div>
           </div>
         </div>

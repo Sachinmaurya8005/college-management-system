@@ -431,7 +431,7 @@ export const TeacherMySalaryView: React.FC = () => {
                     Er. Sachin Maurya
                   </div>
                   <div className="text-[11px] font-semibold text-slate-600">
-                    Principal, Government Polytechnic
+                    Principal, Government Polytechnic Bansdih, Ballia
                   </div>
                 </div>
               </div>

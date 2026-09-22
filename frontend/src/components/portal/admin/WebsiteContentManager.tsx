@@ -102,7 +102,7 @@ export const WebsiteContentManager: React.FC = () => {
 
   // About College State
   const [aboutForm, setAboutForm] = useState<AboutCollegeData>({
-    college_name: 'Government Polytechnic',
+    college_name: 'Government Polytechnic Bansdih, Ballia',
     hindi_name: 'राजकीय पॉलिटेक्निक',
     bteup_code: '4412',
     aicte_approval: 'Approved by AICTE, New Delhi & Affiliated to BTEUP Lucknow',
@@ -1000,7 +1000,7 @@ export const WebsiteContentManager: React.FC = () => {
                   required
                   value={locationForm.address}
                   onChange={e => setLocationForm({ ...locationForm, address: e.target.value })}
-                  placeholder="e.g. Government Polytechnic Main Campus, Uttar Pradesh - 277202"
+                  placeholder="e.g. Bansdih-Ballia Road, Bansdih, Ballia, Uttar Pradesh - 277202"
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none font-medium"
                 />
               </div>

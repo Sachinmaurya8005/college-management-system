@@ -167,7 +167,7 @@ export const MarksheetModal: React.FC<MarksheetModalProps> = ({
               <div className="font-serif italic font-bold text-slate-700 dark:text-slate-300">
                 Tabulator
               </div>
-              <div className="text-[10px] text-slate-400">Exam Cell, Government Polytechnic</div>
+              <div className="text-[10px] text-slate-400">Exam Cell, Government Polytechnic Bansdih, Ballia</div>
             </div>
 
             <div className="w-16 h-16 border-2 border-dashed border-polytechnic-900/40 rounded-full flex flex-col items-center justify-center text-center p-1 text-[8px] font-bold text-polytechnic-900 rotate-[-10deg]">
@@ -179,7 +179,7 @@ export const MarksheetModal: React.FC<MarksheetModalProps> = ({
               <div className="font-serif italic font-bold text-slate-700 dark:text-slate-300">
                 Principal / Center Supdt.
               </div>
-              <div className="text-[10px] text-slate-400">Govt. Polytechnic Uttar Pradesh</div>
+              <div className="text-[10px] text-slate-400">Govt. Polytechnic Bansdih, Ballia (Er. Sachin Maurya, Principal)</div>
             </div>
           </div>
         </div>

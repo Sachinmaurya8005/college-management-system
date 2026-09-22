@@ -53,7 +53,7 @@ export const CollegeOfficialQrModal: React.FC<CollegeOfficialQrModalProps> = ({
     upi: {
       title: 'College Treasury UPI Fee Deposit',
       subtitle: 'स्कैन करके कॉलेज ट्रेजरी खाते में ऑनलाइन फीस जमा करें',
-      url: `upi://pay?pa=polytechnictreasury@sbi&pn=Government%20Polytechnic&tn=College%20Fees%20Deposit&cu=INR`,
+      url: `upi://pay?pa=gpbansdihtreasury@sbi&pn=Government%20Polytechnic%20Bansdih%20Ballia&tn=College%20Fees%20Deposit&cu=INR`,
       tag: '💳 UPI Scan & Pay',
       instruction: 'PhonePe, Google Pay, Paytm, BHIM या किसी भी UPI ऐप से स्कैन करके सुरक्षित भुगतान करें।'
     },
@@ -67,7 +67,7 @@ export const CollegeOfficialQrModal: React.FC<CollegeOfficialQrModalProps> = ({
     vcard: {
       title: 'Official College Digital vCard',
       subtitle: 'स्कैन करके कॉलेज व प्रिंसिपल का आधिकारिक संपर्क फोन में सेव करें',
-      url: `BEGIN:VCARD\nVERSION:3.0\nFN:Government Polytechnic\nORG:Department of Technical Education UP\nTITLE:Principal Er. Sachin Maurya\nTEL:+91 94150 24510\nEMAIL:info@polytechnic.edu\nURL:${currentHost}\nADR:;;Government Polytechnic Campus;Uttar Pradesh;277202;India\nEND:VCARD`,
+      url: `BEGIN:VCARD\nVERSION:3.0\nFN:Government Polytechnic Bansdih Ballia\nORG:Department of Technical Education UP\nTITLE:Principal Er. Sachin Maurya\nTEL:+91 94150 24510\nEMAIL:principal.gpbansdih@gmail.com\nURL:${currentHost}\nADR:;;Government Polytechnic Campus;Uttar Pradesh;277202;India\nEND:VCARD`,
       tag: '📇 Contact vCard',
       instruction: 'स्कैन करते ही कॉलेज का पूरा संपर्क पता आपके स्मार्टफोन में 1-टैप में सेव हो जाएगा।'
     },
@@ -96,7 +96,7 @@ export const CollegeOfficialQrModal: React.FC<CollegeOfficialQrModalProps> = ({
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Government_Polytechnic_QR_${activeTab.toUpperCase()}.png`;
+      a.download = `GP_Bansdih_Ballia_QR_${activeTab.toUpperCase()}.png`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -126,7 +126,7 @@ export const CollegeOfficialQrModal: React.FC<CollegeOfficialQrModalProps> = ({
                 <span>UP BTEUP Code: {settings.bteupCode || '4412'} • Official QR Hub</span>
               </div>
               <h3 className="text-base sm:text-lg font-black text-white">
-                Government Polytechnic • Official QR Code
+                Government Polytechnic Bansdih, Ballia • Official QR Code
               </h3>
               <p className="text-[11px] text-slate-300">
                 राजकीय पॉलिटेक्निक • आधिकारिक क्यूआर कोड जनरेटर व पोस्टर

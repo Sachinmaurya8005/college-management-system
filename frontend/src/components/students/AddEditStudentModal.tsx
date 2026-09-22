@@ -141,7 +141,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
       subtitle={
         isTeacher
           ? `Class Teacher Admission Gate • ${teacherAssignedBranch} (Semester ${teacherAssignedSemester})`
-          : 'Government Polytechnic • Master Student Registry (Admin View)'
+          : 'GP Bansdih Ballia • Master Student Registry (Admin View)'
       }
       maxWidth="4xl"
     >
@@ -517,7 +517,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
                 type="email"
                 value={formData.email}
                 onChange={e => setFormData({ ...formData, email: e.target.value })}
-                placeholder="student.name@Government Polytechnic.ac.in"
+                placeholder="student.name@gpbansdih.ac.in"
                 className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none"
               />
             </div>

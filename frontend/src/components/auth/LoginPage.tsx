@@ -92,7 +92,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onGoToHome
             Next-Gen Academic &amp; Administrative Management
           </h1>
           <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed">
-            Centralized e-governance platform for students, faculty, and administrators of Government Polytechnic.
+            Centralized e-governance platform for students, faculty, and administrators of Government Polytechnic Bansdih, Ballia.
           </p>
 
           {/* Key Feature Badges */}

@@ -365,7 +365,7 @@ export const PlacementCellPage: React.FC = () => {
             Campus Recruitment &amp; Career Hub
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Government Polytechnic bridges academic excellence with industry readiness. We partner with India's leading engineering corporations, PSUs, and technology giants for 100% placement and apprentice assistance.
+            Government Polytechnic Bansdih, Ballia bridges academic excellence with industry readiness. We partner with India's leading engineering corporations, PSUs, and technology giants for 100% placement and apprentice assistance.
           </p>
           <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs text-slate-300">
             <span className="flex items-center gap-1.5">
@@ -434,7 +434,7 @@ export const PlacementCellPage: React.FC = () => {
             <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
               <Building2 className="w-5 h-5 text-blue-600" /> Top Corporate Recruiters ({recruiters.length} कम्पनियाँ)
             </h3>
-            <p className="text-xs text-slate-500">Leading industrial partners hiring diploma engineers from Government Polytechnic</p>
+            <p className="text-xs text-slate-500">Leading industrial partners hiring diploma engineers from Government Polytechnic Bansdih, Ballia</p>
           </div>
           {isAdmin && (
             <button

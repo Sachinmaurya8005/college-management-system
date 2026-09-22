@@ -106,7 +106,7 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
         salary: teacher.salary || 78500,
         payScale: teacher.payScale || '7th CPC Level 10 (₹56,100 - ₹1,77,500)',
         promotionStatus: teacher.promotionStatus || 'Regular Confirmed • Eligible for Next CAS Review',
-        address: teacher.address || 'Government Polytechnic Staff Quarters, Uttar Pradesh (U.P.) - 277202',
+        address: teacher.address || 'GP Bansdih Staff Quarters, Ballia (U.P.) - 277202',
         bloodGroup: teacher.bloodGroup || 'B+',
         staffType: teacher.staffType || 'Teaching Faculty',
         workDescription: teacher.workDescription || 'Conducts theory & practical lectures, departmental laboratory supervision',
@@ -180,7 +180,7 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
         id: `punch-${p.id || p.date}`,
         type: 'punches',
         title: p.status === 'P' ? 'In-Campus 50m Geo-Fenced Punch (उपस्थिति)' : p.status === 'L' ? 'Late Arrival Marked (विलंब)' : 'Leave / Official Duty (अवकाश)',
-        description: `In-Campus Biometric Punch at Government Polytechnic Main Academic Campus • Time: ${p.inTime || '09:00 AM'} to ${p.outTime || '05:00 PM'} (GPS Verified)`,
+        description: `In-Campus Biometric Punch at GP Bansdih Ballia Main Campus • Time: ${p.inTime || '09:00 AM'} to ${p.outTime || '05:00 PM'} (GPS Verified)`,
         timestamp: `${formatDate(p.date)} • 50m Radius Geofence`,
         badge: p.status === 'P' ? '50m GPS Present' : p.status === 'L' ? 'Late Marked' : 'Leave',
         badgeColor: p.status === 'P' ? 'emerald' : p.status === 'L' ? 'amber' : 'purple',
@@ -223,7 +223,7 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
           id: 'def-2',
           type: 'punches',
           title: '50m In-Campus Geo-Biometric Punch Marked',
-          description: 'Faculty in-campus location verified within 50m boundary of Government Polytechnic Main Campus.',
+          description: 'Faculty in-campus location verified within 50m boundary of GP Bansdih Ballia Campus.',
           timestamp: 'Today at 08:58 AM • GPS Verified',
           badge: '50m Geo Verified',
           badgeColor: 'emerald',
@@ -327,7 +327,7 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
           </span>
         </div>
       }
-      subtitle="Government Polytechnic (Affiliated to BTEUP Lucknow)"
+      subtitle="Government Polytechnic Bansdih, Ballia (Affiliated to BTEUP Lucknow)"
       maxWidth="5xl"
     >
       <div className="space-y-6">
@@ -522,7 +522,7 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
                   <MapPin className="w-4 h-4" /> Permanent &amp; Residential Address (पता)
                 </h4>
                 <p className="text-slate-800 dark:text-slate-200 font-medium leading-relaxed bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-700/60">
-                  {teacher.address || 'Government Polytechnic Campus Staff Quarters, Uttar Pradesh (U.P.) - 277202'}
+                  {teacher.address || 'GP Bansdih Staff Quarters, Ballia (U.P.) - 277202'}
                 </p>
               </div>
             </div>
@@ -820,7 +820,7 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
             <div className="w-full max-w-md rounded-3xl bg-gradient-to-br from-slate-900 via-polytechnic-950 to-slate-900 text-white p-6 shadow-2xl border border-white/20 relative overflow-hidden space-y-4">
               <div className="flex items-center justify-between border-b border-white/20 pb-3">
                 <div>
-                  <h4 className="text-xs font-black uppercase text-amber-400 tracking-wider">Government Polytechnic</h4>
+                  <h4 className="text-xs font-black uppercase text-amber-400 tracking-wider">Government Polytechnic Bansdih, Ballia</h4>
                   <p className="text-[10px] text-blue-200">Uttar Pradesh (U.P.) • Inst. Code 4412</p>
                 </div>
                 <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-white/20 text-white">STAFF ID</span>

@@ -49,7 +49,7 @@ export const AICampusAssistant: React.FC<AICampusAssistantProps> = ({ onNavigate
     {
       id: 'msg-1',
       sender: 'bot',
-      text: `नमस्ते! 🙏 मैं राजकीय पॉलिटेक्निक (Government Polytechnic) का AI कैंपस असिस्टेंट हूँ।\n\nमैं आपकी एडमिशन, डिप्लोमा कोर्सेस, BTEUP परीक्षा, फीस, स्कॉलरशिप, हॉस्टल और प्लेसमेंट में कैसे मदद कर सकता हूँ?`,
+      text: `नमस्ते! 🙏 मैं राजकीय पॉलिटेक्निक बांसडीह, बलिया (GP Bansdih Ballia) का AI कैंपस असिस्टेंट हूँ।\n\nमैं आपकी एडमिशन, डिप्लोमा कोर्सेस, BTEUP परीक्षा, फीस, स्कॉलरशिप, हॉस्टल और प्लेसमेंट में कैसे मदद कर सकता हूँ?`,
       timestamp: 'Just now',
       suggestions: [
         '📋 डिप्लोमा कोर्सेस और सीटें',
@@ -227,7 +227,7 @@ export const AICampusAssistant: React.FC<AICampusAssistantProps> = ({ onNavigate
                     LIVE
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-300">Government Polytechnic Helpdesk</p>
+                <p className="text-[11px] text-slate-300">GP Bansdih Ballia Helpdesk</p>
               </div>
             </div>
 

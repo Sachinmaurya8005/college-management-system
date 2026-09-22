@@ -95,7 +95,7 @@ export const AddEditTeacherModal: React.FC<AddEditTeacherModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={teacher ? 'Edit Faculty Member' : 'New Faculty Appointment Entry'}
-      subtitle="Government Polytechnic • Faculty Registry"
+      subtitle="GP Bansdih Ballia • Faculty Registry"
       maxWidth="3xl"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -307,7 +307,7 @@ export const AddEditTeacherModal: React.FC<AddEditTeacherModalProps> = ({
               type="email"
               value={formData.email}
               onChange={e => setFormData({ ...formData, email: e.target.value })}
-              placeholder="faculty.name@Government Polytechnic.ac.in"
+              placeholder="faculty.name@gpbansdih.ac.in"
               className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none"
             />
           </div>

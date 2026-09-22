@@ -29,10 +29,10 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate, onOpenQr
               <CollegeLogo size="md" showText={false} className="rounded-xl shadow-lg" />
               <div>
                 <h3 className="text-sm font-extrabold text-white tracking-tight">
-                  GOVERNMENT POLYTECHNIC
+                  GOVERNMENT POLYTECHNIC BANSDIH
                 </h3>
                 <span className="text-xs text-amber-400 font-bold block">
-                  Uttar Pradesh (U.P.)
+                  Ballia, Uttar Pradesh (U.P.)
                 </span>
               </div>
             </div>
@@ -120,7 +120,7 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate, onOpenQr
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
                 <span>
-                  Institutional Campus Area, Uttar Pradesh - 277202
+                  Bansdih-Ballia Road, Bansdih, Ballia, UP - 277202
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -129,7 +129,7 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate, onOpenQr
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                <span>principal.polytechnic@gmail.com</span>
+                <span>principal.gpbansdih@gmail.com</span>
               </div>
             </div>
 
@@ -159,7 +159,7 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({ onNavigate, onOpenQr
         {/* Bottom Copyright & Disclaimer */}
         <div className="pt-8 border-t border-polytechnic-800/80 dark:border-slate-800 text-center text-xs text-slate-500 space-y-2">
           <p>
-            © {new Date().getFullYear()} Government Polytechnic, Uttar Pradesh. All Rights Reserved.
+            © {new Date().getFullYear()} Government Polytechnic Bansdih, Ballia. All Rights Reserved. All Rights Reserved.
           </p>
           <p className="text-[11px] text-slate-600">
             Affiliated to Board of Technical Education, Uttar Pradesh (BTEUP) • Approved by All India Council for Technical Education (AICTE), New Delhi.

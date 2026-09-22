@@ -226,16 +226,16 @@ export const DEFAULT_FEES: PublicFeeStructure[] = [
 ];
 
 export const DEFAULT_ABOUT: AboutCollegeData = {
-  college_name: 'Government Polytechnic',
-  hindi_name: 'राजकीय पॉलिटेक्निक',
+  college_name: 'Government Polytechnic Bansdih, Ballia',
+  hindi_name: 'राजकीय पॉलिटेक्निक बांसडीह, बलिया',
   bteup_code: '4412',
   aicte_approval: 'Approved by AICTE New Delhi & Affiliated to BTEUP Lucknow',
-  history: 'Government Polytechnic was established by the Department of Technical Education, Government of Uttar Pradesh to extend high-standard engineering diploma education to the Purvanchal region. Spanning 12.5 acres of modern campus infrastructure, the institution provides 6 AICTE-approved 3-year diploma programs with advanced laboratories, machine workshops, and computer centers.',
+  history: 'Government Polytechnic Bansdih, Ballia was established by the Department of Technical Education, Government of Uttar Pradesh to extend high-standard engineering diploma education to the Ballia & Purvanchal region. Spanning 12.5 acres of modern campus infrastructure in Bansdih, the institution provides AICTE-approved 3-year diploma programs with advanced laboratories, machine workshops, and computer centers.',
   vision: 'To emerge as a benchmark institution in technical education, practical skill competence, and innovation, empowering students from all socioeconomic strata to become globally competitive engineers and entrepreneurs.',
   mission: 'To deliver rigorous industry-aligned engineering curricula, hands-on workshop training, and moral ethics, ensuring high employability and sustainable nation-building.',
   principal_name: 'Er. Sachin Maurya',
-  principal_message: 'Technical education is the cornerstone of industrial transformation and self-reliance. At Government Polytechnic, we are committed to providing top-tier academic discipline, modern laboratory experiences, and career development to every student.',
-  principal_photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces',
+  principal_message: 'Technical education is the cornerstone of industrial transformation and self-reliance. At Government Polytechnic Bansdih, Ballia, we are committed to providing top-tier academic discipline, modern laboratory experiences, and career development to every student.',
+  principal_photo: '/principal_sachin_maurya.jpg',
   achievements: [
     'Affiliated to Board of Technical Education, Uttar Pradesh (BTEUP Code 4412)',
     'Approved by All India Council for Technical Education (AICTE), New Delhi',
@@ -251,30 +251,30 @@ export const DEFAULT_ABOUT: AboutCollegeData = {
 };
 
 export const DEFAULT_LOCATION: CollegeLocationData = {
-  address: 'Government Polytechnic Main Campus, Uttar Pradesh - 277202',
-  district: 'Uttar Pradesh',
+  address: 'Bansdih - Ballia Road, Near Tehsil & Block Office, Bansdih, Ballia, Uttar Pradesh - 277202',
+  district: 'Ballia',
   state: 'Uttar Pradesh',
   pincode: '277202',
-  landmark: 'Campus Main Road, Near Technical Complex',
+  landmark: 'Near Tehsil & Block Office, Bansdih',
   latitude: 25.86472,
   longitude: 84.22153,
   map_embed_url: 'https://maps.google.com/maps?q=25.86472,84.22153&t=&z=14&ie=UTF8&iwloc=&output=embed',
   map_view_url: 'https://maps.google.com/?q=25.86472,84.22153',
   directions_url: 'https://www.google.com/maps/dir/?api=1&destination=25.86472,84.22153',
-  connectivity_bus: 'Frequent UPSRTC state transport buses and shared transit available from Central City Bus Stand.',
-  connectivity_train: 'Major Railway Junctions connecting Lucknow, Varanasi, Gorakhpur, Patna, and Delhi.',
-  contact_phone: '+91 94150 24510 / +91 5498 299100',
-  contact_email: 'principal.polytechnic@gmail.com'
+  connectivity_bus: 'Frequent UPSRTC state transport buses, Ballia-Bansdih-Sahatwar route buses and shared autos available directly from Ballia Main Bus Stand.',
+  connectivity_train: 'Ballia Railway Junction (BUI - 18 km) & Bansdih Road Station (BHTR - 8 km) connecting Lucknow, Varanasi, Gorakhpur, Patna, and Delhi.',
+  contact_phone: '+91 94150 24510 / +91 5498 245120',
+  contact_email: 'principal.gpbansdih@gmail.com'
 };
 
 export const DEFAULT_HOME_PAYLOAD: PublicHomePayload = {
-  college_name: 'Government Polytechnic',
+  college_name: 'Government Polytechnic Bansdih, Ballia',
   bteup_code: '4412',
   aicte_approval: 'Approved by AICTE New Delhi & Affiliated to BTEUP Lucknow',
   principal_name: 'Er. Sachin Maurya',
   principal_message: 'Our mission is to foster technical excellence, practical workshop competence, and disciplined leadership in every diploma engineer.',
-  principal_photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces',
-  history_snippet: 'Government Polytechnic is a premier government institution dedicated to excellence in 3-year technical diploma engineering programs with world-class laboratories and workshop facilities.',
+  principal_photo: '/principal_sachin_maurya.jpg',
+  history_snippet: 'Government Polytechnic Bansdih, Ballia is a premier government institution dedicated to excellence in 3-year technical diploma engineering programs with world-class laboratories and workshop facilities.',
   location: DEFAULT_LOCATION,
   latest_notices: INITIAL_NOTICES,
   courses: INITIAL_COURSES,
@@ -325,10 +325,10 @@ export const publicService = {
 
     return {
       ...DEFAULT_HOME_PAYLOAD,
-      college_name: localAbout.college_name || 'Government Polytechnic',
+      college_name: localAbout.college_name || 'Government Polytechnic Bansdih, Ballia',
       principal_name: localAbout.principal_name || 'Er. Sachin Maurya',
       principal_message: localAbout.principal_message || DEFAULT_ABOUT.principal_message,
-      principal_photo: localAbout.principal_photo || DEFAULT_ABOUT.principal_photo,
+      principal_photo: localAbout.principal_photo || '/principal_sachin_maurya.jpg',
       location: localLocation,
       featured_facilities: localFacilities,
       gallery_preview: localGallery,

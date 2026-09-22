@@ -122,7 +122,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
                   <span className="text-white">GOVERNMENT </span>
                   <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-200 bg-clip-text text-transparent">
-                    POLYTECHNIC
+                    POLYTECHNIC BANSDIH, BALLIA
                   </span>
                 </h1>
                 <p className="text-xs sm:text-sm text-blue-200/90 max-w-xl font-normal leading-relaxed">
@@ -171,7 +171,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               <div className="p-6 rounded-3xl bg-white/10 dark:bg-slate-900/60 backdrop-blur-xl border border-white/20 shadow-2xl space-y-4 text-left">
                 <div className="flex items-center gap-4">
                   <img
-                    src={data?.principal_photo || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces'}
+                    src={data?.principal_photo || '/principal_sachin_maurya.jpg'}
                     alt="Principal"
                     className="w-16 h-16 rounded-2xl object-cover ring-2 ring-amber-400/60 shadow-lg flex-shrink-0"
                   />
@@ -199,7 +199,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   >
                     Read Full Message <ChevronRight className="w-3 h-3" />
                   </button>
-                  <span className="text-[10px] text-blue-300">Government Polytechnic, Uttar Pradesh</span>
+                  <span className="text-[10px] text-blue-300">Government Polytechnic Bansdih, Ballia</span>
                 </div>
               </div>
             </div>
@@ -456,7 +456,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               <MapPin className="w-4 h-4" /> Campus Location &amp; Directions
             </div>
             <h2 className="text-xl sm:text-2xl font-black">
-              Visit Government Polytechnic
+              Visit Government Polytechnic Bansdih, Ballia
             </h2>
             <p className="text-xs text-blue-200 max-w-xl">
               Main Campus, Uttar Pradesh. Accessible by rail and road networks.

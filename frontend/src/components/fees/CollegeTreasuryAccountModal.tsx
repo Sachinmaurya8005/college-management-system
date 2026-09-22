@@ -63,7 +63,7 @@ export const CollegeTreasuryAccountModal: React.FC<CollegeTreasuryAccountModalPr
   const [isLookingUpIfsc, setIsLookingUpIfsc] = useState(false);
   const [ifscVerifiedStatus, setIfscVerifiedStatus] = useState<string | null>('State Bank of India (Govt Treasury Branch)');
 
-  const collegeUpiId = 'principal.Government Polytechnic@sbi';
+  const collegeUpiId = 'gpbansdihtreasury@sbi';
 
   // Validation errors state
   const [errors, setErrors] = useState<{
@@ -788,7 +788,7 @@ export const CollegeTreasuryAccountModal: React.FC<CollegeTreasuryAccountModalPr
                     setAccountHolderName(e.target.value);
                     if (errors.accountHolderName) setErrors(prev => ({ ...prev, accountHolderName: undefined }));
                   }}
-                  placeholder="e.g. Principal, Government Polytechnic (Institutional Treasury A/C)"
+                  placeholder="e.g. Principal, Government Polytechnic Bansdih, Ballia (Institutional Treasury A/C)"
                   className={`w-full px-3.5 py-2.5 rounded-xl border text-xs outline-none transition-all font-medium ${
                     errors.accountHolderName
                       ? 'border-red-500 ring-2 ring-red-500/20 bg-red-50/40 dark:bg-red-950/30 text-red-900 dark:text-red-200'

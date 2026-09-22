@@ -461,7 +461,7 @@ export const SettingsPage: React.FC = () => {
           setTimeout(() => setSaveSuccess(false), 2000);
         }}
         title="Reset All College Data"
-        message="This will clear your local changes and reload the default Government Polytechnic database records. Proceed?"
+        message="This will clear your local changes and reload the default Government Polytechnic Bansdih, Ballia database records. Proceed?"
         danger={true}
         confirmText="Yes, Reset Data"
       />

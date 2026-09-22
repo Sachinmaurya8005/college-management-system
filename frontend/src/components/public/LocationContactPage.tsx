@@ -49,20 +49,20 @@ export const LocationContactPage: React.FC = () => {
   }, []);
 
   const defaultLocation: CollegeLocationData = {
-    address: 'Campus Main Road, Uttar Pradesh - 277202',
-    district: 'Main District',
+    address: 'Bansdih - Ballia Road, Near Tehsil & Block Office, Bansdih, Ballia, Uttar Pradesh - 277202',
+    district: 'Ballia',
     state: 'Uttar Pradesh',
     pincode: '277202',
-    landmark: 'State Highway 1, Polytechnic Campus',
-    latitude: 25.8647,
-    longitude: 84.2185,
-    map_embed_url: 'https://maps.google.com/maps?q=Uttar+Pradesh&t=&z=14&ie=UTF8&iwloc=&output=embed',
-    map_view_url: 'https://maps.google.com/?q=25.8647,84.2185',
-    directions_url: 'https://maps.google.com',
-    connectivity_bus: 'Frequent UPSRTC buses and private shared vehicles available from City Bus Stand.',
-    connectivity_train: 'Nearest Railway Station with direct express trains to major cities.',
-    contact_phone: '+91 94150 24510 / +91 5498 290124',
-    contact_email: 'principal.polytechnic@gmail.com'
+    landmark: 'Near Tehsil & Block Office, Bansdih',
+    latitude: 25.86472,
+    longitude: 84.22153,
+    map_embed_url: 'https://maps.google.com/maps?q=25.86472,84.22153&t=&z=14&ie=UTF8&iwloc=&output=embed',
+    map_view_url: 'https://maps.google.com/?q=25.86472,84.22153',
+    directions_url: 'https://www.google.com/maps/dir/?api=1&destination=25.86472,84.22153',
+    connectivity_bus: 'Frequent UPSRTC buses and private shared vehicles available from Ballia Main Bus Stand directly to Bansdih.',
+    connectivity_train: 'Ballia Railway Junction (BUI) - 18 km / Bansdih Road Station (BHTR) - 8 km with direct express trains to major cities.',
+    contact_phone: '+91 94150 24510 / +91 5498 245120',
+    contact_email: 'principal.gpbansdih@gmail.com'
   };
 
   const loc = location || defaultLocation;
@@ -76,10 +76,10 @@ export const LocationContactPage: React.FC = () => {
             Campus Location &amp; Directions
           </span>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-            How to Reach Government Polytechnic
+            How to Reach Government Polytechnic Bansdih, Ballia
           </h1>
           <p className="text-xs sm:text-sm text-blue-200 max-w-2xl">
-            Located in Uttar Pradesh. Conveniently accessible via road transit and railway network.
+            Located in Bansdih, Ballia (Uttar Pradesh). Conveniently accessible via road transit and railway network.
           </p>
         </div>
 

@@ -699,9 +699,9 @@ class Command(BaseCommand):
         about_obj.history = 'Government Polytechnic Bansdeeh, Ballia was established in Uttar Pradesh as a flagship government polytechnic institution to deliver world-class technical education, industrial vocational skills, and career opportunities to youth across the Purvanchal region. Since its inception, the institute has maintained high standards of academic rigor, practical workshop training, and successful industry placements under the Board of Technical Education, Uttar Pradesh.'
         about_obj.vision = 'To be a premier technical institute in Northern India empowering diploma engineers with deep technical competence, innovative mindset, ethical stewardship, and community impact.'
         about_obj.mission = 'Provide industry-aligned curriculum, world-class laboratory infrastructure, dedicated faculty mentorship, and holistic skill development for aspiring diploma technicians.'
-        about_obj.principal_name = 'Er. R. C. Srivastava'
-        about_obj.principal_message = 'Welcome to Government Polytechnic Bansdeeh, Ballia. Our institution is dedicated to building robust technical foundation, practical engineering skills, and career opportunities for our diploma students under BTEUP curriculum.'
-        about_obj.principal_photo = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop&crop=faces'
+        about_obj.principal_name = 'Er. Sachin Maurya'
+        about_obj.principal_message = 'Welcome to Government Polytechnic Bansdih, Ballia. Our institution is dedicated to building robust technical foundation, practical engineering skills, and career opportunities for our diploma students under BTEUP curriculum.'
+        about_obj.principal_photo = '/principal_sachin_maurya.jpg'
         about_obj.achievements = [
             '100% AICTE Approval & BTEUP Code 4412 Accreditation',
             'Over 85% placement rate across leading core engineering & IT firms',

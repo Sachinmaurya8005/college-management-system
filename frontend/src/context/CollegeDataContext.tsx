@@ -173,13 +173,15 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const raw = loadState('settings', INITIAL_SETTINGS);
     const cleaned: CollegeSettings = {
       ...raw,
-      collegeName: 'GOVERNMENT POLYTECHNIC',
-      hindiName: 'राजकीय पॉलिटेक्निक',
+      collegeName: 'GOVERNMENT POLYTECHNIC BANSDIH, BALLIA',
+      hindiName: 'राजकीय पॉलिटेक्निक बांसडीह, बलिया',
       principalName: 'Er. Sachin Maurya',
-      address: 'Polytechnic Campus, Uttar Pradesh - 277202',
-      district: 'Uttar Pradesh',
-      email: 'principal.polytechnic@gmail.com',
-      website: 'https://polytechnic.up.gov.in'
+      address: 'Bansdih-Ballia Road, Near Tehsil & Block Office, Bansdih',
+      district: 'Ballia',
+      state: 'Uttar Pradesh',
+      pincode: '277202',
+      email: 'principal.gpbansdih@gmail.com',
+      website: 'https://gpbansdih.up.gov.in'
     };
     try {
       localStorage.setItem('gpb_portal_settings', JSON.stringify(cleaned));
@@ -265,7 +267,7 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
       id: 'act-init',
       type: 'general',
       message: 'Real-Time College Data Gateway Active',
-      detail: 'Government Polytechnic Live Hub',
+      detail: 'GP Bansdih Ballia Live Hub',
       timestamp: 'Just now'
     }
   ]);

@@ -49,8 +49,8 @@ export const CollegeLogo: React.FC<CollegeLogoProps> = ({
       : 'text-slate-500 dark:text-slate-400';
 
   const logoSrc = settings.customLogoUrl || '/college-logo.svg';
-  const collegeDisplayName = 'GOVERNMENT POLYTECHNIC';
-  const collegeDisplayHindi = 'राजकीय पॉलिटेक्निक';
+  const collegeDisplayName = settings.collegeName || 'GOVERNMENT POLYTECHNIC BANSDIH, BALLIA';
+  const collegeDisplayHindi = settings.hindiName || 'राजकीय पॉलिटेक्निक बांसडीह, बलिया';
 
   return (
     <div className={`flex items-center gap-3 select-none ${className}`}>

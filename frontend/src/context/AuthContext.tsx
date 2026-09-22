@@ -23,7 +23,7 @@ export const DEMO_USERS: Record<Role, User> = {
     designation: 'Principal & Chief Administrator',
     department: 'Administration',
     phone: '+91 94150 24510',
-    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces',
+    avatar: '/principal_sachin_maurya.jpg',
     lastLogin: 'Today at 09:15 AM'
   },
   teacher: {
@@ -34,7 +34,7 @@ export const DEMO_USERS: Record<Role, User> = {
     designation: 'HOD & Associate Professor',
     department: 'Computer Science & Engineering',
     phone: '+91 94150 12345',
-    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=faces',
+    avatar: 'https://images.unsplash.com/principal_sachin_maurya.jpg?w=200&h=200&fit=crop&crop=faces',
     lastLogin: 'Today at 10:05 AM'
   },
   student: {
@@ -64,7 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
         if (parsed && typeof parsed === 'object' && parsed.role) {
           if (parsed.avatar?.includes('photo-1534528741775-53994a69daeb')) {
-            parsed.avatar = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces';
+            parsed.avatar = 'https://images.unsplash.com/principal_sachin_maurya.jpg?w=400&h=400&fit=crop&crop=faces';
           }
           return parsed;
         }
@@ -201,7 +201,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const validAdminUsernames = [
         'sachin_maurya8005',
         'sachin_maurya8005@polytechnic.edu',
-        'sachin_maurya8005@Government Polytechnic.ac.in',
+        'sachin_maurya8005@gpbansdih.ac.in',
         'admin@polytechnic.edu',
         'admin'
       ];
@@ -339,7 +339,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const newAbout = {
           ...parsedAbout,
           principal_name: updated.name || parsedAbout.principal_name || 'Er. Sachin Maurya',
-          principal_photo: updated.avatar || parsedAbout.principal_photo || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces'
+          principal_photo: updated.avatar || parsedAbout.principal_photo || 'https://images.unsplash.com/principal_sachin_maurya.jpg?w=400&h=400&fit=crop&crop=faces'
         };
         localStorage.setItem('gpb_public_about', JSON.stringify(newAbout));
 
