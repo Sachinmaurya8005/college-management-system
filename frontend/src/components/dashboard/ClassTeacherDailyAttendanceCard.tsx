@@ -87,9 +87,21 @@ export const ClassTeacherDailyAttendanceCard: React.FC = () => {
   const { user } = useAuth();
   const { students, saveAttendance } = useCollegeData();
 
-  // Class selection state
-  const [selectedBranchName, setSelectedBranchName] = useState('Computer Science & Engineering');
-  const [selectedSemester, setSelectedSemester] = useState<number>(4);
+  // Class selection state: Auto-assigned based on teacher's department or Admin master
+  const isTeacher = user?.role === 'teacher';
+  const teacherDept = user?.department || '';
+
+  const getInitialBranch = () => {
+    if (teacherDept.toLowerCase().includes('mechanical')) return 'Mechanical Engineering (Production)';
+    if (teacherDept.toLowerCase().includes('civil')) return 'Civil Engineering';
+    if (teacherDept.toLowerCase().includes('electrical')) return 'Electrical Engineering';
+    if (teacherDept.toLowerCase().includes('electronics')) return 'Electronics Engineering';
+    if (teacherDept.toLowerCase().includes('information')) return 'Information Technology';
+    return 'Computer Science & Engineering';
+  };
+
+  const [selectedBranchName, setSelectedBranchName] = useState<string>(() => getInitialBranch());
+  const [selectedSemester, setSelectedSemester] = useState<number>(() => (isTeacher ? 4 : 4));
   const [selectedSubject, setSelectedSubject] = useState('CS-401 Data Structures & Algorithms');
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [searchQuery, setSearchQuery] = useState('');
