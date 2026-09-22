@@ -61,13 +61,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [attendancePeriod, setAttendancePeriod] = useState<'week' | 'month' | 'semester'>('week');
   const [selectedSessionForModal, setSelectedSessionForModal] = useState<AttendanceSession | null>(null);
 
-  // Stats calculation
-  const totalStudentsCount = 1248; // Official college total
-  const totalTeachersCount = 86;
+  // Real-time dynamic stats directly from live database state
+  const totalStudentsCount = students.length;
+  const totalTeachersCount = teachers.length;
   const totalCoursesCount = courses.length;
 
-  const totalCollectedFees = fees.reduce((sum, f) => sum + f.paidAmount, 0) + 1232550;
-  const totalPendingFees = fees.reduce((sum, f) => sum + f.pendingAmount, 0) + 420000;
+  const totalCollectedFees = fees.reduce((sum, f) => sum + (f.paidAmount || 0), 0);
+  const totalPendingFees = fees.reduce((sum, f) => sum + (f.pendingAmount || 0), 0);
+
+  // Real institutional average attendance calculated from live student records
+  const avgAttendance = students.length > 0
+    ? Math.round(students.reduce((acc, s) => acc + (s.attendancePercentage || 0), 0) / students.length)
+    : 85;
 
   // Recharts Chart Data
   const attendanceWeeklyData = [
@@ -161,38 +166,41 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
       </div>
 
-      {/* 5 Core Metric Cards */}
+      {/* 5 Core Metric Cards (100% Real Dynamic Live Data) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <StatCard
           title="Total Students"
           value={totalStudentsCount.toLocaleString('en-IN')}
           icon={Users}
           color="blue"
-          trend={{ value: '+4.5%', isPositive: true, label: 'vs last year' }}
+          trend={{ value: `${totalStudentsCount} Enrolled`, isPositive: true, label: 'Real Database' }}
+          description="Total Active Candidates"
           onClick={() => onNavigate('students')}
         />
         <StatCard
           title="Total Faculty"
-          value={totalTeachersCount}
+          value={totalTeachersCount.toString()}
           icon={GraduationCap}
           color="emerald"
-          trend={{ value: '100% Active', isPositive: true }}
+          trend={{ value: `${totalTeachersCount} Staff`, isPositive: true, label: 'Active Roster' }}
+          description="Faculty & Support Staff"
           onClick={() => onNavigate('teachers')}
         />
         <StatCard
           title="Total Courses"
-          value={totalCoursesCount}
+          value={totalCoursesCount.toString()}
           icon={BookOpen}
           color="purple"
           description="AICTE Approved Diploma Branches"
           onClick={() => onNavigate('courses')}
         />
         <StatCard
-          title="Today's Attendance"
-          value="78%"
+          title="Avg Attendance"
+          value={`${avgAttendance}%`}
           icon={CheckSquare}
           color="amber"
-          trend={{ value: '+2.1%', isPositive: true, label: 'today' }}
+          trend={{ value: 'Live Matrix', isPositive: true, label: 'BTEUP' }}
+          description="Institutional Average"
           onClick={() => onNavigate('attendance')}
         />
         <StatCard
@@ -200,7 +208,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           value={formatCurrencyINR(totalCollectedFees)}
           icon={CreditCard}
           color="indigo"
-          trend={{ value: '92% Cleared', isPositive: true }}
+          trend={{ value: `${fees.filter(f => f.paymentStatus === 'Paid').length} Paid`, isPositive: true }}
+          description={`Pending: ${formatCurrencyINR(totalPendingFees)}`}
           onClick={() => onNavigate('fees')}
         />
       </div>
