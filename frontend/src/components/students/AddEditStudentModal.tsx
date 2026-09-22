@@ -3,7 +3,7 @@ import { Student } from '../../types';
 import { Modal } from '../common/Modal';
 import { useCollegeData } from '../../context/CollegeDataContext';
 import { useAuth } from '../../context/AuthContext';
-import { Upload } from 'lucide-react';
+import { Upload, Lock, ShieldCheck, GraduationCap, CheckCircle2 } from 'lucide-react';
 
 interface AddEditStudentModalProps {
   isOpen: boolean;
@@ -19,7 +19,9 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
   const { addStudent, updateStudent, courses, teachers } = useCollegeData();
   const { user } = useAuth();
   const isTeacher = user?.role === 'teacher';
+  const isAdmin = user?.role === 'admin';
 
+  // Find live assigned branch and semester for the logged-in teacher
   const currentTeacherObj = teachers.find(
     t =>
       (user?.email && t.email?.toLowerCase() === user.email.toLowerCase()) ||
@@ -37,7 +39,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
     motherName: '',
     dob: '2004-01-01',
     gender: 'Male' as 'Male' | 'Female' | 'Other',
-    branch: 'Diploma in Computer Science & Engineering',
+    branch: isTeacher ? teacherAssignedBranch : 'Computer Science & Engineering',
     semester: isTeacher ? teacherAssignedSemester : 1,
     rollNo: '',
     enrollmentNo: '',
@@ -61,8 +63,8 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
         motherName: student.motherName || '',
         dob: student.dob || '2004-01-01',
         gender: student.gender || 'Male',
-        branch: student.branch,
-        semester: student.semester,
+        branch: isTeacher ? teacherAssignedBranch : student.branch,
+        semester: isTeacher ? teacherAssignedSemester : student.semester,
         rollNo: student.rollNo,
         enrollmentNo: student.enrollmentNo,
         mobile: student.mobile,
@@ -86,7 +88,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
         dob: '2004-06-15',
         gender: 'Male',
         branch: isTeacher ? teacherAssignedBranch : 'Computer Science & Engineering',
-        semester: 1,
+        semester: isTeacher ? teacherAssignedSemester : 1,
         rollNo: `E234412355${rand}`,
         enrollmentNo: `E234412${rand}`,
         mobile: '+91 94150 00000',
@@ -101,7 +103,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
         feeStatus: 'Pending'
       });
     }
-  }, [student, isOpen]);
+  }, [student, isOpen, isTeacher, teacherAssignedBranch, teacherAssignedSemester]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,10 +112,19 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
       return;
     }
 
+    // Strict Enforcement: If user is teacher, always lock branch and semester to their assigned class
+    const finalSubmissionData = isTeacher
+      ? {
+          ...formData,
+          branch: teacherAssignedBranch,
+          semester: teacherAssignedSemester
+        }
+      : formData;
+
     if (student) {
-      updateStudent(student.id, formData);
+      updateStudent(student.id, finalSubmissionData);
     } else {
-      addStudent(formData);
+      addStudent(finalSubmissionData);
     }
     onClose();
   };
@@ -122,11 +133,44 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={student ? 'Edit Student Details' : 'New Student Admission Entry'}
-      subtitle="Government Polytechnic • Student Registry"
+      title={
+        student
+          ? (isTeacher ? `Edit Class Student (${teacherAssignedBranch} • Sem ${teacherAssignedSemester})` : 'Edit Student Details')
+          : (isTeacher ? `New Student Admission (${teacherAssignedBranch} • Sem ${teacherAssignedSemester})` : 'New Student Admission Entry')
+      }
+      subtitle={
+        isTeacher
+          ? `Class Teacher Admission Gate • ${teacherAssignedBranch} (Semester ${teacherAssignedSemester})`
+          : 'Government Polytechnic • Master Student Registry (Admin View)'
+      }
       maxWidth="4xl"
     >
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Class Teacher Policy Notification Banner */}
+        {isTeacher && (
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-500/15 via-indigo-500/10 to-transparent border border-blue-200 dark:border-blue-900/70 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                  <span>🔒 Class Teacher Admission Authority</span>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-bold border border-blue-200">
+                    Locked to Your Class
+                  </span>
+                </p>
+                <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                  प्रिंसिपल के नियम अनुसार आप केवल अपनी कक्षा <strong>{teacherAssignedBranch} (Semester {teacherAssignedSemester})</strong> में ही नए छात्र को जोड़ सकते हैं।
+                </p>
+              </div>
+            </div>
+            <span className="hidden sm:inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Class Verified
+            </span>
+          </div>
+        )}
+
         {/* Student Photo & Identity Banner */}
         <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-3">
           <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -248,10 +292,11 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Date of Birth
+                Date of Birth (DOB) *
               </label>
               <input
                 type="date"
+                required
                 value={formData.dob}
                 onChange={e => setFormData({ ...formData, dob: e.target.value })}
                 className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none"
@@ -324,41 +369,68 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
             2. Academic &amp; Enrollment Details
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Diploma Branch */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Diploma Branch *
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
+                <span>Diploma Branch *</span>
+                {isTeacher && (
+                  <span className="text-[10px] text-blue-600 dark:text-blue-400 font-bold flex items-center gap-1">
+                    <Lock className="w-3 h-3" /> Locked
+                  </span>
+                )}
               </label>
-              <select
-                value={formData.branch}
-                onChange={e => setFormData({ ...formData, branch: e.target.value })}
-                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none"
-              >
-                <option value="Computer Science & Engineering">Computer Science & Engineering</option>
-                <option value="Mechanical Engineering (Production)">Mechanical Engineering (Production)</option>
-                <option value="Civil Engineering">Civil Engineering</option>
-                <option value="Electrical Engineering">Electrical Engineering</option>
-                <option value="Electronics Engineering">Electronics Engineering</option>
-                <option value="Information Technology">Information Technology</option>
-              </select>
+              {isTeacher ? (
+                <div className="w-full px-3.5 py-2.5 rounded-xl border border-blue-200 dark:border-blue-800 bg-blue-50/60 dark:bg-blue-950/40 text-xs font-bold text-blue-900 dark:text-blue-200 flex items-center justify-between shadow-sm">
+                  <span>{teacherAssignedBranch}</span>
+                  <Lock className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                </div>
+              ) : (
+                <select
+                  value={formData.branch}
+                  onChange={e => setFormData({ ...formData, branch: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none"
+                >
+                  <option value="Computer Science & Engineering">Computer Science &amp; Engineering</option>
+                  <option value="Mechanical Engineering (Production)">Mechanical Engineering (Production)</option>
+                  <option value="Civil Engineering">Civil Engineering</option>
+                  <option value="Electrical Engineering">Electrical Engineering</option>
+                  <option value="Electronics Engineering">Electronics Engineering</option>
+                  <option value="Information Technology">Information Technology</option>
+                </select>
+              )}
             </div>
 
+            {/* Current Semester */}
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Current Semester (1-6) *
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
+                <span>Current Semester (1-6) *</span>
+                {isTeacher && (
+                  <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-1">
+                    <Lock className="w-3 h-3" /> Assigned Sem
+                  </span>
+                )}
               </label>
-              <select
-                value={formData.semester}
-                onChange={e => setFormData({ ...formData, semester: Number(e.target.value) })}
-                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none"
-              >
-                {[1, 2, 3, 4, 5, 6].map(sem => (
-                  <option key={sem} value={sem}>
-                    Semester {sem}
-                  </option>
-                ))}
-              </select>
+              {isTeacher ? (
+                <div className="w-full px-3.5 py-2.5 rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/60 dark:bg-indigo-950/40 text-xs font-bold text-indigo-900 dark:text-indigo-200 flex items-center justify-between shadow-sm">
+                  <span>Semester {teacherAssignedSemester}</span>
+                  <Lock className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 flex-shrink-0" />
+                </div>
+              ) : (
+                <select
+                  value={formData.semester}
+                  onChange={e => setFormData({ ...formData, semester: Number(e.target.value) })}
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none"
+                >
+                  {[1, 2, 3, 4, 5, 6].map(sem => (
+                    <option key={sem} value={sem}>
+                      Semester {sem}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
 
+            {/* Roll Number */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 BTEUP Roll Number *
@@ -369,10 +441,11 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
                 value={formData.rollNo}
                 onChange={e => setFormData({ ...formData, rollNo: e.target.value })}
                 placeholder="e.g. E224412355001"
-                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none font-mono"
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none font-mono font-bold"
               />
             </div>
 
+            {/* Enrollment Number */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Enrollment Number
@@ -386,6 +459,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
               />
             </div>
 
+            {/* Admission Year */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Admission Year
@@ -398,6 +472,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
               />
             </div>
 
+            {/* Academic Status */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                 Academic Status
@@ -475,7 +550,7 @@ export const AddEditStudentModal: React.FC<AddEditStudentModalProps> = ({
             type="submit"
             className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-lg shadow-blue-600/30"
           >
-            {student ? 'Save Changes' : 'Register Student'}
+            {student ? 'Save Changes' : (isTeacher ? `Enroll to ${teacherAssignedBranch.split(' ')[0]} Sem ${teacherAssignedSemester}` : 'Register Student')}
           </button>
         </div>
       </form>
