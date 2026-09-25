@@ -194,7 +194,7 @@ export const AICampusAssistant: React.FC<AICampusAssistantProps> = ({ onNavigate
           }}
           aria-label="Open AI Campus Assistant"
           title="Campus Chat Assistant & Message Desk"
-          className="w-14 h-14 rounded-full bg-[#0084FF] hover:bg-[#0073e6] text-white shadow-2xl shadow-blue-500/50 hover:scale-110 active:scale-95 transition-all duration-300 flex items-center justify-center border-2 border-white/20 group cursor-pointer"
+          className="w-14 h-14 rounded-full bg-[#0084FF] hover:bg-[#0073e6] text-white shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 flex items-center justify-center border-2 border-white/20 group cursor-pointer animate-chat-blink"
         >
           <MessageCircle className="w-7 h-7 fill-white/20 stroke-[2] group-hover:rotate-12 transition-transform duration-300" />
         </button>
