@@ -185,7 +185,7 @@ export const AICampusAssistant: React.FC<AICampusAssistantProps> = ({ onNavigate
 
   return (
     <>
-      {/* Floating Toggle Launcher Button */}
+      {/* Floating Toggle Launcher Button (Blue Circular Chat Button matching design) */}
       {!isOpen && (
         <button
           onClick={() => {
@@ -193,16 +193,10 @@ export const AICampusAssistant: React.FC<AICampusAssistantProps> = ({ onNavigate
             setIsMinimized(false);
           }}
           aria-label="Open AI Campus Assistant"
-          className="fixed bottom-6 right-6 z-50 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 text-white shadow-2xl hover:shadow-blue-500/50 hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 border border-white/30 group animate-bounce-subtle"
+          title="Campus Chat Assistant & Message Desk"
+          className="w-14 h-14 rounded-full bg-[#0084FF] hover:bg-[#0073e6] text-white shadow-2xl shadow-blue-500/50 hover:scale-110 active:scale-95 transition-all duration-300 flex items-center justify-center border-2 border-white/20 group cursor-pointer"
         >
-          <div className="relative">
-            <Bot className="w-6 h-6" />
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-white absolute -top-1 -right-1 animate-pulse" />
-          </div>
-          <div className="text-left hidden sm:block">
-            <div className="text-[11px] font-black uppercase tracking-wider text-amber-300">AI Campus Bot</div>
-            <div className="text-[10px] text-white/90 font-medium">24/7 हेल्पडेस्क (हिंदी/EN)</div>
-          </div>
+          <MessageCircle className="w-7 h-7 fill-white/20 stroke-[2] group-hover:rotate-12 transition-transform duration-300" />
         </button>
       )}
 
