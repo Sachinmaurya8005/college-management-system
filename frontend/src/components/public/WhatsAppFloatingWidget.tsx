@@ -104,7 +104,7 @@ export const WhatsAppFloatingWidget: React.FC<WhatsAppFloatingWidgetProps> = ({
         </div>
       )}
 
-      {/* Circular Glowing WhatsApp Button matching exact image design */}
+      {/* Top Green Circular WhatsApp Button */}
       <a
         href={createWhatsAppLink()}
         target="_blank"

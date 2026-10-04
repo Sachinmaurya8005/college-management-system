@@ -24,6 +24,7 @@ import { ImportantLinksPage } from './components/public/ImportantLinksPage';
 import { LocationContactPage } from './components/public/LocationContactPage';
 import { PlacementCellPage } from './components/public/PlacementCellPage';
 import { DigitalLibraryPage } from './components/public/DigitalLibraryPage';
+import { AICampusAssistant } from './components/common/AICampusAssistant';
 import { FloatingContactBar } from './components/public/FloatingContactBar';
 import { RealtimeLiveToastStream } from './components/common/RealtimeLiveToastStream';
 
