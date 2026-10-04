@@ -25,7 +25,7 @@ import { Student, AttendanceRecord, AttendanceSession } from '../../types';
 import { formatDate, exportToCSV } from '../../utils/helpers';
 import confetti from 'canvas-confetti';
 import { StudentProfileModal } from '../students/StudentProfileModal';
-import { HotelCalendarMatrixRegister } from './HotelCalendarMatrixRegister';
+import { CollegeCalendarMatrixRegister } from './CollegeCalendarMatrixRegister';
 import { GeoFencedSelfAttendanceModal } from './GeoFencedSelfAttendanceModal';
 
 export const AttendanceModule: React.FC = () => {
@@ -215,8 +215,8 @@ export const AttendanceModule: React.FC = () => {
         </button>
       </div>
 
-      {/* Tab 1: 31-Day Hotel/Enterprise Calendar Matrix Register */}
-      {activeTab === 'register' && <HotelCalendarMatrixRegister />}
+      {/* Tab 1: 31-Day College Calendar Matrix Register */}
+      {activeTab === 'register' && <CollegeCalendarMatrixRegister />}
 
       {/* Tab 2: Mark Class Lecture Attendance */}
       {activeTab === 'mark' && (

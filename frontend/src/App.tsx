@@ -24,7 +24,7 @@ import { ImportantLinksPage } from './components/public/ImportantLinksPage';
 import { LocationContactPage } from './components/public/LocationContactPage';
 import { PlacementCellPage } from './components/public/PlacementCellPage';
 import { DigitalLibraryPage } from './components/public/DigitalLibraryPage';
-import { AICampusAssistant } from './components/common/AICampusAssistant';
+import { FloatingContactBar } from './components/public/FloatingContactBar';
 import { RealtimeLiveToastStream } from './components/common/RealtimeLiveToastStream';
 
 // Portal Views
@@ -461,8 +461,8 @@ export const AppContent: React.FC = () => {
       {/* Real-time Live Activity Event Stream Toast */}
       <RealtimeLiveToastStream />
 
-      {/* 24/7 Intelligent AI Campus Assistant Helpdesk */}
-      <AICampusAssistant
+      {/* 24/7 Intelligent Floating WhatsApp & AI Campus Assistant Helpdesk */}
+      <FloatingContactBar
         onNavigate={(view) => {
           if (isInPortalMode) {
             navigateTo(view);

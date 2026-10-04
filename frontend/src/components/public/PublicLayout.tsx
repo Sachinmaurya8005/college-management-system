@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { PublicNavbar } from './PublicNavbar';
 import { PublicFooter } from './PublicFooter';
 import { useAuth } from '../../context/AuthContext';
-import { ArrowLeft, LogOut, QrCode } from 'lucide-react';
-import { CollegeOfficialQrModal } from '../common/CollegeOfficialQrModal';
+import { ArrowLeft, LogOut } from 'lucide-react';
 
 interface PublicLayoutProps {
   currentRoute: string;
@@ -19,7 +18,6 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({
   children
 }) => {
   const { user, isAuthenticated, logout } = useAuth();
-  const [qrModalOpen, setQrModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors">
@@ -67,7 +65,6 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({
         currentRoute={currentRoute}
         onNavigate={onNavigate}
         onReturnToPortal={onReturnToPortal}
-        onOpenQrModal={() => setQrModalOpen(true)}
       />
 
       {/* Main Page Content */}
@@ -78,13 +75,6 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({
       {/* Public Footer */}
       <PublicFooter
         onNavigate={onNavigate}
-        onOpenQrModal={() => setQrModalOpen(true)}
-      />
-
-      {/* Global College Official QR Code Modal */}
-      <CollegeOfficialQrModal
-        isOpen={qrModalOpen}
-        onClose={() => setQrModalOpen(false)}
       />
     </div>
   );

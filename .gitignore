@@ -62,3 +62,6 @@ Thumbs.db
 # Agent & Brain Scratch Data
 .system_generated/
 scratch/
+
+# Nested duplicate directory
+college-management-system/
