@@ -22,11 +22,13 @@ import {
   GraduationCap,
   Briefcase,
   ShieldCheck,
-  ArrowLeft
+  ArrowLeft,
+  QrCode
 } from 'lucide-react';
 import { CollegeLogo } from '../common/CollegeLogo';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
+import { CollegeOfficialQrModal } from '../common/CollegeOfficialQrModal';
 
 interface PublicNavbarProps {
   currentRoute: string;
@@ -42,6 +44,7 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
   const NAV_LINKS = [
     { id: 'home', label: 'Home', icon: Home },
@@ -160,6 +163,16 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({
           {/* Action CTAs: Portal Login or Return to Portal */}
           <div className="flex items-center gap-2">
 
+            {/* Google Pay / UPI Official QR Trigger Button */}
+            <button
+              onClick={() => setIsQrModalOpen(true)}
+              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white text-xs font-black shadow-lg shadow-emerald-600/30 ring-1 ring-white/20 transition-all flex items-center gap-1.5 active:scale-95 animate-pulse"
+              title="Google Pay & BHIM UPI QR Code for instant fee payment"
+            >
+              <QrCode className="w-4 h-4 text-emerald-200" />
+              <span>GPay QR (फीस जमा)</span>
+            </button>
+
             {isAuthenticated && user ? (
               <div className="flex items-center gap-2">
                 <button
@@ -237,6 +250,12 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({
           })}
         </div>
       )}
+
+      {/* Official College Google Pay & BHIM UPI Reality QR Modal */}
+      <CollegeOfficialQrModal
+        isOpen={isQrModalOpen}
+        onClose={() => setIsQrModalOpen(false)}
+      />
     </header>
   );
 };

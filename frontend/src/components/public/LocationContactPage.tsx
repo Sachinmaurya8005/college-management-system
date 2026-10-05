@@ -102,6 +102,14 @@ export const LocationContactPage: React.FC = () => {
             <Navigation className="w-4 h-4" />
             <span>Get Directions</span>
           </a>
+          <button
+            type="button"
+            onClick={() => setQrModalOpen(true)}
+            className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white text-xs font-black shadow-lg shadow-emerald-600/30 transition-all flex items-center gap-1.5 active:scale-95 animate-pulse"
+          >
+            <QrCode className="w-4 h-4 text-emerald-200" />
+            <span>Official Google Pay &amp; UPI QR</span>
+          </button>
         </div>
       </div>
 
@@ -233,6 +241,12 @@ export const LocationContactPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Official College Google Pay & UPI QR Modal */}
+      <CollegeOfficialQrModal
+        isOpen={qrModalOpen}
+        onClose={() => setQrModalOpen(false)}
+      />
     </div>
   );
 };

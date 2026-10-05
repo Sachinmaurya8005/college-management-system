@@ -99,6 +99,7 @@ export interface CollegeBankAccount {
   availableBalance: number;
   treasuryCode: string;
   lastUpdated: string;
+  upiId?: string;
 }
 
 export interface SalaryDisbursementRecord {
