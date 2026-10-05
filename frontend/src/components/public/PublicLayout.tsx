@@ -1,6 +1,7 @@
 import React from 'react';
 import { PublicNavbar } from './PublicNavbar';
 import { PublicFooter } from './PublicFooter';
+import { FloatingContactBar } from './FloatingContactBar';
 import { useAuth } from '../../context/AuthContext';
 import { ArrowLeft, LogOut } from 'lucide-react';
 
@@ -76,6 +77,9 @@ export const PublicLayout: React.FC<PublicLayoutProps> = ({
       <PublicFooter
         onNavigate={onNavigate}
       />
+
+      {/* 24/7 Intelligent Floating WhatsApp & AI Campus Assistant Helpdesk on Public Website */}
+      <FloatingContactBar onNavigate={onNavigate} />
     </div>
   );
 };
