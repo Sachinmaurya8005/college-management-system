@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal } from '../common/Modal';
 import { PRINCIPAL_DETAILS } from '../../data/mockData';
+import { usePrincipalInfo } from '../../hooks/usePrincipalInfo';
 import {
   Award,
   BookOpen,
@@ -27,7 +28,15 @@ export const PrincipalProfileModal: React.FC<PrincipalProfileModalProps> = ({
   isOpen,
   onClose
 }) => {
-  const p = PRINCIPAL_DETAILS;
+  const principal = usePrincipalInfo();
+  const p = {
+    ...PRINCIPAL_DETAILS,
+    name: principal.name,
+    mobile: principal.phone,
+    email: principal.email,
+    photoUrl: principal.photoUrl,
+    designation: principal.designation
+  };
 
   return (
     <Modal

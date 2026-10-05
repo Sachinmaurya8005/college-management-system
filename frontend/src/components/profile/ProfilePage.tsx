@@ -95,13 +95,34 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate, onGoToPubl
 
     updateUser(formData);
 
-    // If admin/principal updates name or photo, sync with official College Settings and Website Content
+    // If admin/principal updates name, phone or photo, sync with official College Settings and Website Content
     if (user?.role === 'admin') {
-      updateSettings({ principalName: formData.name });
+      updateSettings({ 
+        principalName: formData.name,
+        principalPhone: formData.phone
+      });
+      try {
+        localStorage.setItem('gpb_principal_phone', formData.phone);
+      } catch (e) {}
+
       websiteContentService.updateAboutCollege({
         principal_name: formData.name,
+        principal_phone: formData.phone,
         principal_photo: formData.avatar
       });
+
+      if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+        const bc = new BroadcastChannel('gpb_realtime_broadcast_channel');
+        bc.postMessage({ 
+          type: 'PRINCIPAL_UPDATED',
+          payload: {
+            name: formData.name,
+            phone: formData.phone,
+            photo: formData.avatar
+          }
+        });
+        bc.close();
+      }
     }
 
     setIsEditing(false);

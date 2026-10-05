@@ -234,6 +234,7 @@ export const DEFAULT_ABOUT: AboutCollegeData = {
   vision: 'To emerge as a benchmark institution in technical education, practical skill competence, and innovation, empowering students from all socioeconomic strata to become globally competitive engineers and entrepreneurs.',
   mission: 'To deliver rigorous industry-aligned engineering curricula, hands-on workshop training, and moral ethics, ensuring high employability and sustainable nation-building.',
   principal_name: 'Er. Sachin Maurya',
+  principal_phone: '+91 94150 24510',
   principal_message: 'Technical education is the cornerstone of industrial transformation and self-reliance. At Government Polytechnic Bansdih, Ballia, we are committed to providing top-tier academic discipline, modern laboratory experiences, and career development to every student.',
   principal_photo: '/principal_sachin_maurya.jpg',
   achievements: [

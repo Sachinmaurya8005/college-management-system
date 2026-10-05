@@ -359,6 +359,7 @@ export interface CollegeSettings {
   email: string;
   website: string;
   principalName: string;
+  principalPhone?: string;
   establishedYear: number;
   customLogoUrl?: string;
 }
@@ -430,6 +431,7 @@ export interface AboutCollegeData {
   vision: string;
   mission: string;
   principal_name: string;
+  principal_phone?: string;
   principal_message: string;
   principal_photo: string;
   achievements: string[];

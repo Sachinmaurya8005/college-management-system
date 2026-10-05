@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCollegeData } from '../../context/CollegeDataContext';
-import { PRINCIPAL_DETAILS } from '../../data/mockData';
+import { usePrincipalInfo } from '../../hooks/usePrincipalInfo';
 
 interface Message {
   id: string;
@@ -38,6 +38,7 @@ interface AICampusAssistantProps {
 export const AICampusAssistant: React.FC<AICampusAssistantProps> = ({ onNavigate }) => {
   const { user } = useAuth();
   const { courses, notices, fees } = useCollegeData();
+  const principal = usePrincipalInfo();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -92,11 +93,11 @@ export const AICampusAssistant: React.FC<AICampusAssistantProps> = ({ onNavigate
       };
     }
 
-    if (q.includes('principal') || q.includes('प्रिंसिपल') || q.includes('head') || q.includes('rc srivastava') || q.includes('प्राचार्य')) {
+    if (q.includes('principal') || q.includes('प्रिंसिपल') || q.includes('head') || q.includes('प्राचार्य') || q.includes('contact')) {
       return {
-        text: `👨‍🏫 हमारे संस्थान के प्राचार्य:\n\n• नाम: ${PRINCIPAL_DETAILS.name}\n• पद: ${PRINCIPAL_DETAILS.designation}\n• योग्यता: ${PRINCIPAL_DETAILS.qualification}\n• अनुभव: ${PRINCIPAL_DETAILS.experienceYears}+ वर्ष (प्राविधिक शिक्षा विभाग, उप्र)\n• ईमेल: ${PRINCIPAL_DETAILS.email}\n• फोन: ${PRINCIPAL_DETAILS.mobile}\n• चैंबर: प्रशासनिक ब्लॉक, ।`,
-        suggestions: ['📋 फैकल्टी सूची', '🏢 कॉलेज लोकेशन', '📢 हालिया सूचनाएं'],
-        actionLink: { label: 'View Principal Dossier', view: 'faculty' }
+        text: `👨‍🏫 हमारे संस्थान के वर्तमान प्राचार्य:\n\n• नाम: ${principal.name}\n• पद: ${principal.designation}\n• ईमेल: ${principal.email}\n• फोन / व्हाट्सएप: ${principal.phone}\n• चैंबर: प्रशासनिक ब्लॉक, राजकीय पॉलिटेक्निक।\n\nआप सीधे नीचे दिए गए फ्लोटिंग व्हाट्सएप बटन पर क्लिक करके प्राचार्य महोदय से सीधी बातचीत कर सकते हैं।`,
+        suggestions: ['💬 व्हाट्सएप पर संदेश भेजें', '📋 फैकल्टी सूची', '🏢 कॉलेज लोकेशन व मैप'],
+        actionLink: { label: 'View Faculty Directory', view: 'faculty' }
       };
     }
 

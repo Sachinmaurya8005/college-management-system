@@ -332,13 +332,32 @@ export const WebsiteContentManager: React.FC = () => {
       await updateSettings({
         collegeName: aboutForm.college_name,
         hindiName: aboutForm.hindi_name,
-        principalName: aboutForm.principal_name
+        principalName: aboutForm.principal_name,
+        principalPhone: aboutForm.principal_phone
       });
+      if (aboutForm.principal_phone) {
+        try {
+          localStorage.setItem('gpb_principal_phone', aboutForm.principal_phone);
+        } catch (e) {}
+      }
       if (user?.role === 'admin') {
         updateUser({
           avatar: aboutForm.principal_photo,
-          name: aboutForm.principal_name
+          name: aboutForm.principal_name,
+          phone: aboutForm.principal_phone || user.phone
         });
+      }
+      if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+        const bc = new BroadcastChannel('gpb_realtime_broadcast_channel');
+        bc.postMessage({
+          type: 'PRINCIPAL_UPDATED',
+          payload: {
+            name: aboutForm.principal_name,
+            phone: aboutForm.principal_phone,
+            photo: aboutForm.principal_photo
+          }
+        });
+        bc.close();
       }
       confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
       setSaveSuccess(true);
@@ -783,6 +802,23 @@ export const WebsiteContentManager: React.FC = () => {
                     onChange={e => setAboutForm({ ...aboutForm, principal_name: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-blue-300 dark:border-blue-700 bg-blue-50/40 dark:bg-blue-950/20 outline-none font-bold text-blue-600 dark:text-blue-400"
                   />
+                </div>
+
+                <div>
+                  <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">
+                    Principal Contact / WhatsApp Number (प्राचार्य मोबाइल / व्हाट्सएप नंबर) *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="+91 94150 24510"
+                    value={aboutForm.principal_phone || ''}
+                    onChange={e => setAboutForm({ ...aboutForm, principal_phone: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-emerald-300 dark:border-emerald-700 bg-emerald-50/40 dark:bg-emerald-950/20 outline-none font-bold text-emerald-600 dark:text-emerald-400 font-mono"
+                  />
+                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 mt-1 block">
+                    ⚡ यह नंबर पब्लिक वेबसाइट पर फ्लोटिंग व्हाट्सएप हेल्पडेस्क से लाइव जुड़ा है।
+                  </span>
                 </div>
 
                 <div>

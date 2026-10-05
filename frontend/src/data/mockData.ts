@@ -71,6 +71,7 @@ export const INITIAL_SETTINGS: CollegeSettings = {
   email: "principal.gpbansdih@gmail.com",
   website: "https://gpbansdih.up.gov.in",
   principalName: "Er. Sachin Maurya",
+  principalPhone: "+91 94150 24510",
   establishedYear: 2013,
   customLogoUrl: ""
 };
