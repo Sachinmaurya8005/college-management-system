@@ -42,7 +42,7 @@ class Student(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='General')
     blood_group = models.CharField(max_length=10, blank=True, default='B+')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Active')
-    photo_url = models.URLField(max_length=500, blank=True)
+    photo_url = models.TextField(blank=True)
     attendance_percentage = models.FloatField(default=85.0)
     fee_status = models.CharField(max_length=20, choices=FEE_STATUS_CHOICES, default='Pending')
 

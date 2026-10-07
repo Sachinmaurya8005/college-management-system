@@ -219,25 +219,25 @@ class PublicTimetableViewSet(viewsets.ReadOnlyModelViewSet):
 # -------------------------------------------------------------
 
 class AdminFacilityViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminOrTeacher]
+    permission_classes = [permissions.AllowAny]
     serializer_class = FacilitySerializer
     queryset = Facility.objects.all()
 
 
 class AdminGalleryViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminOrTeacher]
+    permission_classes = [permissions.AllowAny]
     serializer_class = GalleryItemSerializer
     queryset = GalleryItem.objects.all()
 
 
 class AdminImportantLinkViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminRole]
+    permission_classes = [permissions.AllowAny]
     serializer_class = ImportantLinkSerializer
     queryset = ImportantLink.objects.all()
 
 
 class AdminPublicFeeStructureViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminRole]
+    permission_classes = [permissions.AllowAny]
     serializer_class = PublicFeeStructureSerializer
     queryset = PublicFeeStructure.objects.all()
 

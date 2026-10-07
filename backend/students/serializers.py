@@ -13,6 +13,7 @@ class StudentSerializer(serializers.ModelSerializer):
     photoUrl = serializers.CharField(source='photo_url', required=False, allow_blank=True)
     attendancePercentage = serializers.FloatField(source='attendance_percentage', required=False)
     feeStatus = serializers.CharField(source='fee_status', required=False)
+    email = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         model = Student
@@ -25,6 +26,16 @@ class StudentSerializer(serializers.ModelSerializer):
             'photo_url', 'photoUrl', 'attendance_percentage', 'attendancePercentage',
             'fee_status', 'feeStatus', 'created_at', 'updated_at'
         ]
+
+    def to_internal_value(self, data):
+        data = data.copy() if hasattr(data, 'copy') else dict(data)
+        if 'dob' in data and not data['dob']:
+            data['dob'] = None
+        if 'date_of_birth' in data and not data['date_of_birth']:
+            data['date_of_birth'] = None
+        if 'email' in data and not data['email']:
+            data['email'] = ''
+        return super().to_internal_value(data)
 
     def create(self, validated_data):
         if not validated_data.get('student_id'):
