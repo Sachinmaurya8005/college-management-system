@@ -74,6 +74,22 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
     }
   }, [student, isOpen]);
 
+  // Parse formData.dob (YYYY-MM-DD) into Day, Month, Year
+  const [profileDobYear, profileDobMonth, profileDobDay] = (() => {
+    if (formData.dob && formData.dob.includes('-')) {
+      const parts = formData.dob.split('-');
+      if (parts.length === 3) {
+        return [parts[0], parts[1].padStart(2, '0'), parts[2].padStart(2, '0')];
+      }
+    }
+    return ['2004', '05', '14'];
+  })();
+
+  const handleProfileDobChange = (d: string, m: string, y: string) => {
+    const formattedIso = `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+    setFormData(prev => ({ ...prev, dob: formattedIso }));
+  };
+
   if (!student) return null;
 
   const studentFee = fees.find(f => f.studentId === student.id || f.rollNo === student.rollNo);
@@ -296,17 +312,67 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
                     />
                   </div>
 
-                  <div>
-                    <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
-                      Date of Birth (DOB) (जन्मतिथि)
-                    </label>
-                    <input
-                      type="date"
-                      required
-                      value={formData.dob || ''}
-                      onChange={e => setFormData({ ...formData, dob: e.target.value })}
-                      className="w-full px-3 py-2 rounded-xl border bg-white dark:bg-slate-900 focus:ring-2 focus:ring-blue-600 outline-none font-mono"
-                    />
+                  {/* Day / Month / Year (DD / MM / YYYY) DOB Selector */}
+                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                        <Calendar className="w-4 h-4 text-blue-600" />
+                        <span>Date of Birth (DOB) (जन्मतिथि) *</span>
+                      </label>
+                      <span className="text-[11px] font-mono font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-2 py-0.5 rounded-lg border border-blue-200 dark:border-blue-800">
+                        {profileDobDay}/{profileDobMonth}/{profileDobYear} (DD/MM/YYYY)
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2">
+                      <div>
+                        <span className="text-[10px] text-slate-500 block mb-1 font-semibold">1. Day (दिन - DD)</span>
+                        <select
+                          value={profileDobDay}
+                          onChange={e => handleProfileDobChange(e.target.value, profileDobMonth, profileDobYear)}
+                          className="w-full px-2 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold outline-none focus:ring-2 focus:ring-blue-600"
+                        >
+                          {Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0')).map(d => (
+                            <option key={d} value={d}>{d}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div>
+                        <span className="text-[10px] text-slate-500 block mb-1 font-semibold">2. Month (माह - MM)</span>
+                        <select
+                          value={profileDobMonth}
+                          onChange={e => handleProfileDobChange(profileDobDay, e.target.value, profileDobYear)}
+                          className="w-full px-2 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold outline-none focus:ring-2 focus:ring-blue-600"
+                        >
+                          <option value="01">01 - Jan (जनवरी)</option>
+                          <option value="02">02 - Feb (फ़रवरी)</option>
+                          <option value="03">03 - Mar (मार्च)</option>
+                          <option value="04">04 - Apr (अप्रैल)</option>
+                          <option value="05">05 - May (मई)</option>
+                          <option value="06">06 - Jun (जून)</option>
+                          <option value="07">07 - Jul (जुलाई)</option>
+                          <option value="08">08 - Aug (अगस्त)</option>
+                          <option value="09">09 - Sep (सितंबर)</option>
+                          <option value="10">10 - Oct (अक्टूबर)</option>
+                          <option value="11">11 - Nov (नवंबर)</option>
+                          <option value="12">12 - Dec (दिसंबर)</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <span className="text-[10px] text-slate-500 block mb-1 font-semibold">3. Year (वर्ष - YYYY)</span>
+                        <select
+                          value={profileDobYear}
+                          onChange={e => handleProfileDobChange(profileDobDay, profileDobMonth, e.target.value)}
+                          className="w-full px-2 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold outline-none focus:ring-2 focus:ring-blue-600 font-mono"
+                        >
+                          {Array.from({ length: 25 }, (_, i) => String(1995 + i)).map(y => (
+                            <option key={y} value={y}>{y}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
                   </div>
 
                   <div>

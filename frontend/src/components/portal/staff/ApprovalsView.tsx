@@ -13,7 +13,8 @@ import {
   Sparkles,
   Search,
   Check,
-  X
+  X,
+  Calendar
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { approvalService, StaffApprovalRequest } from '../../../services/approvalService';
@@ -51,6 +52,22 @@ export const ApprovalsView: React.FC = () => {
     fee_status: 'Pending',
     description: 'Requesting registration for newly admitted student.'
   });
+
+  // Parse newStudentForm.date_of_birth into Day, Month, Year (DD/MM/YYYY)
+  const [newStudentDobYear, newStudentDobMonth, newStudentDobDay] = (() => {
+    if (newStudentForm.date_of_birth && newStudentForm.date_of_birth.includes('-')) {
+      const parts = newStudentForm.date_of_birth.split('-');
+      if (parts.length === 3) {
+        return [parts[0], parts[1].padStart(2, '0'), parts[2].padStart(2, '0')];
+      }
+    }
+    return ['2005', '06', '15'];
+  })();
+
+  const handleNewStudentDobChange = (d: string, m: string, y: string) => {
+    const formattedIso = `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+    setNewStudentForm(prev => ({ ...prev, date_of_birth: formattedIso }));
+  };
 
   // Fee Update Form
   const [feeUpdateForm, setFeeUpdateForm] = useState({
@@ -403,15 +420,67 @@ export const ApprovalsView: React.FC = () => {
                   />
                 </div>
 
-                <div>
-                  <label className="block font-semibold mb-1">Date of Birth (DOB) *</label>
-                  <input
-                    type="date"
-                    required
-                    value={newStudentForm.date_of_birth}
-                    onChange={e => setNewStudentForm({ ...newStudentForm, date_of_birth: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 outline-none"
-                  />
+                {/* Day / Month / Year (DD / MM / YYYY) DOB Selector */}
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                      <Calendar className="w-4 h-4 text-blue-600" />
+                      <span>Date of Birth (DOB) • जन्मतिथि (Day / Month / Year) *</span>
+                    </label>
+                    <span className="text-[11px] font-mono font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-2.5 py-0.5 rounded-lg border border-blue-200 dark:border-blue-800">
+                      {newStudentDobDay}/{newStudentDobMonth}/{newStudentDobYear} (DD/MM/YYYY)
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2">
+                    <div>
+                      <span className="text-[10px] text-slate-500 block mb-1 font-semibold">1. Day (दिन - DD)</span>
+                      <select
+                        value={newStudentDobDay}
+                        onChange={e => handleNewStudentDobChange(e.target.value, newStudentDobMonth, newStudentDobYear)}
+                        className="w-full px-2.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold outline-none focus:ring-2 focus:ring-blue-600"
+                      >
+                        {Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0')).map(d => (
+                          <option key={d} value={d}>{d}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <span className="text-[10px] text-slate-500 block mb-1 font-semibold">2. Month (माह - MM)</span>
+                      <select
+                        value={newStudentDobMonth}
+                        onChange={e => handleNewStudentDobChange(newStudentDobDay, e.target.value, newStudentDobYear)}
+                        className="w-full px-2.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold outline-none focus:ring-2 focus:ring-blue-600"
+                      >
+                        <option value="01">01 - Jan (जनवरी)</option>
+                        <option value="02">02 - Feb (फ़रवरी)</option>
+                        <option value="03">03 - Mar (मार्च)</option>
+                        <option value="04">04 - Apr (अप्रैल)</option>
+                        <option value="05">05 - May (मई)</option>
+                        <option value="06">06 - Jun (जून)</option>
+                        <option value="07">07 - Jul (जुलाई)</option>
+                        <option value="08">08 - Aug (अगस्त)</option>
+                        <option value="09">09 - Sep (सितंबर)</option>
+                        <option value="10">10 - Oct (अक्टूबर)</option>
+                        <option value="11">11 - Nov (नवंबर)</option>
+                        <option value="12">12 - Dec (दिसंबर)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <span className="text-[10px] text-slate-500 block mb-1 font-semibold">3. Year (वर्ष - YYYY)</span>
+                      <select
+                        value={newStudentDobYear}
+                        onChange={e => handleNewStudentDobChange(newStudentDobDay, newStudentDobMonth, e.target.value)}
+                        className="w-full px-2.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold outline-none focus:ring-2 focus:ring-blue-600 font-mono"
+                      >
+                        {Array.from({ length: 25 }, (_, i) => String(1995 + i)).map(y => (
+                          <option key={y} value={y}>{y}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
