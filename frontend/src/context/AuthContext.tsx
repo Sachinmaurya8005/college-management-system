@@ -339,14 +339,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const newAbout = {
           ...parsedAbout,
           principal_name: updated.name || parsedAbout.principal_name || 'Er. Sachin Maurya',
-          principal_photo: updated.avatar || parsedAbout.principal_photo || 'https://images.unsplash.com/principal_sachin_maurya.jpg?w=400&h=400&fit=crop&crop=faces'
+          principal_photo: updated.avatar || parsedAbout.principal_photo || '/principal_sachin_maurya.jpg',
+          principal_phone: updated.phone || parsedAbout.principal_phone || '+91 94150 24510',
+          principal_message: (updated as any).bio || parsedAbout.principal_message || 'Our mission is to foster technical excellence, practical workshop competence, and disciplined leadership in every diploma engineer.'
         };
         localStorage.setItem('gpb_public_about', JSON.stringify(newAbout));
 
-        if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
-          const bc = new BroadcastChannel('gpb_realtime_broadcast_channel');
-          bc.postMessage({ type: 'PUBLIC_CONTENT_UPDATED', payload: newAbout });
-          bc.close();
+        if (typeof window !== 'undefined') {
+          if ('BroadcastChannel' in window) {
+            const bc = new BroadcastChannel('gpb_realtime_broadcast_channel');
+            bc.postMessage({ type: 'PUBLIC_CONTENT_UPDATED', payload: newAbout });
+            bc.close();
+          }
+          window.dispatchEvent(new Event('storage'));
+          window.dispatchEvent(new CustomEvent('principal-updated', { detail: newAbout }));
         }
       } catch (e) {}
     }

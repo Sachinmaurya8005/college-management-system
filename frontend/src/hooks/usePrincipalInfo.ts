@@ -41,16 +41,25 @@ export function usePrincipalInfo(): PrincipalInfo {
       directPhone = localStorage.getItem('gpb_principal_phone') || '';
     } catch (e) {}
 
-    // 3. Admin user profile if logged in
+    // 3. Admin user profile if logged in or stored in session
     const adminUser = user?.role === 'admin' ? user : null;
+    let savedAdmin: any = null;
+    try {
+      const rawUser = localStorage.getItem('gpb_portal_user');
+      if (rawUser) {
+        const u = JSON.parse(rawUser);
+        if (u?.role === 'admin') savedAdmin = u;
+      }
+    } catch (e) {}
+    const activeAdmin = adminUser || savedAdmin;
 
     // Harmonize fields with prioritizations
-    const name = publicName || adminUser?.name || settings.principalName || PRINCIPAL_DETAILS.name;
-    const phone = directPhone || publicPhone || adminUser?.phone || settings.principalPhone || PRINCIPAL_DETAILS.mobile;
-    const email = (adminUser?.email && adminUser.email.includes('@')) ? adminUser.email : settings.email || PRINCIPAL_DETAILS.email;
-    const photoUrl = publicPhoto || adminUser?.avatar || PRINCIPAL_DETAILS.photoUrl;
-    const designation = adminUser?.designation || PRINCIPAL_DETAILS.designation;
-    const bio = publicMessage || PRINCIPAL_DETAILS.bio;
+    const name = activeAdmin?.name || publicName || settings.principalName || PRINCIPAL_DETAILS.name;
+    const phone = directPhone || publicPhone || activeAdmin?.phone || settings.principalPhone || PRINCIPAL_DETAILS.mobile;
+    const email = (activeAdmin?.email && activeAdmin.email.includes('@')) ? activeAdmin.email : settings.email || PRINCIPAL_DETAILS.email;
+    const photoUrl = activeAdmin?.avatar || publicPhoto || PRINCIPAL_DETAILS.photoUrl;
+    const designation = activeAdmin?.designation || PRINCIPAL_DETAILS.designation;
+    const bio = publicMessage || activeAdmin?.bio || PRINCIPAL_DETAILS.bio;
 
     return {
       name,
@@ -82,9 +91,10 @@ export function usePrincipalInfo(): PrincipalInfo {
       bc.addEventListener('message', handleBroadcast);
     }
 
-    // Storage event for other tabs/local modifications
+    // Storage event for other tabs/local modifications and custom intra-tab sync
     const handleStorage = () => setPrincipalInfo(getLatestInfo());
     window.addEventListener('storage', handleStorage);
+    window.addEventListener('principal-updated', handleStorage);
 
     return () => {
       if (bc) {
@@ -92,6 +102,7 @@ export function usePrincipalInfo(): PrincipalInfo {
         bc.close();
       }
       window.removeEventListener('storage', handleStorage);
+      window.removeEventListener('principal-updated', handleStorage);
     };
   }, [user, settings]);
 

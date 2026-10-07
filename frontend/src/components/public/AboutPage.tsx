@@ -15,8 +15,10 @@ import {
 import { publicService } from '../../services/publicService';
 import { AboutCollegeData } from '../../types';
 import { CollegeLogo } from '../common/CollegeLogo';
+import { usePrincipalInfo } from '../../hooks/usePrincipalInfo';
 
 export const AboutPage: React.FC = () => {
+  const principal = usePrincipalInfo();
   const [about, setAbout] = useState<AboutCollegeData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -135,26 +137,29 @@ export const AboutPage: React.FC = () => {
           <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-polytechnic-950 to-slate-900 text-white border border-polytechnic-800 shadow-xl space-y-5">
             <div className="text-center space-y-3">
               <img
-                src={about?.principal_photo || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces'}
-                alt="Principal"
+                src={principal.photoUrl || about?.principal_photo || '/principal_sachin_maurya.jpg'}
+                alt={principal.name || 'Principal'}
                 className="w-32 h-32 rounded-3xl object-cover ring-4 ring-amber-400/50 shadow-2xl mx-auto"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/principal_sachin_maurya.jpg';
+                }}
               />
               <div>
                 <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest block">
                   Principal &amp; Head of Institution
                 </span>
                 <h3 className="text-lg font-extrabold text-white">
-                  {about?.principal_name || 'Er. Sachin Maurya'}
+                  {principal.name || about?.principal_name || 'Er. Sachin Maurya'}
                 </h3>
                 <p className="text-xs text-blue-300">
-                  Government Polytechnic
+                  {principal.designation || 'Principal & Chief Administrator'}
                 </p>
               </div>
             </div>
 
             <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-blue-100/90 leading-relaxed italic space-y-2">
               <p>
-                "{about?.principal_message ||
+                "{principal.bio || about?.principal_message ||
                   'Welcome to Government Polytechnic Bansdih, Ballia. Our institution is dedicated to building robust technical foundation, practical engineering skills, and career opportunities for our diploma students under BTEUP curriculum.'}"
               </p>
               <p>

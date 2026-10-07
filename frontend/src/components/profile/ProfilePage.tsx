@@ -24,6 +24,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useCollegeData } from '../../context/CollegeDataContext';
 import { websiteContentService } from '../../services/websiteContentService';
+import { apiClient } from '../../services/api';
 import { formatDate } from '../../utils/helpers';
 import { Globe, ArrowLeft } from 'lucide-react';
 
@@ -53,22 +54,34 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate, onGoToPubl
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
 
+  // Read existing about/bio from storage if available
+  const currentAbout = (() => {
+    try {
+      const raw = localStorage.getItem('gpb_public_about');
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  })();
+
   const [formData, setFormData] = useState({
-    name: user?.name || '',
+    name: user?.name || currentAbout?.principal_name || 'Er. Sachin Maurya',
     email: user?.email || '',
-    phone: user?.phone || '+91 94150 24510',
-    designation: user?.designation || (user?.role === 'admin' ? 'Principal & Administrator' : user?.role === 'teacher' ? 'Lecturer' : 'Diploma Student'),
+    phone: user?.phone || currentAbout?.principal_phone || '+91 94150 24510',
+    designation: user?.designation || (user?.role === 'admin' ? 'Principal & Chief Administrator' : user?.role === 'teacher' ? 'Lecturer' : 'Diploma Student'),
     department: user?.department || (user?.role === 'student' ? user?.branch || 'Computer Science' : 'Administration'),
-    avatar: user?.avatar || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces'
+    avatar: user?.avatar || currentAbout?.principal_photo || '/principal_sachin_maurya.jpg',
+    bio: currentAbout?.principal_message || (user as any)?.bio || 'Our mission is to foster technical excellence, practical workshop competence, and disciplined leadership in every diploma engineer.'
   });
 
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   // Suggested high quality profile photo presets
   const AVATAR_PRESETS = [
-    { label: 'Principal (Academician Male 1)', url: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces' },
-    { label: 'Principal (Academician Male 2)', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=faces' },
-    { label: 'Principal (Academician Male 3)', url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=faces' },
+    { label: 'Er. Sachin Maurya (Official Photo)', url: '/principal_sachin_maurya.jpg' },
+    { label: 'Academician Male 1', url: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop&crop=faces' },
+    { label: 'Academician Male 2', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=faces' },
+    { label: 'Academician Male 3', url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=faces' },
     { label: 'Professor Female', url: 'https://images.unsplash.com/photo-1580894732444-8ecded7900cd?w=200&h=200&fit=crop&crop=faces' },
     { label: 'Student Male', url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&h=200&fit=crop&crop=faces' },
     { label: 'Student Female', url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=faces' },
@@ -95,7 +108,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate, onGoToPubl
 
     updateUser(formData);
 
-    // If admin/principal updates name, phone or photo, sync with official College Settings and Website Content
+    // If admin/principal updates name, phone, photo or bio, sync with official College Settings and Website Content
     if (user?.role === 'admin') {
       updateSettings({ 
         principalName: formData.name,
@@ -108,20 +121,41 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate, onGoToPubl
       websiteContentService.updateAboutCollege({
         principal_name: formData.name,
         principal_phone: formData.phone,
-        principal_photo: formData.avatar
+        principal_photo: formData.avatar,
+        principal_message: formData.bio
       });
 
-      if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
-        const bc = new BroadcastChannel('gpb_realtime_broadcast_channel');
-        bc.postMessage({ 
-          type: 'PRINCIPAL_UPDATED',
-          payload: {
+      // Update core settings via API
+      try {
+        apiClient.patch('/core/settings/', {
+          principal_name: formData.name,
+          phone: formData.phone
+        }).catch(() => {});
+      } catch (e) {}
+
+      if (typeof window !== 'undefined') {
+        if ('BroadcastChannel' in window) {
+          const bc = new BroadcastChannel('gpb_realtime_broadcast_channel');
+          bc.postMessage({ 
+            type: 'PRINCIPAL_UPDATED',
+            payload: {
+              name: formData.name,
+              phone: formData.phone,
+              photo: formData.avatar,
+              bio: formData.bio
+            }
+          });
+          bc.close();
+        }
+        window.dispatchEvent(new Event('storage'));
+        window.dispatchEvent(new CustomEvent('principal-updated', {
+          detail: {
             name: formData.name,
             phone: formData.phone,
-            photo: formData.avatar
+            photo: formData.avatar,
+            bio: formData.bio
           }
-        });
-        bc.close();
+        }));
       }
     }
 
@@ -382,7 +416,38 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate, onGoToPubl
                     className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                    Designation / Title
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.designation}
+                    onChange={e => setFormData({ ...formData, designation: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs focus:ring-2 focus:ring-blue-600 outline-none"
+                  />
+                </div>
               </div>
+
+              {user?.role === 'admin' && (
+                <div className="space-y-1.5 p-4 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-900/50">
+                  <label className="block text-xs font-bold text-slate-800 dark:text-slate-200">
+                    Principal's Desk Message / Bio (प्राचार्य संदेश एवं वक्तव्य) *
+                  </label>
+                  <p className="text-[11px] text-slate-500">
+                    यह संदेश पब्लिक वेबसाइट के होमपेज, अबाउट पेज एवं आधिकारिक पोर्टल पर लाइव प्रदर्शित होता है।
+                  </p>
+                  <textarea
+                    rows={4}
+                    required
+                    value={formData.bio}
+                    onChange={e => setFormData({ ...formData, bio: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-amber-300 dark:border-amber-800 bg-white dark:bg-slate-900 text-xs focus:ring-2 focus:ring-amber-500 outline-none resize-none leading-relaxed text-slate-800 dark:text-slate-200"
+                    placeholder="Enter official principal message..."
+                  />
+                </div>
+              )}
 
               {/* Action Buttons */}
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
@@ -497,6 +562,20 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate, onGoToPubl
                 <strong className="text-slate-900 dark:text-white text-xs block">{settings.collegeName}</strong>
                 <span className="text-slate-500">BTEUP Code: {settings.bteupCode} • Uttar Pradesh (U.P.)</span>
               </div>
+
+              {user?.role === 'admin' && (
+                <div className="sm:col-span-2 p-4 rounded-2xl bg-gradient-to-br from-polytechnic-950 via-slate-900 to-indigo-950 text-white border border-polytechnic-800 shadow-md space-y-2">
+                  <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" /> From the Principal's Desk (Public Website Live Preview)
+                  </span>
+                  <p className="text-xs text-blue-100/95 leading-relaxed italic">
+                    "{formData.bio || currentAbout?.principal_message || 'Technical education is the cornerstone of industrial transformation and self-reliance.'}"
+                  </p>
+                  <div className="text-[10px] text-blue-300 font-medium">
+                    ⚡ यह संदेश एवं फोटो पब्लिक होमपेज, अबाउट पेज एवं आधिकारिक पोर्टल पर लाइव कनेक्टेड है।
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

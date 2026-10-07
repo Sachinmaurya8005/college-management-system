@@ -308,10 +308,11 @@ function getStorage<T>(key: string, fallback: T): T {
 
 export const publicService = {
   getHomeOverview: async (): Promise<PublicHomePayload> => {
+    let payload: PublicHomePayload | null = null;
     try {
       const res = await apiClient.get<PublicHomePayload>('/public/home/');
       if (isObjectPayload<PublicHomePayload>(res.data) && res.data.college_name) {
-        return res.data;
+        payload = res.data;
       }
     } catch (e) {
       // Backend offline / not reachable
@@ -324,7 +325,16 @@ export const publicService = {
     const localLinks = getStorage<ImportantLink[]>('links', DEFAULT_LINKS);
     const localFees = getStorage<PublicFeeStructure[]>('fees', DEFAULT_FEES);
 
-    return {
+    let activeAdminUser: any = null;
+    try {
+      const rawUser = localStorage.getItem('gpb_portal_user');
+      if (rawUser) {
+        const u = JSON.parse(rawUser);
+        if (u?.role === 'admin') activeAdminUser = u;
+      }
+    } catch (e) {}
+
+    const resolvedPayload: PublicHomePayload = payload ? { ...payload } : {
       ...DEFAULT_HOME_PAYLOAD,
       college_name: localAbout.college_name || 'Government Polytechnic Bansdih, Ballia',
       principal_name: localAbout.principal_name || 'Er. Sachin Maurya',
@@ -336,18 +346,60 @@ export const publicService = {
       important_links: localLinks,
       public_fees: localFees
     };
+
+    // Always prioritize admin customized profile across localStorage
+    if (activeAdminUser?.name) {
+      resolvedPayload.principal_name = activeAdminUser.name;
+    } else if (localAbout.principal_name && localAbout.principal_name !== 'Er. R. C. Srivastava') {
+      resolvedPayload.principal_name = localAbout.principal_name;
+    }
+
+    if (activeAdminUser?.avatar) {
+      resolvedPayload.principal_photo = activeAdminUser.avatar;
+    } else if (localAbout.principal_photo) {
+      resolvedPayload.principal_photo = localAbout.principal_photo;
+    }
+
+    if (activeAdminUser?.bio) {
+      resolvedPayload.principal_message = activeAdminUser.bio;
+    } else if (localAbout.principal_message) {
+      resolvedPayload.principal_message = localAbout.principal_message;
+    }
+
+    return resolvedPayload;
   },
 
   getAboutCollege: async (): Promise<AboutCollegeData> => {
+    let data: AboutCollegeData | null = null;
     try {
       const res = await apiClient.get<AboutCollegeData>('/public/about/');
       if (isObjectPayload<AboutCollegeData>(res.data) && res.data.college_name) {
-        return res.data;
+        data = res.data;
       }
     } catch (e) {
       // Backend offline
     }
-    return getStorage<AboutCollegeData>('about', DEFAULT_ABOUT);
+    const localAbout = getStorage<AboutCollegeData>('about', DEFAULT_ABOUT);
+    const merged: AboutCollegeData = {
+      ...DEFAULT_ABOUT,
+      ...(data || {}),
+      ...localAbout
+    };
+
+    try {
+      const rawUser = localStorage.getItem('gpb_portal_user');
+      if (rawUser) {
+        const u = JSON.parse(rawUser);
+        if (u?.role === 'admin') {
+          if (u.name) merged.principal_name = u.name;
+          if (u.avatar) merged.principal_photo = u.avatar;
+          if (u.phone) merged.principal_phone = u.phone;
+          if (u.bio) merged.principal_message = u.bio;
+        }
+      }
+    } catch (e) {}
+
+    return merged;
   },
 
   getCollegeLocation: async (): Promise<CollegeLocationData> => {

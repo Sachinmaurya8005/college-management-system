@@ -344,20 +344,33 @@ export const WebsiteContentManager: React.FC = () => {
         updateUser({
           avatar: aboutForm.principal_photo,
           name: aboutForm.principal_name,
-          phone: aboutForm.principal_phone || user.phone
-        });
+          phone: aboutForm.principal_phone || user.phone,
+          ...(aboutForm.principal_message ? { bio: aboutForm.principal_message } : {})
+        } as any);
       }
-      if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
-        const bc = new BroadcastChannel('gpb_realtime_broadcast_channel');
-        bc.postMessage({
-          type: 'PRINCIPAL_UPDATED',
-          payload: {
+      if (typeof window !== 'undefined') {
+        if ('BroadcastChannel' in window) {
+          const bc = new BroadcastChannel('gpb_realtime_broadcast_channel');
+          bc.postMessage({
+            type: 'PRINCIPAL_UPDATED',
+            payload: {
+              name: aboutForm.principal_name,
+              phone: aboutForm.principal_phone,
+              photo: aboutForm.principal_photo,
+              bio: aboutForm.principal_message
+            }
+          });
+          bc.close();
+        }
+        window.dispatchEvent(new Event('storage'));
+        window.dispatchEvent(new CustomEvent('principal-updated', {
+          detail: {
             name: aboutForm.principal_name,
             phone: aboutForm.principal_phone,
-            photo: aboutForm.principal_photo
+            photo: aboutForm.principal_photo,
+            bio: aboutForm.principal_message
           }
-        });
-        bc.close();
+        }));
       }
       confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
       setSaveSuccess(true);

@@ -9,7 +9,7 @@ class CollegeSettings(models.Model):
     website = models.CharField(max_length=255, default='https://gpbansdeeh.ac.in')
     aicte_code = models.CharField(max_length=50, default='1-3328491021')
     bteup_code = models.CharField(max_length=50, default='4412')
-    principal_name = models.CharField(max_length=150, default='Er. R. C. Srivastava')
+    principal_name = models.CharField(max_length=150, default='Er. Sachin Maurya')
     custom_logo_url = models.CharField(max_length=500, blank=True, default='')
 
     def __str__(self):

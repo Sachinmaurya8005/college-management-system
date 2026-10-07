@@ -24,6 +24,7 @@ import {
 import { publicService } from '../../services/publicService';
 import { PublicHomePayload, Facility, GalleryItem } from '../../types';
 import { CollegeLogo } from '../common/CollegeLogo';
+import { usePrincipalInfo } from '../../hooks/usePrincipalInfo';
 
 interface HomePageProps {
   onNavigate: (route: string) => void;
@@ -36,6 +37,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onOpenLightbox,
   onOpenFacilityModal
 }) => {
+  const principal = usePrincipalInfo();
   const [data, setData] = useState<PublicHomePayload | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -183,25 +185,28 @@ export const HomePage: React.FC<HomePageProps> = ({
               <div className="p-6 rounded-3xl bg-white/10 dark:bg-slate-900/60 backdrop-blur-xl border border-white/20 shadow-2xl space-y-4 text-left">
                 <div className="flex items-center gap-4">
                   <img
-                    src={data?.principal_photo || '/principal_sachin_maurya.jpg'}
-                    alt="Principal"
+                    src={principal.photoUrl || data?.principal_photo || '/principal_sachin_maurya.jpg'}
+                    alt={principal.name || 'Principal'}
                     className="w-16 h-16 rounded-2xl object-cover ring-2 ring-amber-400/60 shadow-lg flex-shrink-0"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/principal_sachin_maurya.jpg';
+                    }}
                   />
                   <div>
                     <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider block">
                       From the Principal's Desk
                     </span>
                     <h3 className="text-sm sm:text-base font-extrabold text-white">
-                      {data?.principal_name || 'Er. Sachin Maurya'}
+                      {principal.name || data?.principal_name || 'Er. Sachin Maurya'}
                     </h3>
                     <p className="text-[11px] text-blue-200">
-                      Principal &amp; Chief Administrator
+                      {principal.designation || 'Principal & Chief Administrator'}
                     </p>
                   </div>
                 </div>
 
                 <p className="text-xs text-blue-100/90 leading-relaxed italic">
-                  "{data?.principal_message || 'Our mission is to foster technical excellence, practical workshop competence, and disciplined leadership in every diploma engineer.'}"
+                  "{principal.bio || data?.principal_message || 'Our mission is to foster technical excellence, practical workshop competence, and disciplined leadership in every diploma engineer.'}"
                 </p>
 
                 <div className="pt-2 flex items-center justify-between border-t border-white/10 text-xs">

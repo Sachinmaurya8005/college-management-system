@@ -61,12 +61,12 @@ class PublicHomeOverviewView(APIView):
         public_fees = PublicFeeStructure.objects.filter(is_published=True)
 
         return Response({
-            'college_name': about.college_name if about else 'Government Polytechnic Bansdeeh, Ballia',
-            'bteup_code': about.bteup_code if about else '4412',
-            'aicte_approval': about.aicte_approval if about else 'Approved by AICTE, New Delhi',
-            'principal_name': about.principal_name if about else 'Er. R. C. Srivastava',
-            'principal_message': about.principal_message if about else '',
-            'principal_photo': about.principal_photo if about else '',
+            'college_name': about.college_name if (about and about.college_name) else 'Government Polytechnic Bansdih, Ballia',
+            'bteup_code': about.bteup_code if (about and about.bteup_code) else '4412',
+            'aicte_approval': about.aicte_approval if (about and about.aicte_approval) else 'Approved by AICTE, New Delhi',
+            'principal_name': about.principal_name if (about and about.principal_name) else 'Er. Sachin Maurya',
+            'principal_message': about.principal_message if (about and about.principal_message) else 'Our mission is to foster technical excellence, practical workshop competence, and disciplined leadership in every diploma engineer.',
+            'principal_photo': about.principal_photo if (about and about.principal_photo) else '/principal_sachin_maurya.jpg',
             'history_snippet': (about.history[:200] + '...') if about and about.history else '',
             'location': CollegeLocationSerializer(location).data if location else None,
             'latest_notices': NoticeItemSerializer(notices, many=True).data,
@@ -85,7 +85,11 @@ class PublicAboutCollegeView(APIView):
     def get(self, request):
         about = AboutCollege.objects.first()
         if not about:
-            about = AboutCollege.objects.create()
+            about = AboutCollege.objects.create(
+                principal_name='Er. Sachin Maurya',
+                principal_message='Our mission is to foster technical excellence, practical workshop competence, and disciplined leadership in every diploma engineer.',
+                principal_photo='/principal_sachin_maurya.jpg'
+            )
         return Response(AboutCollegeSerializer(about).data)
 
 
@@ -239,18 +243,26 @@ class AdminPublicFeeStructureViewSet(viewsets.ModelViewSet):
 
 
 class AdminAboutCollegeView(APIView):
-    permission_classes = [IsAdminRole]
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request):
         about = AboutCollege.objects.first()
         if not about:
-            about = AboutCollege.objects.create()
+            about = AboutCollege.objects.create(
+                principal_name='Er. Sachin Maurya',
+                principal_message='Our mission is to foster technical excellence, practical workshop competence, and disciplined leadership in every diploma engineer.',
+                principal_photo='/principal_sachin_maurya.jpg'
+            )
         return Response(AboutCollegeSerializer(about).data)
 
     def patch(self, request):
         about = AboutCollege.objects.first()
         if not about:
-            about = AboutCollege.objects.create()
+            about = AboutCollege.objects.create(
+                principal_name='Er. Sachin Maurya',
+                principal_message='Our mission is to foster technical excellence, practical workshop competence, and disciplined leadership in every diploma engineer.',
+                principal_photo='/principal_sachin_maurya.jpg'
+            )
         serializer = AboutCollegeSerializer(about, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -259,7 +271,7 @@ class AdminAboutCollegeView(APIView):
 
 
 class AdminCollegeLocationView(APIView):
-    permission_classes = [IsAdminRole]
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request):
         loc = CollegeLocation.objects.first()
