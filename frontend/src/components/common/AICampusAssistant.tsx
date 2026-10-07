@@ -217,7 +217,7 @@ export const AICampusAssistant: React.FC<AICampusAssistantProps> = ({ onNavigate
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <h3 className="text-sm font-black text-white">Antigravity Campus AI</h3>
+                  <h3 className="text-sm font-black text-white">GPB,Ballia AI Assistant</h3>
                   <span className="px-1.5 py-0.2 rounded text-[9px] font-extrabold bg-emerald-500/30 text-emerald-300 border border-emerald-500/40">
                     LIVE
                   </span>
