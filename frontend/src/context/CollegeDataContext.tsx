@@ -243,10 +243,20 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
       ]);
 
       if (apiStudents.status === 'fulfilled' && Array.isArray(apiStudents.value) && apiStudents.value.length > 0) {
-        setStudents(apiStudents.value);
+        setStudents(prev => {
+          const apiMap = new Map(apiStudents.value.map((s: any) => [String(s.id), s]));
+          const apiRolls = new Set(apiStudents.value.map((s: any) => (s.rollNo || s.roll_number || '').trim().toLowerCase()));
+          const localOnly = prev.filter(s => !apiMap.has(String(s.id)) && !apiRolls.has((s.rollNo || '').trim().toLowerCase()));
+          return [...apiStudents.value, ...localOnly];
+        });
       }
       if (apiTeachers.status === 'fulfilled' && Array.isArray(apiTeachers.value) && apiTeachers.value.length > 0) {
-        setTeachers(apiTeachers.value);
+        setTeachers(prev => {
+          const apiMap = new Map(apiTeachers.value.map((t: any) => [String(t.id), t]));
+          const apiCodes = new Set(apiTeachers.value.map((t: any) => (t.empCode || t.emp_code || '').trim().toLowerCase()));
+          const localOnly = prev.filter(t => !apiMap.has(String(t.id)) && !apiCodes.has((t.empCode || '').trim().toLowerCase()));
+          return [...apiTeachers.value, ...localOnly];
+        });
       }
       if (apiCourses.status === 'fulfilled' && Array.isArray(apiCourses.value) && apiCourses.value.length > 0) {
         setCourses(apiCourses.value);
@@ -382,7 +392,10 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
     });
 
     try {
-      await studentService.create(studentData);
+      const created = await studentService.create(studentData);
+      if (created && created.id) {
+        setStudents(prev => prev.map(s => s.id === newStudent.id ? { ...s, ...created, id: String(created.id) } : s));
+      }
     } catch (e) {
       console.warn('Student saved locally:', e);
     }

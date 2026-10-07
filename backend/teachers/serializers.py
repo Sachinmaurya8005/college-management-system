@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import Teacher
 
 class TeacherSerializer(serializers.ModelSerializer):
+    full_name = serializers.CharField(required=False)
+    emp_code = serializers.CharField(required=False)
     name = serializers.CharField(source='full_name', required=False)
     empCode = serializers.CharField(source='emp_code', required=False)
     photoUrl = serializers.CharField(source='photo_url', required=False, allow_blank=True)
@@ -26,6 +28,34 @@ class TeacherSerializer(serializers.ModelSerializer):
             'staffType', 'staff_type', 'workDescription', 'work_description',
             'created_at', 'updated_at'
         ]
+
+    def to_internal_value(self, data):
+        data = data.copy() if hasattr(data, 'copy') else dict(data)
+        if 'name' in data and not data.get('full_name'):
+            data['full_name'] = data['name']
+        if 'empCode' in data and not data.get('emp_code'):
+            data['emp_code'] = data['empCode']
+        if 'photoUrl' in data and not data.get('photo_url'):
+            data['photo_url'] = data['photoUrl']
+        if 'joiningDate' in data and not data.get('joining_date'):
+            data['joining_date'] = data['joiningDate']
+        if 'experienceYears' in data and not data.get('experience_years'):
+            data['experience_years'] = data['experienceYears']
+        if 'dob' in data and not data.get('date_of_birth'):
+            data['date_of_birth'] = data['dob']
+        if 'bloodGroup' in data and not data.get('blood_group'):
+            data['blood_group'] = data['bloodGroup']
+        if 'staffType' in data and not data.get('staff_type'):
+            data['staff_type'] = data['staffType']
+        if 'workDescription' in data and not data.get('work_description'):
+            data['work_description'] = data['workDescription']
+        if 'payScale' in data and not data.get('pay_scale'):
+            data['pay_scale'] = data['payScale']
+        if 'promotionStatus' in data and not data.get('promotion_status'):
+            data['promotion_status'] = data['promotionStatus']
+        if 'email' in data and not data['email']:
+            data['email'] = ''
+        return super().to_internal_value(data)
 
     def create(self, validated_data):
         if not validated_data.get('teacher_id'):

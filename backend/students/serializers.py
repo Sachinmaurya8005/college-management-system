@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import Student, StudentApplication, StaffApprovalRequest
 
 class StudentSerializer(serializers.ModelSerializer):
+    full_name = serializers.CharField(required=False)
+    roll_number = serializers.CharField(required=False)
     name = serializers.CharField(source='full_name', required=False)
     rollNo = serializers.CharField(source='roll_number', required=False)
     enrollmentNo = serializers.CharField(source='enrollment_number', required=False, allow_blank=True)
@@ -29,6 +31,28 @@ class StudentSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         data = data.copy() if hasattr(data, 'copy') else dict(data)
+        if 'name' in data and not data.get('full_name'):
+            data['full_name'] = data['name']
+        if 'rollNo' in data and not data.get('roll_number'):
+            data['roll_number'] = data['rollNo']
+        if 'enrollmentNo' in data and not data.get('enrollment_number'):
+            data['enrollment_number'] = data['enrollmentNo']
+        if 'fatherName' in data and not data.get('father_name'):
+            data['father_name'] = data['fatherName']
+        if 'motherName' in data and not data.get('mother_name'):
+            data['mother_name'] = data['motherName']
+        if 'dob' in data and not data.get('date_of_birth'):
+            data['date_of_birth'] = data['dob']
+        if 'bloodGroup' in data and not data.get('blood_group'):
+            data['blood_group'] = data['bloodGroup']
+        if 'photoUrl' in data and not data.get('photo_url'):
+            data['photo_url'] = data['photoUrl']
+        if 'admissionYear' in data and not data.get('admission_year'):
+            data['admission_year'] = data['admissionYear']
+        if 'attendancePercentage' in data and not data.get('attendance_percentage'):
+            data['attendance_percentage'] = data['attendancePercentage']
+        if 'feeStatus' in data and not data.get('fee_status'):
+            data['fee_status'] = data['feeStatus']
         if 'dob' in data and not data['dob']:
             data['dob'] = None
         if 'date_of_birth' in data and not data['date_of_birth']:
