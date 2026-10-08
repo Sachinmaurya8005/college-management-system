@@ -235,11 +235,12 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const refreshFromApi = async () => {
     try {
       setIsLoading(true);
-      const [apiStudents, apiTeachers, apiCourses, apiNotices] = await Promise.allSettled([
+      const [apiStudents, apiTeachers, apiCourses, apiNotices, apiSettings] = await Promise.allSettled([
         studentService.getAll(),
         teacherService.getAll(),
         courseService.getAll(),
         noticeService.getAll(),
+        settingsService.getSettings(),
       ]);
 
       if (apiStudents.status === 'fulfilled' && Array.isArray(apiStudents.value) && apiStudents.value.length > 0) {
@@ -263,6 +264,21 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
       }
       if (apiNotices.status === 'fulfilled' && Array.isArray(apiNotices.value) && apiNotices.value.length > 0) {
         setNotices(apiNotices.value);
+      }
+      if (apiSettings.status === 'fulfilled' && apiSettings.value) {
+        const s = apiSettings.value as any;
+        setSettings(prev => ({
+          ...prev,
+          principalName: s.principal_name || s.principalName || prev.principalName,
+          principalPhone: s.phone || s.principalPhone || prev.principalPhone,
+          collegeName: s.college_name || s.collegeName || prev.collegeName,
+          hindiName: s.hindi_name || s.hindiName || prev.hindiName,
+          address: s.address || prev.address,
+          phone: s.phone || prev.phone,
+          email: s.email || prev.email,
+          website: s.website || prev.website,
+          bteupCode: s.bteup_code || s.bteupCode || prev.bteupCode,
+        }));
       }
     } catch (e) {
       console.warn('Backend API refresh silent catch, keeping local state:', e);

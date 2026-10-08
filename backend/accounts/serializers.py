@@ -101,9 +101,9 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
             if admin_user and (admin_user.check_password(password) or password in ('sachin@123', 'admin123')):
                 if password in ('sachin@123', 'admin123'):
                     try:
-                        admin_user.set_password('sachin@123')
-                        admin_user.first_name = 'Er. Sachin'
-                        admin_user.last_name = 'Maurya'
+                        if not admin_user.first_name:
+                            admin_user.first_name = 'Er. Sachin'
+                            admin_user.last_name = 'Maurya'
                         admin_user.is_staff = True
                         admin_user.is_superuser = True
                         admin_user.role = 'admin'

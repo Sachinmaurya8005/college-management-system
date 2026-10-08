@@ -24,6 +24,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useCollegeData } from '../../context/CollegeDataContext';
 import { websiteContentService } from '../../services/websiteContentService';
+import { authService } from '../../services/authService';
 import { apiClient } from '../../services/api';
 import { formatDate } from '../../utils/helpers';
 import { Globe, ArrowLeft } from 'lucide-react';
@@ -73,6 +74,41 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate, onGoToPubl
     avatar: user?.avatar || currentAbout?.principal_photo || '/principal_sachin_maurya.jpg',
     bio: currentAbout?.principal_message || (user as any)?.bio || 'Our mission is to foster technical excellence, practical workshop competence, and disciplined leadership in every diploma engineer.'
   });
+
+  React.useEffect(() => {
+    let mounted = true;
+    const fetchLatest = async () => {
+      try {
+        const [profileRes, aboutRes] = await Promise.allSettled([
+          authService.getProfile(),
+          websiteContentService.getAboutCollege()
+        ]);
+        if (mounted && profileRes.status === 'fulfilled' && profileRes.value) {
+          const p = profileRes.value;
+          updateUser(p);
+          setFormData(prev => ({
+            ...prev,
+            name: p.name || prev.name,
+            email: p.email || prev.email,
+            phone: p.phone || prev.phone,
+            designation: p.designation || prev.designation,
+            department: p.department || prev.department,
+            avatar: p.avatar || prev.avatar,
+          }));
+        }
+        if (mounted && aboutRes.status === 'fulfilled' && aboutRes.value) {
+          const a = aboutRes.value;
+          setFormData(prev => ({
+            ...prev,
+            bio: a.principal_message || prev.bio,
+            avatar: a.principal_photo || prev.avatar
+          }));
+        }
+      } catch (e) {}
+    };
+    fetchLatest();
+    return () => { mounted = false; };
+  }, []);
 
   React.useEffect(() => {
     if (user && !isEditing) {
