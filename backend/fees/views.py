@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from decimal import Decimal
 import random
+from django.db import models
 from .models import FeeRecord, PaymentTransaction
 from .serializers import FeeRecordSerializer, PaymentTransactionSerializer
 from students.models import Student

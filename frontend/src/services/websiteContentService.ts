@@ -314,7 +314,21 @@ export const websiteContentService = {
     setStorage('about', updated);
 
     try {
-      await apiClient.patch('/admin/website/about/', data);
+      const payload: any = {};
+      if (data.college_name !== undefined) payload.college_name = data.college_name;
+      if (data.bteup_code !== undefined) payload.bteup_code = data.bteup_code;
+      if (data.aicte_approval !== undefined) payload.aicte_approval = data.aicte_approval;
+      if (data.history !== undefined) payload.history = data.history;
+      if (data.vision !== undefined) payload.vision = data.vision;
+      if (data.mission !== undefined) payload.mission = data.mission;
+      if (data.principal_name !== undefined) payload.principal_name = data.principal_name;
+      if (data.principal_message !== undefined) payload.principal_message = data.principal_message;
+      if (data.principal_photo !== undefined && !data.principal_photo.startsWith('data:')) {
+        payload.principal_photo = data.principal_photo;
+      }
+      if (Object.keys(payload).length > 0) {
+        await apiClient.patch('/admin/website/about/', payload);
+      }
     } catch (e) {}
 
     return updated;

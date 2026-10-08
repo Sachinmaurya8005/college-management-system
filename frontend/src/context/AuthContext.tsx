@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Role, User } from '../types';
 import { authService } from '../services/authService';
-import { apiClient } from '../services/api';
+import { apiClient, API_BASE_URL } from '../services/api';
 import { INITIAL_STUDENTS, INITIAL_TEACHERS } from '../data/mockData';
 
 interface AuthContextType {
@@ -112,8 +112,59 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (identifier: string, pass: string, role: Role): Promise<{ success: boolean; message?: string }> => {
-    const trimmedId = identifier.trim().toLowerCase();
+    const rawId = identifier.trim();
     const cleanPass = pass.trim();
+    const trimmedId = rawId.toLowerCase();
+
+    // =============================================================
+    // 0. BACKEND DJANGO JWT AUTHENTICATION (Real Token Generation)
+    // =============================================================
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/login/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: rawId,
+          password: cleanPass,
+          email: rawId,
+          enrollment_number: rawId,
+        }),
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (response.ok && data?.access) {
+        // Save JWT tokens to localStorage for apiClient request interceptor
+        localStorage.setItem('gpb_jwt_access_token', data.access);
+        if (data.refresh) {
+          localStorage.setItem('gpb_jwt_refresh_token', data.refresh);
+        }
+
+        const backendUser = data.user;
+        const loggedUser: User = {
+          id: backendUser?.id?.toString() || rawId,
+          name: backendUser?.name || (backendUser?.first_name ? `${backendUser.first_name} ${backendUser.last_name || ''}`.trim() : rawId),
+          email: backendUser?.email || rawId,
+          role: (backendUser?.role as Role) || role,
+          designation: backendUser?.designation,
+          department: backendUser?.department,
+          rollNo: backendUser?.roll_number || backendUser?.rollNo,
+          enrollmentNo: backendUser?.enrollment_number || backendUser?.enrollmentNo,
+          branch: backendUser?.branch,
+          semester: backendUser?.semester,
+          phone: backendUser?.phone,
+          avatar: backendUser?.avatar || (DEMO_USERS[role] ? DEMO_USERS[role].avatar : undefined),
+          lastLogin: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+        };
+
+        setUser(loggedUser);
+        return { success: true };
+      }
+    } catch (backendError) {
+      console.warn('Backend login request error, falling back to local verification:', backendError);
+    }
 
     // -------------------------------------------------------------
     // 1. STUDENT AUTHENTICATION: STRICT ENROLLMENT NO + DOB ONLY

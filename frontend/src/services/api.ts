@@ -2,11 +2,13 @@
 import axios from 'axios';
 
 // Get API base URL from environment variable or intelligent host fallback
+
 export const API_BASE_URL: string =
-  (import.meta as any).env?.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_BASE_URL ||
   (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
-    ? '/api'
+    ? 'https://college-management-system-dsgq.onrender.com/api'
     : 'http://127.0.0.1:8000/api');
+
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,

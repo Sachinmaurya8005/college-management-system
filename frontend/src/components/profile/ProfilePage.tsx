@@ -127,7 +127,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate, onGoToPubl
 
       // Update core settings via API
       try {
-        apiClient.patch('/core/settings/', {
+        apiClient.patch('/settings/', {
           principal_name: formData.name,
           phone: formData.phone
         }).catch(() => {});
