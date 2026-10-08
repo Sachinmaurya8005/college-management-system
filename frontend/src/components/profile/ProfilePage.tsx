@@ -74,6 +74,20 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onNavigate, onGoToPubl
     bio: currentAbout?.principal_message || (user as any)?.bio || 'Our mission is to foster technical excellence, practical workshop competence, and disciplined leadership in every diploma engineer.'
   });
 
+  React.useEffect(() => {
+    if (user && !isEditing) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.name || prev.name,
+        email: user.email || prev.email,
+        phone: user.phone || prev.phone,
+        designation: user.designation || prev.designation,
+        department: user.department || prev.department,
+        avatar: user.avatar || prev.avatar,
+      }));
+    }
+  }, [user, isEditing]);
+
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   // Suggested high quality profile photo presets

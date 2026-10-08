@@ -5,14 +5,29 @@ from .models import User
 from students.models import Student
 
 class UserSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(required=False, allow_blank=True)
+    avatar = serializers.CharField(required=False, allow_blank=True)
+
     class Meta:
         model = User
         fields = [
             'id', 'username', 'email', 'first_name', 'last_name',
             'role', 'phone', 'designation', 'department',
-            'roll_number', 'branch', 'semester', 'avatar_url', 'last_login'
+            'roll_number', 'branch', 'semester', 'avatar_url', 'last_login',
+            'name', 'avatar'
         ]
         read_only_fields = ['id', 'last_login']
+
+    def update(self, instance, validated_data):
+        name = validated_data.pop('name', None)
+        if name:
+            parts = name.strip().split(' ', 1)
+            instance.first_name = parts[0]
+            instance.last_name = parts[1] if len(parts) > 1 else ''
+        avatar = validated_data.pop('avatar', None)
+        if avatar is not None:
+            instance.avatar_url = avatar
+        return super().update(instance, validated_data)
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
