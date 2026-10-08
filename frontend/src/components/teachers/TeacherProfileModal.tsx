@@ -43,6 +43,7 @@ import {
 import { formatDate, formatCurrencyINR, exportToCSV } from '../../utils/helpers';
 import { useAuth } from '../../context/AuthContext';
 import { useCollegeData } from '../../context/CollegeDataContext';
+import { usePrincipalInfo } from '../../hooks/usePrincipalInfo';
 import confetti from 'canvas-confetti';
 
 interface TeacherProfileModalProps {
@@ -59,6 +60,7 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
   initialTab = 'dossier'
 }) => {
   const { user } = useAuth();
+  const principal = usePrincipalInfo();
   const {
     updateTeacher,
     addNotification,
@@ -849,7 +851,7 @@ export const TeacherProfileModal: React.FC<TeacherProfileModalProps> = ({
 
               <div className="pt-3 border-t border-white/20 flex items-center justify-between text-[9px] text-slate-400">
                 <div>Official Govt. Faculty Record</div>
-                <div className="text-right font-serif italic text-white font-bold">Sachin Maurya (Principal)</div>
+                <div className="text-right font-serif italic text-white font-bold">{principal.name} (Principal)</div>
               </div>
             </div>
 

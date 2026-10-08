@@ -211,9 +211,18 @@ export const approvalService = {
       if (stored) currentUser = JSON.parse(stored);
     } catch (e) {}
 
+    let dynamicPrincipal = 'Er. Sachin Maurya';
+    try {
+      const storedAbout = localStorage.getItem('gpb_public_about');
+      if (storedAbout) {
+        const parsed = JSON.parse(storedAbout);
+        if (parsed.principal_name) dynamicPrincipal = parsed.principal_name;
+      }
+    } catch (e) {}
+
     const currentList = getLocalRequests();
     const target = currentList.find(r => r.id === id);
-    const reviewerName = currentUser?.name || 'Er. Sachin Maurya (Principal)';
+    const reviewerName = currentUser?.name ? `${currentUser.name} (Principal)` : `${dynamicPrincipal} (Principal)`;
 
     if (target) {
       target.status = 'Approved';
@@ -292,9 +301,18 @@ export const approvalService = {
       if (stored) currentUser = JSON.parse(stored);
     } catch (e) {}
 
+    let dynamicPrincipal = 'Er. Sachin Maurya';
+    try {
+      const storedAbout = localStorage.getItem('gpb_public_about');
+      if (storedAbout) {
+        const parsed = JSON.parse(storedAbout);
+        if (parsed.principal_name) dynamicPrincipal = parsed.principal_name;
+      }
+    } catch (e) {}
+
     const currentList = getLocalRequests();
     const target = currentList.find(r => r.id === id);
-    const reviewerName = currentUser?.name || 'Er. Sachin Maurya (Principal)';
+    const reviewerName = currentUser?.name ? `${currentUser.name} (Principal)` : `${dynamicPrincipal} (Principal)`;
 
     if (target) {
       target.status = 'Rejected';

@@ -4,8 +4,8 @@ import json
 import re
 
 req = urllib.request.Request(
-    'http://127.0.0.1:8000/api/auth/login/',
-    data=json.dumps({'email': 'admin@polytechnic.edu', 'password': 'admin123'}).encode('utf-8'),
+    'https://college-management-system-dsgq.onrender.com/api/auth/login/',
+    data=json.dumps({'username': 'sachin_maurya8005', 'password': 'sachin@123'}).encode('utf-8'),
     headers={'Content-Type': 'application/json'},
     method='POST'
 )

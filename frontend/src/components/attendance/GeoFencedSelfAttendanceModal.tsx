@@ -19,6 +19,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useCollegeData } from '../../context/CollegeDataContext';
 import { CAMPUS_COORDINATES, calculateDistanceMeters } from '../../utils/helpers';
+import { usePrincipalInfo } from '../../hooks/usePrincipalInfo';
 import confetti from 'canvas-confetti';
 
 interface GeoFencedSelfAttendanceModalProps {
@@ -34,6 +35,7 @@ export const GeoFencedSelfAttendanceModal: React.FC<GeoFencedSelfAttendanceModal
 }) => {
   const { user } = useAuth();
   const { markTeacherAttendance, markPrincipalTodayAttendance, teachers } = useCollegeData();
+  const principal = usePrincipalInfo();
 
   const isPrincipal = user?.role === 'admin';
   const currentTeacher = teachers.find(t => t.email === user?.email) || teachers[0];
@@ -188,7 +190,7 @@ export const GeoFencedSelfAttendanceModal: React.FC<GeoFencedSelfAttendanceModal
           <div>
             <span className="text-[10px] text-slate-400 font-bold uppercase block">Employee / Official</span>
             <strong className="text-slate-900 dark:text-white text-xs">
-              {isPrincipal ? 'Er. Sachin Maurya (Principal)' : currentTeacher?.name}
+              {isPrincipal ? `${principal.name} (Principal)` : currentTeacher?.name}
             </strong>
             <span className="text-slate-500 text-[11px] block">
               {isPrincipal ? 'Office of Principal' : `${currentTeacher?.empCode} • ${currentTeacher?.department}`}
@@ -343,7 +345,7 @@ export const GeoFencedSelfAttendanceModal: React.FC<GeoFencedSelfAttendanceModal
             <button
               type="button"
               onClick={() => {
-                alert('Attendance Request sent to Principal Er. Sachin Maurya for manual review.');
+                alert(`Attendance Request sent to Principal ${principal.name} for manual review.`);
                 onClose();
               }}
               className="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold shadow-md flex items-center gap-2 transition-all"

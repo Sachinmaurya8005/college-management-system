@@ -44,7 +44,7 @@ import {
 import confetti from 'canvas-confetti';
 
 export const WebsiteContentManager: React.FC = () => {
-  const { updateSettings } = useCollegeData();
+  const { updateSettings, settings } = useCollegeData();
   const { user, updateUser } = useAuth();
   const [activeTab, setActiveTab] = useState<'facilities' | 'gallery' | 'links' | 'fees' | 'location' | 'about' | 'placements'>('facilities');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -109,9 +109,9 @@ export const WebsiteContentManager: React.FC = () => {
     history: '',
     vision: '',
     mission: '',
-    principal_name: 'Er. Sachin Maurya',
+    principal_name: user?.name || settings.principalName || 'Er. Sachin Maurya',
     principal_message: '',
-    principal_photo: '',
+    principal_photo: user?.avatar || '/principal_sachin_maurya.jpg',
     achievements: []
   });
   const [newAchievement, setNewAchievement] = useState('');
@@ -974,7 +974,7 @@ export const WebsiteContentManager: React.FC = () => {
                       From the Principal's Desk
                     </span>
                     <h3 className="text-base font-extrabold text-white">
-                      {aboutForm.principal_name || 'Er. Sachin Maurya'}
+                      {aboutForm.principal_name || user?.name || settings.principalName || 'Er. Sachin Maurya'}
                     </h3>
                     <p className="text-[11px] text-blue-200">
                       Principal &amp; Chief Administrator

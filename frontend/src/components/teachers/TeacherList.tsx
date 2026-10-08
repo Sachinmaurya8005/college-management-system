@@ -26,6 +26,7 @@ import { ConfirmDialog } from '../common/ConfirmDialog';
 import { exportToCSV, formatDate, formatCurrencyINR } from '../../utils/helpers';
 import { PRINCIPAL_DETAILS } from '../../data/mockData';
 import { PrincipalProfileModal } from '../common/PrincipalProfileModal';
+import { usePrincipalInfo } from '../../hooks/usePrincipalInfo';
 
 interface TeacherListProps {
   onOpenAddModal: () => void;
@@ -39,6 +40,7 @@ export const TeacherList: React.FC<TeacherListProps> = ({
   onOpenProfileModal
 }) => {
   const { teachers, deleteTeacher } = useCollegeData();
+  const principal = usePrincipalInfo();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [deptFilter, setDeptFilter] = useState('All');
@@ -90,8 +92,8 @@ export const TeacherList: React.FC<TeacherListProps> = ({
       <div className="p-6 rounded-3xl bg-gradient-to-r from-polytechnic-950 via-slate-900 to-polytechnic-900 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-polytechnic-800">
         <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
           <img
-            src={PRINCIPAL_DETAILS.photoUrl}
-            alt={PRINCIPAL_DETAILS.name}
+            src={principal.photoUrl || PRINCIPAL_DETAILS.photoUrl}
+            alt={principal.name}
             className="w-20 h-20 rounded-2xl object-cover ring-2 ring-amber-400/80 shadow-lg flex-shrink-0"
           />
           <div>
@@ -100,10 +102,10 @@ export const TeacherList: React.FC<TeacherListProps> = ({
               <span>Head of Institution &amp; Principal Dossier</span>
             </div>
             <h2 className="text-lg sm:text-xl font-extrabold text-white">
-              {PRINCIPAL_DETAILS.name}
+              {principal.name}
             </h2>
             <p className="text-xs text-amber-400 font-semibold">
-              {PRINCIPAL_DETAILS.designation}
+              {principal.designation}
             </p>
             <p className="text-[11px] text-slate-300 mt-0.5">
               Age: <span className="font-mono text-white">{PRINCIPAL_DETAILS.age} Yrs</span> • Qualification: <span className="text-white font-medium">{PRINCIPAL_DETAILS.qualification}</span> • Exp: <span className="text-white font-bold">{PRINCIPAL_DETAILS.experienceYears}+ Years</span>

@@ -283,9 +283,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const validAdminPasswords = ['sachin@123', 'admin123'];
 
       if (validAdminUsernames.includes(trimmedId) && validAdminPasswords.includes(cleanPass)) {
+        let currentAdminName = DEMO_USERS.admin.name;
+        let currentAdminAvatar = DEMO_USERS.admin.avatar;
+        try {
+          const storedAbout = localStorage.getItem('gpb_public_about');
+          if (storedAbout) {
+            const parsed = JSON.parse(storedAbout);
+            if (parsed.principal_name) currentAdminName = parsed.principal_name;
+            if (parsed.principal_photo) currentAdminAvatar = parsed.principal_photo;
+          }
+        } catch (e) {}
+
         const adminUser: User = {
           ...DEMO_USERS.admin,
-          name: 'Er. Sachin Maurya',
+          name: currentAdminName,
+          avatar: currentAdminAvatar,
           email: 'sachin_maurya8005',
           lastLogin: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
         };
@@ -374,9 +386,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const quickLogin = async (role: Role) => {
     if (role === 'admin') {
+      let currentAdminName = DEMO_USERS.admin.name;
+      let currentAdminAvatar = DEMO_USERS.admin.avatar;
+      try {
+        const storedAbout = localStorage.getItem('gpb_public_about');
+        if (storedAbout) {
+          const parsed = JSON.parse(storedAbout);
+          if (parsed.principal_name) currentAdminName = parsed.principal_name;
+          if (parsed.principal_photo) currentAdminAvatar = parsed.principal_photo;
+        }
+      } catch (e) {}
+
       const adminUser = {
         ...DEMO_USERS.admin,
-        name: 'Er. Sachin Maurya',
+        name: currentAdminName,
+        avatar: currentAdminAvatar,
         email: 'sachin_maurya8005',
         lastLogin: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
       };

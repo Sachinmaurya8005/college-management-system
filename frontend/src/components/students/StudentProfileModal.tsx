@@ -26,6 +26,7 @@ import { useCollegeData } from '../../context/CollegeDataContext';
 import { useAuth } from '../../context/AuthContext';
 import { approvalService } from '../../services/approvalService';
 import { CollegeLogo } from '../common/CollegeLogo';
+import { usePrincipalInfo } from '../../hooks/usePrincipalInfo';
 import confetti from 'canvas-confetti';
 
 interface StudentProfileModalProps {
@@ -45,6 +46,7 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
 }) => {
   const { user } = useAuth();
   const { fees, results, settings, updateStudent, addNotification, students } = useCollegeData();
+  const principal = usePrincipalInfo();
   const [activeTab, setActiveTab] = useState<'profile' | 'attendance' | 'idcard' | 'fees' | 'results'>('profile');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [savedSuccess, setSavedSuccess] = useState<boolean>(false);
@@ -833,7 +835,7 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
                   <div className="font-mono text-[8px] text-slate-400">{student.enrollmentNo}</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-serif italic font-bold text-white text-[10px]">Er. Sachin Maurya</div>
+                  <div className="font-serif italic font-bold text-white text-[10px]">{principal.name}</div>
                   <div className="text-[8px] text-amber-400 font-semibold">Principal & Chief Admin</div>
                 </div>
               </div>

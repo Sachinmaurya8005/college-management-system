@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { useCollegeData } from '../../../context/CollegeDataContext';
+import { usePrincipalInfo } from '../../../hooks/usePrincipalInfo';
 import { Student } from '../../../types';
 import { formatDate } from '../../../utils/helpers';
 import confetti from 'canvas-confetti';
@@ -84,6 +85,12 @@ const FACULTY_MEMBERS = [
 export const UniversalApplicationsView: React.FC = () => {
   const { user } = useAuth();
   const { students } = useCollegeData();
+  const principal = usePrincipalInfo();
+
+  const facultyMembers = [
+    { name: `${principal.name} (Principal & Exam Controller)`, email: principal.email || 'principal.gpbansdih@gmail.com', role: 'principal', department: 'Administration' },
+    ...FACULTY_MEMBERS.slice(1)
+  ];
 
   const userRole = user?.role || 'student';
 
@@ -108,14 +115,14 @@ export const UniversalApplicationsView: React.FC = () => {
       branch: 'Computer Science & Engineering',
       semester: 4,
       recipientRole: 'principal',
-      recipientName: 'Er. Sachin Maurya (Principal & Exam Controller)',
+      recipientName: `${principal.name} (Principal & Exam Controller)`,
       recipientEmail: 'principal.gpbansdih@gmail.com',
       subject: 'Request for Name Spelling Correction on BTEUP Portal',
       category: 'Personal Information Correction',
       description: 'Respected Sir, My father name spelling in the matriculation marksheet is Shri Ramakant Verma. Please update the same on BTEUP college database record.',
       status: 'Approved',
       staffResponse: 'Verified with High School Board Certificate and approved. Updated in database.',
-      reviewedBy: 'Er. Sachin Maurya (Principal)',
+      reviewedBy: `${principal.name} (Principal)`,
       submissionDate: '2026-04-18'
     },
     {
@@ -145,7 +152,7 @@ export const UniversalApplicationsView: React.FC = () => {
       senderRole: 'teacher',
       senderEmail: 'alok.rai@polytechnic.edu',
       recipientRole: 'principal',
-      recipientName: 'Er. Sachin Maurya (Principal & Exam Controller)',
+      recipientName: `${principal.name} (Principal & Exam Controller)`,
       recipientEmail: 'principal.gpbansdih@gmail.com',
       subject: 'Requisition for 10 New Core i7 Workstations for CSE Python Lab',
       category: 'Academic / Lab Equipment Request',
@@ -166,7 +173,7 @@ export const UniversalApplicationsView: React.FC = () => {
       category: 'Academic Audit',
       publishDate: '2026-04-12',
       priority: 'High',
-      issuedBy: 'Office of the Principal (Er. Sachin Maurya)',
+      issuedBy: `Office of the Principal (${principal.name})`,
       referenceNo: 'GPB/STAFF/CONF/2026/01',
       comments: [
         {
@@ -199,7 +206,7 @@ export const UniversalApplicationsView: React.FC = () => {
   ]);
 
   // Form State for Composing Application (Minimal & Easy)
-  const [selectedRecipient, setSelectedRecipient] = useState(FACULTY_MEMBERS[0]);
+  const [selectedRecipient, setSelectedRecipient] = useState(facultyMembers[0]);
   const [subject, setSubject] = useState('');
   const [category, setCategory] = useState('General Official Application');
   const [description, setDescription] = useState('');
@@ -526,12 +533,12 @@ export const UniversalApplicationsView: React.FC = () => {
               <select
                 value={selectedRecipient.email}
                 onChange={e => {
-                  const target = FACULTY_MEMBERS.find(f => f.email === e.target.value) || FACULTY_MEMBERS[0];
+                  const target = facultyMembers.find(f => f.email === e.target.value) || facultyMembers[0];
                   setSelectedRecipient(target);
                 }}
                 className="w-full px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold focus:ring-2 focus:ring-blue-600 outline-none"
               >
-                {FACULTY_MEMBERS.map((f, idx) => (
+                {facultyMembers.map((f, idx) => (
                   <option key={idx} value={f.email}>
                     {f.role === 'principal' ? '🏛️ ' : '👨‍🏫 '} {f.name} ({f.department}) • {f.email}
                   </option>

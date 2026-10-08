@@ -4,6 +4,7 @@ import { Modal } from '../common/Modal';
 import { Printer, Download, Award, ShieldCheck, CheckCircle } from 'lucide-react';
 import { useCollegeData } from '../../context/CollegeDataContext';
 import { CollegeLogo } from '../common/CollegeLogo';
+import { usePrincipalInfo } from '../../hooks/usePrincipalInfo';
 
 interface MarksheetModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export const MarksheetModal: React.FC<MarksheetModalProps> = ({
   result
 }) => {
   const { settings } = useCollegeData();
+  const principal = usePrincipalInfo();
 
   if (!result) return null;
 
@@ -179,7 +181,7 @@ export const MarksheetModal: React.FC<MarksheetModalProps> = ({
               <div className="font-serif italic font-bold text-slate-700 dark:text-slate-300">
                 Principal / Center Supdt.
               </div>
-              <div className="text-[10px] text-slate-400">Govt. Polytechnic Bansdih, Ballia (Er. Sachin Maurya, Principal)</div>
+              <div className="text-[10px] text-slate-400">Govt. Polytechnic Bansdih, Ballia ({principal.name}, Principal)</div>
             </div>
           </div>
         </div>

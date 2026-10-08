@@ -21,10 +21,12 @@ import { useAuth } from '../../context/AuthContext';
 import { useCollegeData } from '../../context/CollegeDataContext';
 import { formatCurrencyINR, formatDate } from '../../utils/helpers';
 import { SalaryDisbursementRecord } from '../../types';
+import { usePrincipalInfo } from '../../hooks/usePrincipalInfo';
 
 export const TeacherMySalaryView: React.FC = () => {
   const { user } = useAuth();
   const { teachers, salaryDisbursements, calculateTeacherMonthlySalary } = useCollegeData();
+  const principal = usePrincipalInfo();
 
   const currentTeacher =
     teachers.find(
@@ -425,10 +427,10 @@ export const TeacherMySalaryView: React.FC = () => {
 
                 <div className="space-y-1 text-right">
                   <div className="font-serif italic font-bold text-slate-800 text-sm">
-                    Sachin Maurya
+                    {principal.name}
                   </div>
                   <div className="font-black text-xs uppercase text-slate-900">
-                    Er. Sachin Maurya
+                    {principal.name}
                   </div>
                   <div className="text-[11px] font-semibold text-slate-600">
                     Principal, Government Polytechnic Bansdih, Ballia

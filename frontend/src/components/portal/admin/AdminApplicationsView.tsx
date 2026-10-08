@@ -15,9 +15,11 @@ import {
   Send
 } from 'lucide-react';
 import { apiClient } from '../../../services/api';
+import { usePrincipalInfo } from '../../../hooks/usePrincipalInfo';
 import confetti from 'canvas-confetti';
 
 export const AdminApplicationsView: React.FC = () => {
+  const principal = usePrincipalInfo();
   const [applications, setApplications] = useState<any[]>([]);
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -28,7 +30,7 @@ export const AdminApplicationsView: React.FC = () => {
   const [reviewForm, setReviewForm] = useState({
     status: 'Under Review',
     staff_response: '',
-    reviewed_by: 'Er. Sachin Maurya (Principal)',
+    reviewed_by: `${principal.name} (Principal)`,
     corrected_name: ''
   });
   const [saving, setSaving] = useState(false);
@@ -54,7 +56,7 @@ export const AdminApplicationsView: React.FC = () => {
     setReviewForm({
       status: app.status || 'Under Review',
       staff_response: app.staff_response || '',
-      reviewed_by: app.reviewed_by || 'Er. Sachin Maurya (Principal)',
+      reviewed_by: app.reviewed_by || `${principal.name} (Principal)`,
       corrected_name: app.student_name || ''
     });
     setSaveSuccess(false);
