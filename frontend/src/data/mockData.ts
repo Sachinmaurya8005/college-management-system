@@ -1195,33 +1195,47 @@ export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
     type: "info",
     time: "10 mins ago",
     read: false,
+    targetRole: "all",
     linkView: "examination"
   },
   {
     id: "nt-02",
-    title: "Fee Payment Reminder",
-    message: "Semester fee payment deadline is April 15, 2026. Please clear pending balances.",
+    title: "Semester Fee Payment Verification",
+    message: "Semester tuition & examination fee verification is active. Please verify pending receipts.",
     type: "urgent",
     time: "2 hours ago",
     read: false,
+    targetRole: "student",
     linkView: "fees"
   },
   {
     id: "nt-03",
-    title: "Attendance Alert: Shortage Warning",
-    message: "12 students have attendance below 75% in Electrical Engineering. Review report.",
+    title: "Faculty Weekly Attendance Verification",
+    message: "Please review and submit weekly attendance registers for 4th & 6th Sem batches.",
     type: "warning",
     time: "1 day ago",
     read: false,
+    targetRole: "teacher",
     linkView: "attendance"
   },
   {
     id: "nt-04",
-    title: "New Circular Published",
-    message: "State-Level Technical Workshop on AI & Cloud Computing registration open.",
+    title: "BTEUP Zonal Directives & Audit Checklist",
+    message: "Chief Superintendent inspection scheduled next week. Laboratory stock registers ready for principal endorsement.",
+    type: "urgent",
+    time: "3 hours ago",
+    read: false,
+    targetRole: "admin",
+    linkView: "reports"
+  },
+  {
+    id: "nt-05",
+    title: "State Technical Symposium",
+    message: "State-Level Technical Workshop on AI & Robotics prototypes registration is now open.",
     type: "success",
     time: "2 days ago",
     read: true,
+    targetRole: "all",
     linkView: "notices"
   }
 ];

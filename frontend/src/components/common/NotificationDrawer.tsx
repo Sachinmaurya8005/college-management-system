@@ -1,6 +1,8 @@
 import React from 'react';
 import { Bell, CheckCheck, Info, AlertTriangle, CheckCircle, AlertCircle, X } from 'lucide-react';
 import { useCollegeData } from '../../context/CollegeDataContext';
+import { useAuth } from '../../context/AuthContext';
+import { getFilteredNotificationsForUser } from '../../utils/helpers';
 
 interface NotificationDrawerProps {
   isOpen: boolean;
@@ -13,11 +15,13 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
   onClose,
   onNavigate
 }) => {
+  const { user } = useAuth();
   const { notifications, markNotificationRead, markAllNotificationsRead } = useCollegeData();
+  const userNotifications = getFilteredNotificationsForUser(notifications, user);
 
   if (!isOpen) return null;
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = userNotifications.filter(n => !n.read).length;
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -67,10 +71,10 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
 
         {/* List */}
         <div className="max-h-96 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
-          {notifications.length === 0 ? (
+          {userNotifications.length === 0 ? (
             <div className="py-8 text-center text-xs text-slate-400">No notifications yet</div>
           ) : (
-            notifications.map(notif => (
+            userNotifications.map(notif => (
               <div
                 key={notif.id}
                 onClick={() => {

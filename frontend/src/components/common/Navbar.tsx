@@ -14,6 +14,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useCollegeData } from '../../context/CollegeDataContext';
 import { NotificationDrawer } from './NotificationDrawer';
 import { Role } from '../../types';
+import { getFilteredNotificationsForUser } from '../../utils/helpers';
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -31,7 +32,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const userNotifications = getFilteredNotificationsForUser(notifications, user);
+  const unreadCount = userNotifications.filter(n => !n.read).length;
 
   const today = new Date().toLocaleDateString('en-IN', {
     weekday: 'short',

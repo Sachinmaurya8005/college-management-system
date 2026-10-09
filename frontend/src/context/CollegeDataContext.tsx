@@ -404,6 +404,7 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
       title: 'New Student Admitted',
       message: `${newStudent.name} (${newStudent.rollNo}) admitted to ${newStudent.branch}.`,
       type: 'success',
+      targetRole: 'admin',
       linkView: 'students'
     });
 
@@ -434,6 +435,7 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
         title: 'Student Record Removed',
         message: `Student record of ${student.name} was removed.`,
         type: 'warning',
+        targetRole: 'admin',
         linkView: 'students'
       });
     }
@@ -455,6 +457,7 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
       title: 'New Faculty Appointed',
       message: `${newTeacher.name} appointed to Department of ${newTeacher.department}.`,
       type: 'success',
+      targetRole: 'admin',
       linkView: 'teachers'
     });
     try {
@@ -546,10 +549,25 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
       })
     );
 
+    const targetFee = fees.find(f => f.id === feeId);
+    const calculatedPending = targetFee ? Math.max(0, targetFee.pendingAmount - paymentData.amount) : 0;
+    // Student personal receipt notification
+    if (targetFee) {
+      addNotification({
+        title: 'Fee Payment Received',
+        message: `Your payment of ₹${paymentData.amount} (Receipt: ${receiptNo}) has been recorded. Remaining balance: ₹${calculatedPending}.`,
+        type: 'success',
+        targetRole: 'student',
+        targetUserId: targetFee.rollNo,
+        linkView: 'fees'
+      });
+    }
+    // Admin receipt audit notification
     addNotification({
-      title: 'Fee Payment Received',
-      message: `Payment of ₹${paymentData.amount} received (Receipt: ${receiptNo}).`,
+      title: 'Institutional Fee Collection',
+      message: `Fee payment of ₹${paymentData.amount} received for Roll ${targetFee?.rollNo || 'Student'} (Receipt: ${receiptNo}).`,
       type: 'success',
+      targetRole: 'admin',
       linkView: 'fees'
     });
 
@@ -841,10 +859,21 @@ export const CollegeDataProvider: React.FC<{ children: React.ReactNode }> = ({ c
     });
 
     broadcastLiveEvent('salary', `Salary Disbursed: ₹${netAmount.toLocaleString('en-IN')} to ${teacher?.name}`, `Ref: ${transactionRef}`);
+    // Targeted only to that specific teacher
     addNotification({
-      title: 'Salary Transferred Successfully',
-      message: `₹${netAmount.toLocaleString('en-IN')} transferred to ${teacher?.name} (${teacherBank.bankName} A/C). Ref: ${transactionRef}`,
+      title: 'Salary Credited to Your Account',
+      message: `Your salary for ${monthStr} of ₹${netAmount.toLocaleString('en-IN')} has been credited to your ${teacherBank.bankName} A/C. Ref: ${transactionRef}`,
       type: 'success',
+      targetRole: 'teacher',
+      targetUserId: teacherId,
+      linkView: 'payroll'
+    });
+    // Administrative disbursement summary for Principal
+    addNotification({
+      title: 'Salary Disbursed',
+      message: `Disbursed ₹${netAmount.toLocaleString('en-IN')} to ${teacher?.name} (${teacherBank.bankName} A/C). Ref: ${transactionRef}`,
+      type: 'info',
+      targetRole: 'admin',
       linkView: 'payroll'
     });
 

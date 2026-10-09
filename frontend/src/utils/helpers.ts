@@ -1,3 +1,5 @@
+import { NotificationItem, User } from '../types';
+
 export const formatCurrencyINR = (amount: number): string => {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
@@ -333,4 +335,70 @@ export const generateUpiPaymentUrl = (
     url += `&am=${amount.toFixed(2)}`;
   }
   return url;
+};
+
+/**
+ * Strict Role-Based & User-Scoped Notification Filter
+ * - Students see ONLY notifications for their ID, rollNo, branch/semester, or student broadcasts.
+ * - Teachers see ONLY notifications for their faculty ID, department, or faculty broadcasts.
+ * - Non-teaching staff see ONLY notifications for their specific role or department.
+ * - Principal (Admin) sees administrative alerts, approval requests, college summaries, and broadcast notices.
+ */
+export const getFilteredNotificationsForUser = (
+  notifications: NotificationItem[],
+  user: User | null
+): NotificationItem[] => {
+  if (!user) return [];
+
+  const userRole = user.role;
+  const userEmail = (user.email || '').toLowerCase().trim();
+  const userId = (user.id || '').toLowerCase().trim();
+  const userRollNo = (user.rollNo || '').toLowerCase().trim();
+  const userEmpCode = (user.empCode || '').toLowerCase().trim();
+  const userDept = (user.department || user.branch || '').toLowerCase().trim();
+
+  return notifications.filter(notif => {
+    const targetUserId = (notif.targetUserId || '').toLowerCase().trim();
+    const targetEmail = (notif.targetEmail || '').toLowerCase().trim();
+    const targetDept = (notif.targetDepartment || '').toLowerCase().trim();
+
+    // 1. DIRECT USER TARGETING (Highest specificity)
+    if (targetUserId) {
+      const isDirectMatch =
+        targetUserId === userId ||
+        (userRollNo && targetUserId === userRollNo) ||
+        (userEmpCode && targetUserId === userEmpCode);
+      // If targeted to a specific user, ONLY that user should ever see it
+      return isDirectMatch;
+    }
+
+    if (targetEmail) {
+      const isEmailMatch =
+        userEmail &&
+        (userEmail === targetEmail || targetEmail.includes(userEmail) || userEmail.includes(targetEmail));
+      // If targeted to a specific email, ONLY that user should see it
+      return isEmailMatch;
+    }
+
+    // 2. DEPARTMENT TARGETING (If specified, user's department/branch must match)
+    if (targetDept) {
+      const isDeptMatch = userDept && (userDept.includes(targetDept) || targetDept.includes(userDept));
+      if (!isDeptMatch) return false;
+    }
+
+    // 3. ROLE FILTERING
+    if (notif.targetRole) {
+      if (notif.targetRole === 'all') return true;
+      if (notif.targetRole === 'admin') return userRole === 'admin';
+      if (notif.targetRole === 'staff') return userRole === 'teacher' || userRole === 'admin';
+      if (notif.targetRole === 'teacher') return userRole === 'teacher';
+      if (notif.targetRole === 'student') return userRole === 'student';
+      return false;
+    }
+
+    // 4. UNTARGETED NOTIFICATIONS
+    // Admin receives all general notices
+    if (userRole === 'admin') return true;
+    return true;
+  });
 };

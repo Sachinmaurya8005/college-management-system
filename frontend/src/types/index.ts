@@ -341,7 +341,10 @@ export interface NotificationItem {
   type: 'info' | 'warning' | 'success' | 'urgent';
   time: string;
   read: boolean;
-  targetRole?: Role;
+  targetRole?: Role | 'all' | 'staff';
+  targetUserId?: string;
+  targetEmail?: string;
+  targetDepartment?: string;
   linkView?: string;
 }
 

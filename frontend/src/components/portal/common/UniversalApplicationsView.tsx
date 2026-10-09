@@ -84,7 +84,7 @@ const FACULTY_MEMBERS = [
 
 export const UniversalApplicationsView: React.FC = () => {
   const { user } = useAuth();
-  const { students } = useCollegeData();
+  const { students, addNotification } = useCollegeData();
   const principal = usePrincipalInfo();
 
   const facultyMembers = [
@@ -252,6 +252,26 @@ export const UniversalApplicationsView: React.FC = () => {
 
     setApplications(prev => [newApp, ...prev]);
     setFormSuccess(true);
+
+    // Strict scoped notifications: Only recipient staff and sender student
+    addNotification({
+      title: `📩 New Application: ${cleanSubject}`,
+      message: `${user?.name || 'Student'} (${user?.rollNo || user?.branch || 'Diploma'}) has submitted an official application to you: "${cleanSubject}".`,
+      type: 'info',
+      targetRole: selectedRecipient.role === 'principal' ? 'admin' : (selectedRecipient.role as any),
+      targetEmail: selectedRecipient.email,
+      linkView: 'applications'
+    });
+
+    addNotification({
+      title: `Application Delivered (${newApp.applicationNo})`,
+      message: `Your application "${cleanSubject}" has been delivered to ${selectedRecipient.name}. Status: Submitted.`,
+      type: 'success',
+      targetRole: userRole as any,
+      targetUserId: user?.rollNo || user?.id,
+      targetEmail: user?.email,
+      linkView: 'applications'
+    });
     confetti({ particleCount: 50, spread: 60 });
     setSubject('');
     setDescription('');
@@ -276,6 +296,17 @@ export const UniversalApplicationsView: React.FC = () => {
           : app
       )
     );
+
+    // Notify only the specific student who submitted this application
+    addNotification({
+      title: `Application ${reviewStatus}: ${selectedAppForReview.subject}`,
+      message: `Your application (${selectedAppForReview.applicationNo}) has been ${reviewStatus.toLowerCase()} by ${user?.name || 'Faculty'}. Remarks: ${staffRemarks.trim() || `Marked as ${reviewStatus}.`}`,
+      type: reviewStatus === 'Approved' || reviewStatus === 'Resolved' ? 'success' : 'warning',
+      targetRole: 'student',
+      targetUserId: selectedAppForReview.rollNo,
+      targetEmail: selectedAppForReview.senderEmail,
+      linkView: 'applications'
+    });
 
     confetti({ particleCount: 60, spread: 70 });
     setSelectedAppForReview(null);
