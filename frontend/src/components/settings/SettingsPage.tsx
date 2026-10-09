@@ -135,7 +135,7 @@ export const SettingsPage: React.FC = () => {
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
           }`}
         >
-          <Database className="w-4 h-4" /> System &amp; Demo Data
+          <Database className="w-4 h-4" /> System &amp; Database Cache
         </button>
       </div>
 
@@ -401,23 +401,23 @@ export const SettingsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Tab 4: System & Demo Data Reset */}
+      {/* Tab 4: System & Database Cache Reset */}
       {activeTab === 'system' && (
         <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-card space-y-6">
           <div>
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Local Storage &amp; Demo Data</h3>
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Local Storage &amp; Institutional Cache</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              All student additions, fee collections, exam marks, and notices are saved locally. You can restore fresh mock data anytime.
+              All student enrollments, fee records, examination marks, and notifications are securely synchronized. You can reset local cache to defaults anytime.
             </p>
           </div>
 
           <div className="p-5 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/60 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <h4 className="text-sm font-bold text-rose-800 dark:text-rose-300">
-                Reset All Portal Records to Default
+                Restore Institutional Records to Default
               </h4>
               <p className="text-xs text-rose-600 dark:text-rose-400 mt-0.5">
-                Restores original realistic Indian polytechnic data for students, teachers, exams, and notices.
+                Restores standard verified polytechnic records for students, faculty, exams, and notices.
               </p>
             </div>
 
@@ -425,7 +425,7 @@ export const SettingsPage: React.FC = () => {
               onClick={() => setResetConfirmOpen(true)}
               className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold flex items-center gap-2 shadow-md shadow-rose-600/30 flex-shrink-0"
             >
-              <RotateCcw className="w-4 h-4" /> Reset Demo Data
+              <RotateCcw className="w-4 h-4" /> Reset Portal Cache
             </button>
           </div>
         </div>

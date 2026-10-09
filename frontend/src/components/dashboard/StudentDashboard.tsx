@@ -19,7 +19,7 @@ import { StatCard } from '../common/StatCard';
 import { formatCurrencyINR, formatDate } from '../../utils/helpers';
 
 import { PrincipalProfileModal } from '../common/PrincipalProfileModal';
-import { PRINCIPAL_DETAILS } from '../../data/mockData';
+import { usePrincipalInfo } from '../../hooks/usePrincipalInfo';
 
 interface StudentDashboardProps {
   onNavigate: (view: string, metadata?: any) => void;
@@ -33,6 +33,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   onOpenMarksheet
 }) => {
   const { user } = useAuth();
+  const principal = usePrincipalInfo();
   const { students, fees, results, exams, timetable, notices } = useCollegeData();
   const [isPrincipalModalOpen, setIsPrincipalModalOpen] = useState(false);
 
@@ -227,7 +228,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
                 Today's Lecture Timetable
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Department of Computer Science &amp; Engineering • 4th Semester
+                {currentStudent?.branch || 'Diploma Engineering'} • Semester {currentStudent?.semester || 1}
               </p>
             </div>
             <button
@@ -309,20 +310,23 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
       <div className="p-6 rounded-3xl bg-gradient-to-r from-polytechnic-950 via-slate-900 to-polytechnic-900 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 border border-polytechnic-800">
         <div className="flex items-center gap-4 text-center sm:text-left">
           <img
-            src={PRINCIPAL_DETAILS.photoUrl}
-            alt={PRINCIPAL_DETAILS.name}
+            src={principal.photoUrl}
+            alt={principal.name}
             className="w-14 h-14 rounded-2xl object-cover ring-2 ring-amber-400/80 shadow-md flex-shrink-0"
           />
           <div>
-            <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] font-bold mb-0.5">
+            <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 text-[10px] font-bold mb-1">
               <Sparkles className="w-3 h-3" />
               <span>Institutional Leadership</span>
             </div>
-            <h3 className="text-sm font-bold text-white">
-              {PRINCIPAL_DETAILS.name} ({PRINCIPAL_DETAILS.designation})
+            <h3 className="text-sm sm:text-base font-bold text-white">
+              {principal.name}
             </h3>
-            <p className="text-xs text-slate-300">
-              Age: {PRINCIPAL_DETAILS.age} Yrs • Qualification: {PRINCIPAL_DETAILS.qualification}
+            <p className="text-xs text-amber-300 font-semibold">
+              {principal.designation}
+            </p>
+            <p className="text-[11px] text-slate-300 mt-0.5">
+              Qualification: {principal.qualification || 'M.Tech, B.Tech, FIE'} • Exp: {principal.experienceYears || 26}+ Years
             </p>
           </div>
         </div>
@@ -330,7 +334,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
         <button
           type="button"
           onClick={() => setIsPrincipalModalOpen(true)}
-          className="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold transition-all flex items-center gap-1.5 flex-shrink-0 shadow-md"
+          className="px-4 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-bold transition-all flex items-center gap-1.5 flex-shrink-0 shadow-md"
         >
           <span>View Principal Profile &amp; Directives</span>
         </button>

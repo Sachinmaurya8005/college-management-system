@@ -108,7 +108,7 @@ export const TeacherList: React.FC<TeacherListProps> = ({
               {principal.designation}
             </p>
             <p className="text-[11px] text-slate-300 mt-0.5">
-              Age: <span className="font-mono text-white">{PRINCIPAL_DETAILS.age} Yrs</span> • Qualification: <span className="text-white font-medium">{PRINCIPAL_DETAILS.qualification}</span> • Exp: <span className="text-white font-bold">{PRINCIPAL_DETAILS.experienceYears}+ Years</span>
+              Qualification: <span className="text-white font-medium">{principal.qualification || PRINCIPAL_DETAILS.qualification}</span> • Exp: <span className="text-white font-bold">{principal.experienceYears || PRINCIPAL_DETAILS.experienceYears}+ Years</span>
             </p>
           </div>
         </div>
