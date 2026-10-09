@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import {
   Menu,
   Search,
-  Moon,
-  Sun,
   Bell,
   User as UserIcon,
   LogOut,
@@ -13,7 +11,6 @@ import {
   BookOpen
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
 import { useCollegeData } from '../../context/CollegeDataContext';
 import { NotificationDrawer } from './NotificationDrawer';
 import { Role } from '../../types';
@@ -30,7 +27,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavigate
 }) => {
   const { user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const { notifications } = useCollegeData();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -117,18 +113,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           <Search className="w-5 h-5" />
         </button>
 
-        {/* Theme Toggle */}
-        <button
-          onClick={toggleTheme}
-          className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors relative"
-          title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-        >
-          {theme === 'dark' ? (
-            <Sun className="w-5 h-5 text-amber-400" />
-          ) : (
-            <Moon className="w-5 h-5 text-slate-600" />
-          )}
-        </button>
 
         {/* Notifications */}
         <div className="relative">

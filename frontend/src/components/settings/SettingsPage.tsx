@@ -382,37 +382,18 @@ export const SettingsPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg">
+          <div className="max-w-md">
             <div
-              onClick={() => theme === 'dark' && toggleTheme()}
-              className={`p-5 rounded-2xl border-2 cursor-pointer transition-all ${
-                theme === 'light'
-                  ? 'border-blue-600 bg-blue-50/50 shadow-md'
-                  : 'border-slate-200 dark:border-slate-700 hover:border-slate-400'
-              }`}
+              className="p-5 rounded-2xl border-2 border-emerald-500 bg-slate-800/90 shadow-md relative"
             >
               <div className="flex items-center gap-3">
-                <Sun className="w-6 h-6 text-amber-500" />
+                <Moon className="w-6 h-6 text-emerald-400" />
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900">Light Mode</h4>
-                  <p className="text-xs text-slate-500">Clean white and royal navy layout</p>
-                </div>
-              </div>
-            </div>
-
-            <div
-              onClick={() => theme === 'light' && toggleTheme()}
-              className={`p-5 rounded-2xl border-2 cursor-pointer transition-all ${
-                theme === 'dark'
-                  ? 'border-blue-500 bg-slate-800 shadow-md'
-                  : 'border-slate-200 dark:border-slate-700 hover:border-slate-400'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Moon className="w-6 h-6 text-blue-400" />
-                <div>
-                  <h4 className="text-sm font-bold text-white">Dark Mode</h4>
-                  <p className="text-xs text-slate-400">High contrast deep slate &amp; navy</p>
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-bold text-white">Night Mode (Permanent)</h4>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400">Active</span>
+                  </div>
+                  <p className="text-xs text-slate-400 mt-0.5">High contrast deep slate &amp; navy active across all pages</p>
                 </div>
               </div>
             </div>

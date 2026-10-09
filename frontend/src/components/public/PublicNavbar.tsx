@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import {
   Menu,
   X,
-  Sun,
-  Moon,
   LogIn,
   LogOut,
   Home,
@@ -25,7 +23,6 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import { CollegeLogo } from '../common/CollegeLogo';
-import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 
 interface PublicNavbarProps {
@@ -39,7 +36,6 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({
   onNavigate,
   onReturnToPortal
 }) => {
-  const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -85,15 +81,6 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({
           >
             <MapPin className="w-3 h-3 text-amber-400" />
             <span>Campus Location</span>
-          </button>
-          <span className="text-white/30">•</span>
-          {/* Dark / Light Toggle */}
-          <button
-            onClick={toggleTheme}
-            aria-label="Toggle Theme"
-            className="p-1 rounded-md hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
-          >
-            {theme === 'dark' ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-blue-300" />}
           </button>
         </div>
       </div>
