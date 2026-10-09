@@ -19,16 +19,16 @@ export const CollegeLogo: React.FC<CollegeLogoProps> = ({
   const { settings } = useCollegeData();
 
   const sizeDimensions = {
-    xs: 'w-7 h-7',
-    sm: 'w-9 h-9',
-    md: 'w-12 h-12',
-    lg: 'w-16 h-16',
-    xl: 'w-24 h-24'
+    xs: 'w-6 h-6',
+    sm: 'w-8 h-8 sm:w-9 sm:h-9',
+    md: 'w-10 h-10',
+    lg: 'w-14 h-14',
+    xl: 'w-20 h-20'
   };
 
   const titleSizes = {
-    xs: 'text-xs',
-    sm: 'text-xs font-bold leading-tight',
+    xs: 'text-[11px] leading-tight',
+    sm: 'text-xs sm:text-[13px] font-bold leading-tight',
     md: 'text-sm font-extrabold leading-tight',
     lg: 'text-base font-extrabold leading-snug',
     xl: 'text-xl font-black leading-tight'

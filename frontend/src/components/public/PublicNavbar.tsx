@@ -100,13 +100,13 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({
 
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between min-h-[4rem] sm:min-h-[4.25rem] py-2 gap-3">
           {/* College Brand Logo */}
           <button
             onClick={() => handleNavClick('home')}
-            className="text-left flex items-center gap-3 group focus:outline-none"
+            className="text-left flex items-center gap-2.5 group focus:outline-none flex-shrink-0"
           >
-            <CollegeLogo size="md" textColor="light" subtitle={true} />
+            <CollegeLogo size="sm" textColor="light" subtitle={true} />
           </button>
 
           {/* Desktop Navigation Links */}
